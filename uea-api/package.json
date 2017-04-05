@@ -1,0 +1,19 @@
+{
+  "name": "uea-api",
+  "description": "Rest api al uea",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache Version 2.0",
+  "author": "Ana Ribeiro kaj Victor Hugo",
+  "engines": {
+    "node": ">=4.3.2"
+  },
+  "scripts": {
+    "start": "npm install && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-request-proxy": "^2.0.0",
+    "shelljs": "^0.7.6"
+  }
+}

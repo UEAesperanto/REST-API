@@ -1,15 +1,16 @@
-# Converted with pg2mysql-1.9
-# Converted on Wed, 05 Apr 2017 23:01:48 -0400
-# Lightbox Technologies Inc. http://www.lightbox.ca
+/*Notoj:
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone="+00:00";
+Ĉiuj prezoj estas konservitaj kiel integer laŭ valuto cento da eŭro: tio permesas ne bezoni konservi al float.
 
+ */
+
+ /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
 CREATE TABLE uzantoAuxAsocio (
     id int(11) PRIMARY KEY,
     ueakodo varchar(255)
 );
 
+/*datumoj el ueadb:landokodo*/
 CREATE TABLE lando (
     id int(11) PRIMARY KEY,
     nomoLoka varchar(255),
@@ -17,6 +18,7 @@ CREATE TABLE lando (
     landkodo varchar(255)
 );
 
+/*datumoj el ueadb:urboj*/
 CREATE TABLE urbo (
     id int(11) PRIMARY KEY,
     nomoLoka varchar(255),
@@ -24,6 +26,11 @@ CREATE TABLE urbo (
     idLando int(11) REFERENCES lando(id)
 );
 
+/*datumoj el ueadb:tuta1
+ Mi nomiĝis tiun tabelon "uzanto" ĉar ĝi povas havi linioj pri ne membroj sed
+simplaj uzantoj. Estas la tabelo ref_uzantoAuxAsocio_anokategorio kiu permesas
+dedukti la membrecon.
+ */
 CREATE TABLE uzanto (
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
     personanomo varchar(255),
@@ -58,6 +65,7 @@ CREATE TABLE adminrajto (
     priskribo varchar(255)
 );
 
+/*Permesas havi grupojn da uzantoj kun samaj rajtoj*/
 CREATE TABLE rajtgrupo (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
@@ -70,12 +78,15 @@ CREATE TABLE ref_rajtgrupo_uzanto (
     PRIMARY KEY(idRajtgrupo, idUzanto)
 );
 
+/*uzantoj povas havi rajton indivdue (ekstere de grupo)*/
 CREATE TABLE ref_rajtgrupo_adminrajto (
     idRajtgrupo int(11) REFERENCES rajtgrupo(id),
     idAdminrajto int(11) REFERENCES adminrajto(id),
     PRIMARY KEY(idRajtgrupo, idAdminrajto)
 );
 
+
+/*uzantoj povas havi rajton indivdue (ekstere de grupo)*/
 CREATE TABLE ref_uzanto_adminrajto (
     idAdminrajto int(11) REFERENCES adminrajto(id),
     idUzanto int(11) REFERENCES uzanto(id),
@@ -87,6 +98,7 @@ CREATE TABLE komitatkategorio (
     nomo varchar(255)
 );
 
+/*datumoj el ueadb:membroj, ueadb:asocioj kaj retdb:fakasocioj*/
 CREATE TABLE asocio(
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
     nomo varchar(255),
@@ -103,6 +115,7 @@ CREATE TABLE asocio(
     abc varchar(255)
 );
 
+/*datumoj el ueadb:komit*/
 CREATE TABLE komitato (
     id int(11) PRIMARY KEY,
     idUzanto int(11) REFERENCES uzanto(id),
@@ -110,36 +123,43 @@ CREATE TABLE komitato (
     idKomitatkategorio int(11) REFERENCES komitatkategorio(id)
 );
 
+/*La peranto povas esti asocio aŭ membro*/
+/*datumoj el ueadb:perant*/
 CREATE TABLE peranto (
     id int(11) PRIMARY KEY,
     idUeakodo int(11) REFERENCES uzantoAuxAsocio(id),
     idLando int(11) REFERENCES lando(id)
 );
 
+/*datumoj el retdb:taskoj*/
 CREATE TABLE tasko (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
     priskribo varchar(255)
 );
 
+/*datumoj el retdb:taskoj*/
 CREATE TABLE ref_tasko_uzanto (
     idTasko int(11) REFERENCES tasko(id),
     idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
     PRIMARY KEY(idTasko, idUzanto)
 );
 
+/*datumoj el retdb:respondecoj*/
 CREATE TABLE respondeco (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
     priskribo varchar(255)
 );
 
+/*datumoj el retdb:respondecoj*/
 CREATE TABLE ref_respondeco_uzanto (
     idRespondeco int(11) REFERENCES respondeco(id),
     idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
     PRIMARY KEY(idRespondeco, idUzanto)
 );
 
+/*nova tablo, sed el retdb:fakasocio columno 'kategorio'*/
 CREATE TABLE delegito (
     idUzanto int(11) REFERENCES uzanto(id),
     idLando int(11) REFERENCES lando(id),
@@ -164,12 +184,14 @@ CREATE TABLE ref_landasocio(
     PRIMARY KEY(idAsocio, idLando)
 );
 
+/*nova tablo, enhavas la diversajn membrecajn kategoriojn*/
 CREATE TABLE anokategorio (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
     priskribo varchar(255)
 );
 
+/*nova tablo, povas esti kreita rigardante ueadb:asocioj:konstkat kaj ueadb:membroj:konstkat*/
 CREATE TABLE ref_uzantoAuxAsocio_anokategorio(
     id int(11) PRIMARY KEY,
     idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
@@ -177,6 +199,9 @@ CREATE TABLE ref_uzantoAuxAsocio_anokategorio(
     idKategorio int(11) REFERENCES anokategorio(id)
 );
 
+/*Mi ne vidis tiun tablon en la ekzistantaj datumbazoj, sed ĝi ie devas ekzisti por permesi akiri prezon pro kotizo laŭ lando.
+ Ĝi eventuale povus esti tiel farita ke ni konsideru lando kategorio sistemo.
+ */
 CREATE TABLE ref_anokategorio_lando (
   idAnokategorio int(11) REFERENCES anokategorio(id),
   idLando int(11) REFERENCES lando(id),
@@ -184,6 +209,7 @@ CREATE TABLE ref_anokategorio_lando (
   PRIMARY KEY(idAnokategorio, idLando)
 );
 
+/*nova tablo, permesas fari grupojn de uzantoj laŭ kriterioj kiuj ne rilatas al membreco aŭ kotizo. */
 CREATE TABLE uzantogrupo (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
@@ -196,12 +222,16 @@ CREATE TABLE ref_uzantoAuxAsocio_uzantogrupo(
     PRIMARY KEY (idUzanto, idGrupo)
 );
 
+/***** LIGITA AL LA MONKONTA SISTEMO *****/
+
+/*Pri la monkonta sistemo, propono, devas esti validita kaj konfirmita.*/
 CREATE TABLE konto (
     id int(11) PRIMARY KEY,
     posedanto int(11) NULL REFERENCES uzantoAuxAsocio(id),
     ueaPosedanto varchar(255) NULL /*por diversaj uea kontoj, ili ne estas ligita al iu uzantoAuxAsocio sed al UEA internaĵo.*/
 );
 
+/*Pri la monkonta sistemo, propono, devas esti validita kaj konfirmita.*/
 CREATE TABLE gxiro (
     id int(11) PRIMARY KEY,
     sumo int(11),
@@ -224,12 +254,20 @@ CREATE TABLE aprobitagxiro (
     aprobitaDe int(11) REFERENCES uzantoAuxAsocio(id)
 );
 
+
+/***** LIGITA AL LA RETEJO *****/
+
+/* Ĉu ne-membroj povas esti retUzantoj?? Mi supozas ke ne */
+/*datumoj el retdb:uzantaro*/
 CREATE TABLE retUzanto (
     id int(11) PRIMARY KEY REFERENCES uzanto(id),
     kromnomo varchar(255),
     pasvorto text  /*devus iĝi sha1 (laŭ transirebleco)*/
 );
 
+/***** LIGITA AL LA dissenda sistemo *****/
+/*dissendo temas pri iu dissendaĵo farita al specifaj anokategorioj.*/
+/*datumoj el ueadb:dissendoj*/
 CREATE TABLE dissendo (
   id int(11) PRIMARY KEY,
   dissendanto int(11) REFERENCES uzanto(id),
@@ -239,12 +277,16 @@ CREATE TABLE dissendo (
   teksto varchar(255)
 );
 
+/*La tabelo kiu diras al kiu iu dissendo estas sendita.*/
 CREATE TABLE ref_dissendo_anokategorioj (
   idDissendo int(11) REFERENCES dissendo(id),
   idAnokategorio int(11) REFERENCES anokategorio(id),
   PRIMARY KEY(idDissendo, idAnokategorio)
 );
 
+/*dissendoj povas enhavi enketojn, tiu kaze la demanderon aperas en tiu ĉi
+ * tabelo.*/
+/*datumoj el ueadb:dissendo_enketoj*/
 CREATE TABLE dissendo_demandero (
   id int(11) PRIMARY KEY,
   idDissendo int(11) REFERENCES dissendo(id),
@@ -258,6 +300,7 @@ CREATE TABLE ref_dissendo_respondoj (
   PRIMARY KEY(idUzantoAuxAsocio, idDissendoDemandero)
 );
 
+/*datumoj el ueadb:gazkom*/
 CREATE TABLE gazkom(
   id int(11) PRIMARY KEY,
   num int(11),
@@ -279,6 +322,8 @@ CREATE TABLE teko(
   vido bool
 );
 
+/***** LIGITA AL LA UK (aŭ aliaj kongresoj)*****/
+
 CREATE TABLE antauxDumPostKongreso(
     id int(11) PRIMARY KEY
 );
@@ -292,12 +337,16 @@ CREATE TABLE kongreso (
     findato date
 );
 
+/*nova tablo*/
 CREATE TABLE uk (
     id int(11) PRIMARY KEY REFERENCES kongreso(id),
     idUrbo int(11) REFERENCES urbo(id),
     temo varchar(255)
 );
 
+/*nova tablo
+ Por la historiaĵo, oni povas uzi uea:programo:loko
+*/
 CREATE TABLE k_loko(
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
@@ -305,6 +354,7 @@ CREATE TABLE k_loko(
     priskribo varchar(255)
 );
 
+/*datumoj el uea:programo*/
 CREATE TABLE k_Programo (
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
@@ -314,6 +364,7 @@ CREATE TABLE k_Programo (
     loko int(11) REFERENCES k_loko(id)
 );
 
+/*datumoj el ueadb:uk_aliĝintoj kaj uea:kongresanoj */
 CREATE TABLE k_aligxinto (
     id int(11) PRIMARY KEY,
     kongresaNumero int(11),
@@ -343,6 +394,10 @@ CREATE TABLE k_aligxinto (
     abc varchar(255) /*estis abc */
 );
 
+/*datumoj el uea:hoteloj
+ Mi ne komprenas la signifon de ordo, ordig kaj rango el la pasinta tablo
+uea:hoteloj.
+ */
 CREATE TABLE k_hotelo (
     id int(11) PRIMARY KEY,
     idKongresoAuxAntauxPost int(11) REFERENCES antauxDumPostKongreso(id),
@@ -358,6 +413,11 @@ CREATE TABLE k_hotelo (
     notoj varchar(255)
 );
 
+/*Ĉu estas grava se la sistemo por reservo de hotelo ne povas enhavi la datumon de la pasintaj tempoj?*/
+
+/*nova tablo.
+Ĝi permesos al administranto krei ĉambrtipon laŭ bezono.
+ */
 CREATE TABLE k_h_cxambrotipo (
     id int(11) PRIMARY KEY,
     litKvanto int(11),
@@ -373,6 +433,7 @@ CREATE TABLE k_hotelo_cxambrotipo (
     kvanto int(11)
 );
 
+/*Permesas al iu aligxinto mendi hotelon*/
 CREATE TABLE k_hotelo_mendo (
     id int(11) PRIMARY KEY,
     idKAligxinto int(11) REFERENCES k_aligxinto(id),
@@ -391,6 +452,7 @@ CREATE TABLE ref_k_h_kunlogxanto (
     PRIMARY KEY(idHMendo, idKAligxinto)
 );
 
+/*datumoj el uea:akpk*/
 CREATE TABLE k_antauxKajPost (
     id int(11) PRIMARY KEY REFERENCES antauxDumPostKongreso(id),
     idKongreso int(11) REFERENCES kongreso(id),
@@ -400,12 +462,6 @@ CREATE TABLE k_antauxKajPost (
     revenLoko varchar(255),
     priskribo varchar(255),
     kvanto int(11)
-);
-
-CREATE TABLE ref_k_antauxKAjPost_mendo (
-  idKAligxinto int(11) REFERENCES k_aligxinto(id),
-  idKAntauxKajPost int(11) REFERENCES k_antauxKajPost(id),
-  PRIMARY KEY(idKAligxinto, idKAntauxKajPost)
 );
 
 CREATE TABLE k_ekskurso (
@@ -421,6 +477,16 @@ CREATE TABLE ref_k_ekskurso_mendo (
   idKAligxinto int(11) REFERENCES k_aligxinto(id),
   idKEkskurso int(11) REFERENCES k_ekskurso(id),
   PRIMARY KEY(idKAligxinto, idKEkskurso)
+);
+
+
+/***** LIGITA AL LA libroservo *****/
+
+/*datumoj el uea:ls*/
+CREATE TABLE ref_k_antauxKAjPost_mendo (
+  idKAligxinto int(11) REFERENCES k_aligxinto(id),
+  idKAntauxKajPost int(11) REFERENCES k_antauxKajPost(id),
+  PRIMARY KEY(idKAligxinto, idKAntauxKajPost)
 );
 
 CREATE TABLE ls_verkisto( /*aux auxtoro, aux tradukisto, aux kontribuanto*/
@@ -447,11 +513,15 @@ CREATE TABLE ls_sxlosilvorto(
   vorto varchar(255)
 );
 
+/*Helpos trovi libron laŭ eldonisto kaj havi organizitan eldonistan liston
+ Plenigita el ueadb:eldonitade
+ */
 CREATE TABLE ls_eldonisto(
   id int(11) PRIMARY KEY,
   nomo varchar(255)
 );
 
+/*datumoj el uea:ls*/
 CREATE TABLE libroservo(
   id int(11) PRIMARY KEY,
   kodo varchar(9),
@@ -490,6 +560,7 @@ CREATE TABLE libroservo(
   komisiakvanto int(11)
 );
 
+/*datumoj el ueadb:brok */
 CREATE TABLE brok(
   id int(11) PRIMARY KEY, /*el uea:bvar*/
   titolo varchar(255),
@@ -517,6 +588,7 @@ CREATE TABLE brok_periodajxo(
   notoj varchar(255)
 );
 
+/*datumoj el ueadb:brok_periodajhoj */
 CREATE TABLE brok_periodajxo_numero(
   id int(11) PRIMARY KEY,
   idPeriodjxoj int(11) REFERENCES brok_periodajxo(id),
@@ -553,26 +625,6 @@ CREATE TABLE ref_ls_ls_sxlosilvorto(
   idLs int(11) REFERENCES libroservo(id),
   idSxlosilvorto int(11) REFERENCES ls_sxlosilvorto(id),
   PRIMARY KEY(idLs, idSxlosilvorto)
-);
-
-CREATE TABLE revua_abono (
-  id int(11) PRIMARY KEY,
-  kodo varchar(255),
-  titolo varchar(255),
-  klarigo varchar(255),
-  ofteco int(11),
-  prezo int(11),
-  aerposxto int(11),
-  rete int(11),
-  difinebla varchar(255),
-  dprez int(11)
-);
-
-CREATE TABLE ref_revua_abonantoj (
-  id int(11) PRIMARY KEY,
-  idRevuaAbono int(11) REFERENCES revua_abono(id),
-  idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
-  jaro int(11)
 );
 
 CREATE TABLE brosxuro (
@@ -613,6 +665,11 @@ CREATE TABLE opinio (
   nomo varchar(255)
 );
 
+/*Tiu korespondas al iu aĉeta ago sur la libro servo. varmendo_varoj ligas al ĝi kaj permesas scii kiujn varojn estis aĉetitaj.
+
+el retdb:varmendintoj
+
+ */
 CREATE TABLE varmendo (
   id int(11) PRIMARY KEY,
   idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
@@ -635,6 +692,9 @@ CREATE TABLE varmendo (
   /*la prezo ne aperas kiel kampo, ĝi estas kalkulita el la diversaj varmendo_varoj modifiita de la rabato. */
 );
 
+/*
+el retdb:varmendo
+ */
 CREATE TABLE varmendo_varo (
     id int(11) PRIMARY KEY,
     idVarmendo int(11) REFERENCES varmendo(id),
@@ -644,6 +704,34 @@ CREATE TABLE varmendo_varo (
     avisumo int(11)
 );
 
+/**** PRI LA REVUO ESPERANTO KAJ KONTAKTO ***/
+
+/*datumoj el uea:abonoj*/
+CREATE TABLE revua_abono (
+  id int(11) PRIMARY KEY,
+  kodo varchar(255),
+  titolo varchar(255),
+  klarigo varchar(255),
+  ofteco int(11),
+  prezo int(11),
+  aerposxto int(11),
+  rete int(11),
+  difinebla varchar(255),
+  dprez int(11)
+);
+
+/*nova tablo: mi ne trovis kie estas konservita tiun rilaton*/
+/*el retdb:abmendo */
+CREATE TABLE ref_revua_abonantoj (
+  id int(11) PRIMARY KEY,
+  idRevuaAbono int(11) REFERENCES revua_abono(id),
+  idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
+  jaro int(11)
+);
+
+/*Por abonoj al revuoj
+el retdb:abmendo
+ */
 CREATE TABLE varmendo_abono (
     id int(11) PRIMARY KEY,
     idVarmendo int(11) REFERENCES varmendo(id),
@@ -654,6 +742,9 @@ CREATE TABLE varmendo_abono (
     avi int(11)
 );
 
+/***** LIGITA AL LA spezoj (peranto) *****/
+
+/*el ueadb:spezaro (ili havas tipon 1 kaj kategorio kiel "270;;0;0;0;;0;0;0".*/
 CREATE TABLE kongresa_spezraporto (
   id int(11) PRIMARY KEY,
   dato date,
@@ -665,6 +756,7 @@ CREATE TABLE kongresa_spezraporto (
 
 );
 
+/*Ero de kongresa spezraporto*/
 CREATE TABLE kongresa_spezraportero (
   id int(11) PRIMARY KEY,
   idKongresaSpezraporto int(11) REFERENCES kongresa_spezraporto(id),
@@ -674,6 +766,16 @@ CREATE TABLE kongresa_spezraportero (
   kongresajMendoj int(11)
 );
 
+/*
+  kongresa spezraporto_pag_kampo: simpla kampo por kiu oni povas pagi.
+  Ekzemploj nunaj:
+    - donaco_uk,
+    - blindula_kaso,
+    - infana_kongreseto,
+    - canuto,
+    - triamonda,
+    - volontula
+  */
 CREATE TABLE ks_pag_kampo(
   id int(11) PRIMARY KEY,
   priskribo varchar(255),
@@ -687,6 +789,7 @@ CREATE TABLE ref_kongresa_spezraportero_ks_pag_kampo(
   PRIMARY KEY(idKongresaSpezraportero, idKsPagKampo)
 );
 
+/*el ueadb:spezaro kaj ueadb:spezo (ili havas tipon 0) */
 CREATE TABLE gxen_spezraporto (
   id int(11) PRIMARY KEY,
   dato date,
@@ -713,3 +816,4 @@ CREATE TABLE gxen_spezraportero (
   priskribo varchar(255),
   sumo int(11)
 );
+/***************/

@@ -1,7 +1,7 @@
 /*Notoj:
- 
+
 Ĉiuj prezoj estas konservitaj kiel integer laŭ valuto cento da eŭro: tio permesas ne bezoni konservi al float.
- 
+
  */
 
 
@@ -32,7 +32,7 @@ CREATE TABLE urbo (
 simplaj uzantoj. Estas la tabelo ref_uzantoAuxAsocio_anokategorio kiu permesas
 dedukti la membrecon.
  */
-CREATE TABLE uzanto ( 
+CREATE TABLE uzanto (
     id integer PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
     personanomo character varying,
     familianomo character varying,
@@ -199,11 +199,11 @@ CREATE TABLE anokategorio (
 CREATE TABLE ref_uzantoAuxAsocio_anokategorio(
     id integer PRIMARY KEY,
     idUzanto integer REFERENCES uzantoAuxAsocio(id),
-    jaro integer null, 
-    idKategorio integer REFERENCES anokategorio(id),
+    jaro integer null,
+    idKategorio integer REFERENCES anokategorio(id)
 );
 
-/*Mi ne vidis tiun tablon en la ekzistantaj datumbazoj, sed ĝi ie devas ekzisti por permesi akiri prezon pro kotizo laŭ lando. 
+/*Mi ne vidis tiun tablon en la ekzistantaj datumbazoj, sed ĝi ie devas ekzisti por permesi akiri prezon pro kotizo laŭ lando.
  Ĝi eventuale povus esti tiel farita ke ni konsideru lando kategorio sistemo.
  */
 CREATE TABLE ref_anokategorio_lando (
@@ -314,7 +314,7 @@ CREATE TABLE gazkom(
   num integer,
   numero integer,
   dato date,
-  titolo character varying, 
+  titolo character varying,
   subtitolo character varying, /* el gazkom:ttit*/
   htmlTeksto character varying,
   bazTeksto character varying
@@ -323,9 +323,9 @@ CREATE TABLE gazkom(
 CREATE TABLE teko(
   id integer PRIMARY KEY,
   titolo character varying,
-  elnomo character varying, /*nomo de la pdf dosiero*/  
+  elnomo character varying, /*nomo de la pdf dosiero*/
   kodnomo character varying, /*ekzemplo: "eo_okt06"*/
-  jaro integer, 
+  jaro integer,
   absnum character varying,
   vido boolean
 );
@@ -355,7 +355,7 @@ CREATE TABLE uk (
 
 /*nova tablo
  Por la historiaĵo, oni povas uzi uea:programo:loko
- 
+
  */
 CREATE TABLE k_loko(
     id integer PRIMARY KEY,
@@ -378,7 +378,7 @@ CREATE TABLE k_Programo (
 CREATE TABLE k_aligxinto (
     id integer PRIMARY KEY,
     kongresaNumero integer,
-    idUzanto integer REFERENCES uzanto(id) NULL, /*povas esti uzanto aŭ ne*/ 
+    idUzanto integer REFERENCES uzanto(id) NULL, /*povas esti uzanto aŭ ne*/
     id_kongreso integer REFERENCES kongreso(id),
     personanomo character varying,
     familianomo character varying,
@@ -404,7 +404,7 @@ CREATE TABLE k_aligxinto (
     abc character varying /*estis abc */
 );
 
-/*datumoj el uea:hoteloj 
+/*datumoj el uea:hoteloj
  Mi ne komprenas la signifon de ordo, ordig kaj rango el la pasinta tablo
 uea:hoteloj.
  */
@@ -440,7 +440,7 @@ CREATE TABLE k_hotelo_cxambrotipo (
     kHotelo integer REFERENCES k_hotelo(id),
     kHCxambrotipo integer REFERENCES k_h_cxambrotipo(id),
     prezo integer,
-    kvanto integer 
+    kvanto integer
 );
 
 /*Permesas al iu aligxinto mendi hotelon*/
@@ -558,7 +558,7 @@ CREATE TABLE libroservo(
   acxetvaluto integer, /* *cent por havi ĝin en centoj */
   stokvaloro integer, /* *cent por havi ĝin en centoj */
   dato date,
-  enirukat character varying, /*TODO: mi ne komprenas tiun kampon*/ 
+  enirukat character varying, /*TODO: mi ne komprenas tiun kampon*/
   mendoloke character varying,
   aldInf character varying,
   laDeRe character varying,
@@ -604,8 +604,8 @@ CREATE TABLE brok_periodajxo(
 CREATE TABLE brok_periodajxo_numero(
   id integer PRIMARY KEY,
   idPeriodjxoj integer REFERENCES brok_periodajxo(id),
-  stato character varying, 
-  jaro integer, 
+  stato character varying,
+  jaro integer,
   jaro2 integer null, /*se ĝi estas uzata tio 'jaro' estas komencdato kaj 'jaro2' estas findato.*/
   numero character varying,
   monato integer, /*de 1 ĝis 12*/
@@ -622,10 +622,10 @@ CREATE TABLE brok_periodajxoj_jarkolekto(
   id integer PRIMARY KEY,
   idPeriodjxoj integer REFERENCES brok_periodajxo(id),
   notoj character varying,
-  stato character varying, 
+  stato character varying,
   prezokategorio character varying null,
   prezo integer null, /*nur uzata se prezokategorio estas 'null'*/
-  jaro integer, 
+  jaro integer,
   jaro2 integer null, /*se ĝi estas uzata tio 'jaro' estas komencdato kaj 'jaro2' estas findato.*/
   numeroj character varying,
   kvanto integer,
@@ -707,7 +707,7 @@ CREATE TABLE opinio (
 );
 
 /*Tiu korespondas al iu aĉeta ago sur la libro servo. varmendo_varoj ligas al ĝi kaj permesas scii kiujn varojn estis aĉetitaj.
- 
+
 el retdb:varmendintoj
 
  */
@@ -727,7 +727,7 @@ CREATE TABLE varmendo (
   ricevantFakso character varying,
   ricevatRetadreso character varying,
   idPagmaniero character varying, /*TODO: pripensi bezono havi tiun kampon kun la nova pagsistemo kiu estos proponita.*/
-  validigo character varying, 
+  validigo character varying,
   notoj character varying,
   rabato integer null /*inter 0 kaj 100, estas rabata procento.*/
   /*la prezo ne aperas kiel kampo, ĝi estas kalkulita el la diversaj varmendo_varoj modifiita de la rabato. */
@@ -753,7 +753,7 @@ CREATE TABLE varmendo_abono (
     idVarmendo integer REFERENCES varmendo(id),
     idRevuaAbono integer REFERENCES revua_abono(id),
     prioritataPosxto boolean,
-    difino integer, 
+    difino integer,
     pagsumo integer,
     avi integer
 );
@@ -835,6 +835,3 @@ CREATE TABLE gxen_spezraportero (
   sumo integer
 );
 /***************/
-
-
-

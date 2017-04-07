@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
 && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g bower
-
 EXPOSE 3000
-CMD [ "sh", "-c", "npm install --unsafe-perm && npm start" ]
+
+COPY ./entrypoint.sh /
+CMD [ "bash", "/entrypoint.sh"]
 

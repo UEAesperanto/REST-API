@@ -9,10 +9,10 @@ services:
           - ./uea-api:/app
         environment:
           - DB_PASSWORD=u34p4ss
-          - DB_HOST=uea-db
+          - DB_HOST=mysql
           - DB_PORT=3306
         links:
-          - mysql:mysql
+          - mysql:mysql-server
           - postgres:postgres
         depends_on:
           - mysql
@@ -20,8 +20,6 @@ services:
     mysql:
         image: mysql
         restart: always
-        volumes:
-          - ./uea-mysql:/var/lib/mysql
         environment:
           - MYSQL_ROOT_PASSWORD=u34p4ss
           - MYSQL_DATABASE=uea

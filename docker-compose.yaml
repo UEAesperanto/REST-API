@@ -13,7 +13,6 @@ services:
           - DB_PORT=3306
         links:
           - mysql:mysql-server
-          - postgres:postgres
         depends_on:
           - mysql
 

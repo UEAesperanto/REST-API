@@ -380,7 +380,7 @@ CREATE TABLE k_aligxinto (
     interfaco.*/
     adreso varchar(255),
     posxtkodo varchar(255),
-    loĝurbo int(11) REFERENCES urbo(id),
+    logxurbo int(11) REFERENCES urbo(id),
     nacialando int(11) REFERENCES lando(id),
     naskigxtago varchar(255),
     mortdato varchar(255) NULL,
@@ -678,7 +678,7 @@ CREATE TABLE varmendo (
   ricevantPersononomo varchar(255) NULL, /* kaze ke ĝi ne estas tiu de la id_uzanto*/
   ricevantAdreso varchar(255),
   ricevantUrbo varchar(255),
-  ricevantPoŝtkdo varchar(255),
+  ricevantPosxtkdo varchar(255),
   idRicevantLando int(11) REFERENCES lando(id),
   ricevantTelkodo varchar(255),
   ricevantTelhejmo varchar(255),

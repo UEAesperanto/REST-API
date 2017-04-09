@@ -23,12 +23,3 @@ services:
         environment:
           - MYSQL_ROOT_PASSWORD=u34p4ss
           - MYSQL_DATABASE=uea
-        depends_on:
-          - postgres
-
-    postgres:
-        image: postgres
-        restart: always
-        environment:
-          - POSTGRES_PASSWORD=u34p4ss
-          - POSTGRES_DB=uea

@@ -22,3 +22,5 @@ services:
         environment:
           - MYSQL_ROOT_PASSWORD=u34p4ss
           - MYSQL_DATABASE=uea
+        ports:
+          - "3306:3306"

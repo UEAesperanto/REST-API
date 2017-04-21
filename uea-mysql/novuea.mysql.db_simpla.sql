@@ -123,6 +123,13 @@ CREATE TABLE komitato (
     idKomitatkategorio int(11) REFERENCES komitatkategorio(id)
 );
 
+CREATE TABLE estarano (
+    id int(11) PRIMARY KEY,
+    idUzanto int(11) REFERENCES uzanto(id),
+    rolo varchar(255),
+    jaro date
+);
+
 /*La peranto povas esti asocio aŭ membro*/
 /*datumoj el ueadb:perant*/
 CREATE TABLE peranto (
@@ -184,11 +191,16 @@ CREATE TABLE ref_landasocio(
     PRIMARY KEY(idAsocio, idLando)
 );
 
-/*nova tablo, enhavas la diversajn membrecajn kategoriojn*/
-CREATE TABLE anokategorio (
+/*nova tablo, permesas fari grupojn de uzantoj laŭ kriterioj kiuj ne rilatas al membreco aŭ kotizo. */
+CREATE TABLE uzantogrupo (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
     priskribo varchar(255)
+);
+
+/*nova tablo, enhavas la diversajn membrecajn kategoriojn*/
+CREATE TABLE anokategorio (
+    id int(11) PRIMARY KEY REFERENCES uzantogrupo
 );
 
 /*nova tablo, povas esti kreita rigardante ueadb:asocioj:konstkat kaj ueadb:membroj:konstkat*/
@@ -207,13 +219,6 @@ CREATE TABLE ref_anokategorio_lando (
   idLando int(11) REFERENCES lando(id),
   aligxPrezo int(11),
   PRIMARY KEY(idAnokategorio, idLando)
-);
-
-/*nova tablo, permesas fari grupojn de uzantoj laŭ kriterioj kiuj ne rilatas al membreco aŭ kotizo. */
-CREATE TABLE uzantogrupo (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
 );
 
 CREATE TABLE ref_uzantoAuxAsocio_uzantogrupo(
@@ -295,7 +300,7 @@ CREATE TABLE dissendo_demandero (
 );
 
 CREATE TABLE ref_dissendo_respondoj (
-  idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id), /*La respondanto*/
+  idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id), /*la respondanto*/
   idDissendoDemandero int(11) REFERENCES dissendo_demandero(id),
   PRIMARY KEY(idUzantoAuxAsocio, idDissendoDemandero)
 );

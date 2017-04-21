@@ -283,9 +283,9 @@ CREATE TABLE dissendo (
 );
 
 /*La tabelo kiu diras al kiu iu dissendo estas sendita.*/
-CREATE TABLE ref_dissendo_anokategorioj (
+CREATE TABLE ref_dissendo_uzantogrupo (
   idDissendo int(11) REFERENCES dissendo(id),
-  idAnokategorio int(11) REFERENCES anokategorio(id),
+  idUzantoGrupo int(11) REFERENCES uzantogrupo(id),
   PRIMARY KEY(idDissendo, idAnokategorio)
 );
 

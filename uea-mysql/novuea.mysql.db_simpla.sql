@@ -87,8 +87,8 @@ CREATE TABLE uzanto_sangxpropono (
     teloficejo varchar(255),
     telportebla varchar(255),
     tttpagxo varchar(255),
-    validaKonto bool,
-    abc varchar(255), /*estis abc */
+    validakonto bool,
+    abc varchar(255) /*estis abc */
 );
 
 CREATE TABLE adminrajto (
@@ -361,18 +361,18 @@ CREATE TABLE retlisto(
   id int(11) PRIMARY KEY,
   nomo varchar(255),
   priskribo varchar(255)
-)
+);
 
 /*datumoj el retdb:abonoj */
 CREATE TABLE retlist_abono(
   id int(11) PRIMARY KEY,
   ekde date,  /*estis tempo*/
-  abono int(11) REFERENCES(retlisto),
-  id_uzanto int(11) REFERENCES(uzanto) NULL, /*povas esti null se ne farita tra iu konto*/
+  abono int(11) REFERENCES retlisto(id),
+  id_uzanto int(11) REFERENCES uzanto(id), /*povas esti null se ne farita tra iu konto*/
   formato_html boolean, /*se true do html, se ne do teksto */
-  kodiĝxo_utf8 boolean /*se true do utf8, se ne do x-sistemo*/
+  kodigxo_utf8 boolean, /*se true do utf8, se ne do x-sistemo*/
   retadreso varchar(255) NULL /*null signifas ke id_uzanto estas definita kaj ke ni uzas retadreson de la uzanto.*/
-) 
+);
 
 CREATE TABLE teko(
   id int(11) PRIMARY KEY,

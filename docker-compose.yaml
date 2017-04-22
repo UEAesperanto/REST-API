@@ -7,6 +7,7 @@ services:
           - "3000:3000"
         volumes:
           - ./uea-api:/app
+          - ./uea-mysql:/app/mysql
         environment:
           - DB_PASSWORD=u34p4ss
           - DB_HOST=mysql

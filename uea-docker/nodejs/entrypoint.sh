@@ -6,4 +6,8 @@ while ! mysqladmin ping -h"$DB_HOST" -uroot -p"$DB_PASSWORD" --silent; do
 done
 
 cd /app
+#Create database
+mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/novuea.mysql.db_simpla.sql
+#Populate database
+mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/enigi.sql
 npm install --unsafe-perm && npm start

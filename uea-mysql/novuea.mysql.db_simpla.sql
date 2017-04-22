@@ -7,7 +7,10 @@
  /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
 CREATE TABLE uzantoAuxAsocio (
     id int(11) PRIMARY KEY,
-    ueakodo varchar(255)
+    ueakodo varchar(255),
+    kromnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
+    pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
+
 );
 
 /*datumoj el ueadb:landokodo*/
@@ -57,6 +60,35 @@ CREATE TABLE uzanto (
     tttpagxo varchar(255),
     validaKonto bool,
     abc varchar(255) /*estis abc */
+);
+
+CREATE TABLE uzanto_sangxpropono (
+    id int(11) PRIMARY KEY,
+    id_uzanto int(11) REFERENCES uzanto(id),
+    personanomo varchar(255),
+    familianomo varchar(255),
+    personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
+    interfaco.*/
+    familianomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
+    interfaco.*/
+    adreso varchar(255),
+    posxtkodo varchar(255),
+    logxurbo int(11) REFERENCES urbo(id),
+    nacialando int(11) REFERENCES lando(id),
+    naskigxtago date,
+    mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
+    mortdato date NULL, /*vera mortdato*/
+    notoj varchar(255),
+    profesio varchar(255),
+    retposxto varchar(255),
+    telhejmo varchar(255),
+    teloficejo varchar(255),
+    telportebla varchar(255),
+    tttpagxo varchar(255),
+    validaKonto bool,
+    abc varchar(255), /*estis abc */
 );
 
 CREATE TABLE adminrajto (
@@ -115,6 +147,23 @@ CREATE TABLE asocio(
     abc varchar(255)
 );
 
+CREATE TABLE asocio_sangxpropono(
+    id int(11) PRIMARY KEY,
+    id_asocio int(11) REFERENCES asocio(id),
+    nomo varchar(255),
+    siglo varchar(255),
+    adreso varchar(255),
+    fondigxdato date,
+    posxtkodo varchar(255),
+    urbo int(11) NULL REFERENCES urbo(id),
+    telhejmo varchar(255),
+    landokodo varchar(255),
+    retposxto varchar(255),
+    delegFako varchar(255),
+    tttpagxo varchar(255),
+    abc varchar(255)
+);
+
 /*datumoj el ueadb:komit*/
 CREATE TABLE komitato (
     id int(11) PRIMARY KEY,
@@ -146,7 +195,7 @@ CREATE TABLE tasko (
 );
 
 /*datumoj el retdb:taskoj*/
-CREATE TABLE ref_tasko_uzanto (
+CREATE TABLE ref_tasko_uzantoAuxAsocio (
     idTasko int(11) REFERENCES tasko(id),
     idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
     PRIMARY KEY(idTasko, idUzanto)
@@ -160,7 +209,7 @@ CREATE TABLE respondeco (
 );
 
 /*datumoj el retdb:respondecoj*/
-CREATE TABLE ref_respondeco_uzanto (
+CREATE TABLE ref_respondeco_uzantoAuxAsocio (
     idRespondeco int(11) REFERENCES respondeco(id),
     idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
     PRIMARY KEY(idRespondeco, idUzanto)
@@ -260,16 +309,6 @@ CREATE TABLE aprobitagxiro (
 );
 
 
-/***** LIGITA AL LA RETEJO *****/
-
-/* Ĉu ne-membroj povas esti retUzantoj?? Mi supozas ke ne */
-/*datumoj el retdb:uzantaro*/
-CREATE TABLE retUzanto (
-    id int(11) PRIMARY KEY REFERENCES uzanto(id),
-    kromnomo varchar(255),
-    pasvorto text  /*devus iĝi sha1 (laŭ transirebleco)*/
-);
-
 /***** LIGITA AL LA dissenda sistemo *****/
 /*dissendo temas pri iu dissendaĵo farita al specifaj anokategorioj.*/
 /*datumoj el ueadb:dissendoj*/
@@ -316,6 +355,24 @@ CREATE TABLE gazkom(
   htmlTeksto varchar(255),
   bazTeksto varchar(255)
 );
+
+/*datumoj el retdb:abonoj:abono */
+CREATE TABLE retlisto(
+  id int(11) PRIMARY KEY,
+  nomo varchar(255),
+  priskribo varchar(255)
+)
+
+/*datumoj el retdb:abonoj */
+CREATE TABLE retlist_abono(
+  id int(11) PRIMARY KEY,
+  ekde date,  /*estis tempo*/
+  abono int(11) REFERENCES(retlisto),
+  id_uzanto int(11) REFERENCES(uzanto) NULL, /*povas esti null se ne farita tra iu konto*/
+  formato_html boolean, /*se true do html, se ne do teksto */
+  kodiĝxo_utf8 boolean /*se true do utf8, se ne do x-sistemo*/
+  retadreso varchar(255) NULL /*null signifas ke id_uzanto estas definita kaj ke ni uzas retadreson de la uzanto.*/
+) 
 
 CREATE TABLE teko(
   id int(11) PRIMARY KEY,
@@ -373,37 +430,15 @@ CREATE TABLE k_Programo (
 CREATE TABLE k_aligxinto (
     id int(11) PRIMARY KEY,
     kongresaNumero int(11),
-    idUzanto int(11) NULL REFERENCES uzanto(id), /*povas esti uzanto aŭ ne*/
-    id_kongreso int(11) REFERENCES kongreso(id),
-    personanomo varchar(255),
-    familianomo varchar(255),
-    personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
-    eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
-    interfaco.*/
-    familianomoIdentigilo varchar(255), /*defaulte malplena, utila por
-    eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
-    interfaco.*/
-    adreso varchar(255),
-    posxtkodo varchar(255),
-    logxurbo int(11) REFERENCES urbo(id),
-    nacialando int(11) REFERENCES lando(id),
-    naskigxtago varchar(255),
-    mortdato varchar(255) NULL,
-    notoj varchar(255),
-    profesio varchar(255),
-    retposxto varchar(255),
-    telhejmo varchar(255),
-    teloficejo varchar(255),
-    telportebla varchar(255),
-    tttpagxo varchar(255),
-    abc varchar(255) /*estis abc */
+    idUzanto int(11) REFERENCES uzanto(id), /*povas esti uzanto aŭ ne*/
+    id_kongreso int(11) REFERENCES kongreso(id)
 );
 
 /*datumoj el uea:hoteloj
  Mi ne komprenas la signifon de ordo, ordig kaj rango el la pasinta tablo
 uea:hoteloj.
  */
-CREATE TABLE k_hotelo (
+CREATE TABLE k_logxejo (
     id int(11) PRIMARY KEY,
     idKongresoAuxAntauxPost int(11) REFERENCES antauxDumPostKongreso(id),
     ordig int(11), /*ordo de apero sur la retejo aŭ kongresa libro*/
@@ -430,19 +465,19 @@ CREATE TABLE k_h_cxambrotipo (
     nomo varchar(255)
 );
 
-CREATE TABLE k_hotelo_cxambrotipo (
+CREATE TABLE k_logxejo_cxambrotipo (
     id int(11) PRIMARY KEY,
-    kHotelo int(11) REFERENCES k_hotelo(id),
+    kHotelo int(11) REFERENCES k_logxejo(id),
     kHCxambrotipo int(11) REFERENCES k_h_cxambrotipo(id),
     prezo int(11),
     kvanto int(11)
 );
 
-/*Permesas al iu aligxinto mendi hotelon*/
-CREATE TABLE k_hotelo_mendo (
+/*Permesas al iu aligxinto mendi logxejon*/
+CREATE TABLE k_logxejo_mendo (
     id int(11) PRIMARY KEY,
     idKAligxinto int(11) REFERENCES k_aligxinto(id),
-    kHoteloCxambrotipo int(11) REFERENCES k_hotelo_cxambrotipo(id),
+    kHoteloCxambrotipo int(11) REFERENCES k_logxejo_cxambrotipo(id),
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur
@@ -452,7 +487,7 @@ CREATE TABLE k_hotelo_mendo (
 );
 
 CREATE TABLE ref_k_h_kunlogxanto (
-    idHMendo int(11) REFERENCES k_hotelo_mendo(id),
+    idHMendo int(11) REFERENCES k_logxejo_mendo(id),
     idKAligxinto int(11) REFERENCES k_aligxinto(id),
     PRIMARY KEY(idHMendo, idKAligxinto)
 );

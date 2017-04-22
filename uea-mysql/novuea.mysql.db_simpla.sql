@@ -286,7 +286,7 @@ CREATE TABLE dissendo (
 CREATE TABLE ref_dissendo_uzantogrupo (
   idDissendo int(11) REFERENCES dissendo(id),
   idUzantoGrupo int(11) REFERENCES uzantogrupo(id),
-  PRIMARY KEY(idDissendo, idAnokategorio)
+  PRIMARY KEY(idDissendo, idUzantoGrupo)
 );
 
 /*dissendoj povas enhavi enketojn, tiu kaze la demanderon aperas en tiu ĉi

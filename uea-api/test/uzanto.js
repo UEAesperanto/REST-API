@@ -16,7 +16,7 @@ describe('Uzanto', function() {
       })
     });
 
-    describe('/GET uzanto', function(){
+    describe('GET /uzanto', function(){
      it('it should GET all the uzantoj', function(done){
        chai.request(server)
            .get('/uzanto')
@@ -28,5 +28,23 @@ describe('Uzanto', function() {
            });
      });
    });
+
+
+   describe('GET /uzanto', function(){
+    it('it should GET all the uzantoj with body', function(done){
+      var user = {
+        message : "Teste"
+      }
+      chai.request(server)
+          .get('/uzanto')
+          .send(user)
+          .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('array');
+              res.body.length.should.be.eql(0);
+            done();
+          });
+    });
+  });
 
 });

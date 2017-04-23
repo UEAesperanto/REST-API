@@ -1,19 +1,25 @@
 var util = require('util');
+var Uzanto = require('../models/uzanto');
 var db = require('../../modules/db');
 
+/*
+  GET /uzanto
+*/
 var _getUzantoj = function(req, res){
-  var query = util.format('SELECT * FROM `uzanto`;')
-  db.mysqlExec(query).then(function(result){
-    res.send(result);
+  Uzanto.find().then(function(sucess){
+        var uzantoj = sucess;
+        res.send(uzantoj);
   });
 }
 
+/*
+  GET /uzanto/:id
+*/
 var _getUzanto = function(req, res){
-  var id = req.params.id;
-  var query = util.format('SELECT * FROM `uzanto` WHERE `id` = %s;', id);
-  db.mysqlExec(query).then(function(result){
-    res.send(result);
-  })
+  Uzanto.find(req.params.id).then(function(sucess){
+      var uzanto = sucess;
+      res.send(uzanto);
+  });
 }
 
 var _postUzanto = function(req, res){

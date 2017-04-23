@@ -7,7 +7,8 @@ var multer = require('multer');
 var morgan = require('morgan');
 require('shelljs/global');
 
-uzanto = require('./controllers/routes/uzanto');
+uzanto = require('./services/uzanto');
+lando = require('./services/lando');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -30,11 +31,10 @@ app.get('/', function (req, res) {
    res.json({message: 'Saluton Mondo!'});
 });
 
-// Uzanto routes
-app.route('/uzanto')
-    .get(uzanto.getUzantoj);
-app.route('/uzanto/:id')
-    .get(uzanto.getUzanto);
+// Mouting applications.
+app.use('/uzanto', uzanto);
+app.use('/lando', lando);
+
 
 // Start the server
 app.listen(PORT, () => {

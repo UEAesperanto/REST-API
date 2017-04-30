@@ -10,7 +10,6 @@ CREATE TABLE uzantoAuxAsocio (
     ueakodo varchar(255),
     kromnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
     pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
-
 );
 
 /*datumoj el ueadb:landokodo*/
@@ -276,39 +275,6 @@ CREATE TABLE ref_uzantoAuxAsocio_uzantogrupo(
     PRIMARY KEY (idUzanto, idGrupo)
 );
 
-/***** LIGITA AL LA MONKONTA SISTEMO *****/
-
-/*Pri la monkonta sistemo, propono, devas esti validita kaj konfirmita.*/
-CREATE TABLE konto (
-    id int(11) PRIMARY KEY,
-    posedanto int(11) NULL REFERENCES uzantoAuxAsocio(id),
-    ueaPosedanto varchar(255) NULL /*por diversaj uea kontoj, ili ne estas ligita al iu uzantoAuxAsocio sed al UEA internaĵo.*/
-);
-
-/*Pri la monkonta sistemo, propono, devas esti validita kaj konfirmita.*/
-CREATE TABLE gxiro (
-    id int(11) PRIMARY KEY,
-    sumo int(11),
-    dato date,
-    elKonto int(11) NULL REFERENCES konto(id), /*NULL signifus kredito el ekstero (el bankonto de la uzanto, el UEA)*/
-    alKonto int(11) NOT NULL REFERENCES uzantoAuxAsocio(id),
-    priskribo varchar(255)
-);
-
-CREATE TABLE gxirpropono (
-    id int(11) PRIMARY KEY,
-    idGxiro int(11) REFERENCES gxiro(id),
-    idEl int(11) REFERENCES uzantoAuxAsocio(id),
-    kialo varchar(255)
-);
-
-CREATE TABLE aprobitagxiro (
-    id int(11) PRIMARY KEY,
-    idGxirpropono int(11) REFERENCES gxirpropono(id),
-    aprobitaDe int(11) REFERENCES uzantoAuxAsocio(id)
-);
-
-
 /***** LIGITA AL LA dissenda sistemo *****/
 /*dissendo temas pri iu dissendaĵo farita al specifaj anokategorioj.*/
 /*datumoj el ueadb:dissendoj*/
@@ -399,17 +365,10 @@ CREATE TABLE kongreso (
     findato date
 );
 
-/*nova tablo*/
-CREATE TABLE uk (
-    id int(11) PRIMARY KEY REFERENCES kongreso(id),
-    idUrbo int(11) REFERENCES urbo(id),
-    temo varchar(255)
-);
-
 /*nova tablo
  Por la historiaĵo, oni povas uzi uea:programo:loko
 */
-CREATE TABLE k_loko(
+CREATE TABLE k_programejo(
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     nomo varchar(255),
@@ -423,7 +382,7 @@ CREATE TABLE k_Programo (
     komenctempo date,
     fintempo date,
     evento varchar(255),
-    loko int(11) REFERENCES k_loko(id)
+    loko int(11) REFERENCES k_programejo(id)
 );
 
 /*datumoj el ueadb:uk_aliĝintoj kaj uea:kongresanoj */
@@ -517,231 +476,6 @@ CREATE TABLE ref_k_ekskurso_mendo (
   idKAligxinto int(11) REFERENCES k_aligxinto(id),
   idKEkskurso int(11) REFERENCES k_ekskurso(id),
   PRIMARY KEY(idKAligxinto, idKEkskurso)
-);
-
-
-/***** LIGITA AL LA libroservo *****/
-
-/*datumoj el uea:ls*/
-CREATE TABLE ref_k_antauxKAjPost_mendo (
-  idKAligxinto int(11) REFERENCES k_aligxinto(id),
-  idKAntauxKajPost int(11) REFERENCES k_antauxKajPost(id),
-  PRIMARY KEY(idKAligxinto, idKAntauxKajPost)
-);
-
-CREATE TABLE ls_verkisto( /*aux auxtoro, aux tradukisto, aux kontribuanto*/
-  id int(11) PRIMARY KEY,
-  familinomo varchar(255),
-  personanomo varchar(255),
-  idMembro int(11) NULL REFERENCES uzanto(id)
-);
-
-CREATE TABLE ls_kategorio(
-  id int(11) PRIMARY KEY,
-  nomo varchar(255),
-  priskribo varchar(255)
-);
-
-CREATE TABLE ls_subkategorio(
-  id int(11) PRIMARY KEY,
-  nomo varchar(255),
-  priskribo varchar(255)
-);
-
-CREATE TABLE ls_sxlosilvorto(
-  id int(11) PRIMARY KEY,
-  vorto varchar(255)
-);
-
-/*Helpos trovi libron laŭ eldonisto kaj havi organizitan eldonistan liston
- Plenigita el ueadb:eldonitade
- */
-CREATE TABLE ls_eldonisto(
-  id int(11) PRIMARY KEY,
-  nomo varchar(255)
-);
-
-/*datumoj el uea:ls*/
-CREATE TABLE libroservo(
-  id int(11) PRIMARY KEY,
-  kodo varchar(9),
-  jaro date,
-  prezo int(11), /* *cent por havi ĝin en centoj */
-  rabatoricevita int(11),
-  rabatodonata int(11),
-  fakturtitolo varchar(255),
-  titolo varchar(255),
-  aldonatitolo varchar(255),
-  idAuxtoro int(11) REFERENCES ls_verkisto(id),
-  kontribuantoj varchar(255), /*TODO: ĉu nova table ls_kontribuantoj kiu ligas intger libroservo kaj ls_verkisto*/
-  idKategorio int(11) REFERENCES ls_kategorio(id),
-  idSubkategorio int(11) REFERENCES ls_subkategorio(id),
-  idTradukisto int(11) REFERENCES ls_verkisto(id),
-  lingvajinformoj varchar(255),
-  eldonloko int(11) REFERENCES urbo(id),
-  idEldonisto int(11) REFERENCES ls_eldonisto(id),
-  eldonjaro date,
-  imposto int(11),
-  isbnissn varchar(255),
-  alteco varchar(255),
-  pagxnombro int(11),
-  acxetprezo int(11),  /* *cent por havi ĝin en centoj */
-  acxetvaluto int(11), /* *cent por havi ĝin en centoj */
-  stokvaloro int(11), /* *cent por havi ĝin en centoj */
-  dato date,
-  enirukat varchar(255), /*TODO: mi ne komprenas tiun kampon*/
-  mendoloke varchar(255),
-  aldInf varchar(255),
-  laDeRe varchar(255),
-  recEnRe varchar(255),
-  specialajInf varchar(255),
-  katalogaKlar varchar(255),
-  kvanto int(11),
-  komisiakvanto int(11)
-);
-
-/*datumoj el ueadb:brok */
-CREATE TABLE brok(
-  id int(11) PRIMARY KEY, /*el uea:bvar*/
-  titolo varchar(255),
-  idKategorio int(11) REFERENCES ls_kategorio(id),
-  idSubkategorio int(11) REFERENCES ls_subkategorio(id),
-  idTradukisto int(11) REFERENCES ls_verkisto(id),
-  eldonloko int(11) REFERENCES urbo(id),
-  eldonjaro int(11),
-  eldI varchar(255), /*povas esti '1a', '2a korektita' ... do bezonas esti 'string'*/
-  pagxoj int(11),
-  prezo int(11),
-  kvanto int(11),
-  bind varchar(255),
-  aldone varchar(255),
-  posedanto varchar(255),
-  loko varchar(255)
-);
-
-CREATE TABLE brok_periodajxo(
-  id int(11) PRIMARY KEY,
-  ueakodo varchar(255),
-  titolo varchar(255),
-  subtitolo varchar(255),
-  bildo varchar(255),
-  notoj varchar(255)
-);
-
-/*datumoj el ueadb:brok_periodajhoj */
-CREATE TABLE brok_periodajxo_numero(
-  id int(11) PRIMARY KEY,
-  idPeriodjxoj int(11) REFERENCES brok_periodajxo(id),
-  stato varchar(255),
-  jaro int(11),
-  jaro2 int(11) NULL, /*se ĝi estas uzata tio 'jaro' estas komencdato kaj 'jaro2' estas findato.*/
-  numero varchar(255),
-  monato int(11), /*de 1 ĝis 12*/
-  monato2 int(11), /*de 1 ĝis 12, simila la 'jaro2'*/
-  notoj varchar(255),
-  prezokategorio varchar(255) NULL,
-  prezo int(11) NULL, /*nur uzata se prezokategorio estas 'NULL'*/
-  kvanto int(11),
-  deponloko varchar(255),
-  enskribitade varchar(255)
-);
-
-CREATE TABLE brok_periodajxoj_jarkolekto(
-  id int(11) PRIMARY KEY,
-  idPeriodjxoj int(11) REFERENCES brok_periodajxo(id),
-  notoj varchar(255),
-  stato varchar(255),
-  prezokategorio varchar(255) NULL,
-  prezo int(11) NULL, /*nur uzata se prezokategorio estas 'NULL'*/
-  jaro int(11),
-  jaro2 int(11) NULL, /*se ĝi estas uzata tio 'jaro' estas komencdato kaj 'jaro2' estas findato.*/
-  numeroj varchar(255),
-  kvanto int(11),
-  deponloko varchar(255),
-  enskribitade varchar(255)
-);
-
-CREATE TABLE ref_ls_ls_sxlosilvorto(
-  idLs int(11) REFERENCES libroservo(id),
-  idSxlosilvorto int(11) REFERENCES ls_sxlosilvorto(id),
-  PRIMARY KEY(idLs, idSxlosilvorto)
-);
-
-CREATE TABLE brosxuro (
-  id int(11) PRIMARY KEY,
-  titolo varchar(255),
-  idLando int(11) REFERENCES lando(id),
-  loko varchar(255),
-  eldonloko varchar(255),
-  jaro int(11),
-  prezo int(11),
-  kvanto int(11),
-  bildo varchar(255),
-  formato varchar(255),
-  pagxo int(11),
-  stato varchar(255),
-  notoj varchar(255)
-);
-
-CREATE TABLE recenzo (
-  id int(11) PRIMARY KEY,
-  vnum int(11), /*mi ne komprenis la signifon de tiu kampo*/
-  kodo varchar(255),
-  dato date,
-  recTitolo varchar(255),
-  recAutoro varchar(255),
-  fonto varchar(255),
-  ligilo varchar(255),
-  recenzo varchar(255),
-  nomo varchar(255), /*mi ne bone komprenas al kiu ĝi celas*/
-  rajto bool
-);
-
-CREATE TABLE opinio (
-  id int(11) PRIMARY KEY,
-  num int(11),
-  dato date,
-  opinio varchar(255),
-  nomo varchar(255)
-);
-
-/*Tiu korespondas al iu aĉeta ago sur la libro servo. varmendo_varoj ligas al ĝi kaj permesas scii kiujn varojn estis aĉetitaj.
-
-el retdb:varmendintoj
-
- */
-CREATE TABLE varmendo (
-  id int(11) PRIMARY KEY,
-  idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
-  dato date,
-  ricevantFamilinomo varchar(255) NULL, /* kaze ke ĝi ne estas tiu de la id_uzanto*/
-  ricevantPersononomo varchar(255) NULL, /* kaze ke ĝi ne estas tiu de la id_uzanto*/
-  ricevantAdreso varchar(255),
-  ricevantUrbo varchar(255),
-  ricevantPosxtkdo varchar(255),
-  idRicevantLando int(11) REFERENCES lando(id),
-  ricevantTelkodo varchar(255),
-  ricevantTelhejmo varchar(255),
-  ricevantTeloficejo varchar(255),
-  ricevantFakso varchar(255),
-  ricevatRetadreso varchar(255),
-  idPagmaniero varchar(255), /*TODO: pripensi bezono havi tiun kampon kun la nova pagsistemo kiu estos proponita.*/
-  validigo varchar(255),
-  notoj varchar(255),
-  rabato int(11) NULL /*inter 0 kaj 100, estas rabata procento.*/
-  /*la prezo ne aperas kiel kampo, ĝi estas kalkulita el la diversaj varmendo_varoj modifiita de la rabato. */
-);
-
-/*
-el retdb:varmendo
- */
-CREATE TABLE varmendo_varo (
-    id int(11) PRIMARY KEY,
-    idVarmendo int(11) REFERENCES varmendo(id),
-    idLibroservo int(11) REFERENCES libroservo(id),
-    kvanto int(11),
-    pagsumo int(11), /*dum la mendo defaŭlte estas la varprezo, sed administranto povas ŝanĝi ĝin laŭ rabatoj. Tiu prezo estas sumo de la kvanto: se ni aĉetas 3 varoj kiuj kostas 500, ĝi enhavas 1500.*/
-    avisumo int(11)
 );
 
 /**** PRI LA REVUO ESPERANTO KAJ KONTAKTO ***/

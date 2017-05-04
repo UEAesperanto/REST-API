@@ -4,12 +4,17 @@
 
  */
 
- /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
-CREATE TABLE uzantoAuxAsocio (
-    id int(11) PRIMARY KEY,
-    ueakodo varchar(255),
-    kromnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
-    pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
+
+/***** ĜENERALAĴOJ PRI LA DATUMBAZO *****/
+
+/*La celo de tiu ĉi tabelo estas gardi la ŝanĝojn faritajn en la datumbazo*/
+CREATE TABLE sxangxhistorio (
+  id int(11) PRIMARY KEY,
+  tabelo varchar(255), /*la tabelo en kiu la ŝanĝoj estis faritaj, ekzemple: lando*/
+  kampo varchar(255), /*la kampo en kiu la ŝanĝoj estis faritaj, ekzemple: nomoEo*/
+  antauxa_valoro varchar(255), /*la antaǔa valoro de la kampo, eĉ se ĝi ne estis varchar, ĝi iĝos, ekzemple: Brasilo*/
+  farita_de int(11) NULL REFERENCES uzantoAuxAsocio(id), /*kiu faris la ŝanĝon, se ne estas datumoj, estos null*/
+  dato date /*kiam la ŝanĝo okazis*/
 );
 
 /*datumoj el ueadb:landokodo*/
@@ -26,6 +31,15 @@ CREATE TABLE urbo (
     nomoLoka varchar(255),
     nomoEo varchar(255),
     idLando int(11) REFERENCES lando(id)
+);
+
+
+ /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
+CREATE TABLE uzantoAuxAsocio (
+    id int(11) PRIMARY KEY,
+    ueakodo varchar(255),
+    kromnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
+    pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
 );
 
 /*datumoj el ueadb:tuta1

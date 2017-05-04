@@ -7,6 +7,6 @@ done
 
 cd /app
 #Create database
-mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/novuea.mysql.db_simpla.sql
+mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/novuea.mysql.sql
 mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/enigi.sql
 npm install --unsafe-perm --dev && nodemon

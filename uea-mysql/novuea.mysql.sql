@@ -366,23 +366,28 @@ CREATE TABLE teko(
 
 /***** LIGITA AL LA UK (aŭ aliaj kongresoj)*****/
 
-CREATE TABLE antauxDumPostKongreso(
-    id int(11) PRIMARY KEY
-);
-
 CREATE TABLE kongreso (
-    id int(11) PRIMARY KEY REFERENCES antauxDumPostKongreso(id),
+    id int(11) PRIMARY KEY,
+    titolo varchar(255),
     idUrbo int(11) REFERENCES urbo(id),
     jaro date,
     numero int(11),
     komencdato date,
+    priskribo varchar(255),
     findato date
+);
+
+/*por kongresoj kiuj povas okazi krom la ĉefa kongreso, ekzemple, antaǔ kongreso dum UK*/
+CREATE TABLE ref_kongreso_kroma_kongreso (
+   cxefa_kongreso int(11) REFERENCES kongreso(id),
+   kroma_kongreso int(11) REFERENCES kongreso(id),
+   PRIMARY KEY(cxefa_kongreso, kroma_kongreso)
 );
 
 /*nova tablo
  Por la historiaĵo, oni povas uzi uea:programo:loko
 */
-CREATE TABLE k_programejo(
+CREATE TABLE kongresa_programejo(
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     nomo varchar(255),
@@ -390,30 +395,26 @@ CREATE TABLE k_programejo(
 );
 
 /*datumoj el uea:programo*/
-CREATE TABLE k_Programo (
+CREATE TABLE kongresa_programo (
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     komenctempo date,
     fintempo date,
     evento varchar(255),
-    loko int(11) REFERENCES k_programejo(id)
+    programejo int(11) REFERENCES kongresa_programejo(id)
 );
 
 /*datumoj el ueadb:uk_aliĝintoj kaj uea:kongresanoj */
-CREATE TABLE k_aligxinto (
+CREATE TABLE kongresa_aligxinto (
     id int(11) PRIMARY KEY,
     kongresaNumero int(11),
-    idUzanto int(11) REFERENCES uzanto(id), /*povas esti uzanto aŭ ne*/
+    idUzanto int(11) REFERENCES uzanto(id),
     id_kongreso int(11) REFERENCES kongreso(id)
 );
 
-/*datumoj el uea:hoteloj
- Mi ne komprenas la signifon de ordo, ordig kaj rango el la pasinta tablo
-uea:hoteloj.
- */
-CREATE TABLE k_logxejo (
+CREATE TABLE kongresa_logxejo (
     id int(11) PRIMARY KEY,
-    idKongresoAuxAntauxPost int(11) REFERENCES antauxDumPostKongreso(id),
+    kongreso int(11) REFERENCES kongreso(id),
     ordig int(11), /*ordo de apero sur la retejo aŭ kongresa libro*/
     rango int(11), /*kvalito, kvanto da steloj*/
     adreso varchar(255),
@@ -426,69 +427,46 @@ CREATE TABLE k_logxejo (
     notoj varchar(255)
 );
 
-/*Ĉu estas grava se la sistemo por reservo de hotelo ne povas enhavi la datumon de la pasintaj tempoj?*/
 
-/*nova tablo.
-Ĝi permesos al administranto krei ĉambrtipon laŭ bezono.
- */
-CREATE TABLE k_h_cxambrotipo (
+CREATE TABLE kongresa_cxambrsxablono (
     id int(11) PRIMARY KEY,
     litKvanto int(11),
     personKvanto int(11),
+    prezo int(11),
     nomo varchar(255)
 );
 
-CREATE TABLE k_logxejo_cxambrotipo (
+CREATE TABLE kongresa_cxambro (
     id int(11) PRIMARY KEY,
-    kHotelo int(11) REFERENCES k_logxejo(id),
-    kHCxambrotipo int(11) REFERENCES k_h_cxambrotipo(id),
-    prezo int(11),
-    kvanto int(11)
+    nomo varchar(255) NULL,
+    logxejo int(11) REFERENCES kongresa_logxejo(id),
+    cxambrsxablono int(11) REFERENCES cxambrsxablono(id)
 );
 
 /*Permesas al iu aligxinto mendi logxejon*/
-CREATE TABLE k_logxejo_mendo (
-    id int(11) PRIMARY KEY,
-    idKAligxinto int(11) REFERENCES k_aligxinto(id),
-    kHoteloCxambrotipo int(11) REFERENCES k_logxejo_cxambrotipo(id),
+CREATE TABLE ref_aligxinto_logxejo(
+    idKAligxinto int(11) REFERENCES kongresa_aligxinto(id),
+    cxambro int(11) NULL REFERENCES kongresa_cxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur
     rezervu por ili mem sed povas esti ekcepta kazo (iu kiu mendas 2-personan
     liton nur por li).*/
-    kunkogxantoj varchar(255) /*Simpla teksta kampo, tiel ke plenigita de la uzanto. La sistemo poste tradukas tion per la tablo k_h_kunlogxanto.*/
+    kunkogxantoj varchar(255) /*la mendo estas simpla teksta kampo, la sistemo traktos tion kiel homoj kiuj logxas en la cxambro kun la sama id*/
 );
 
-CREATE TABLE ref_k_h_kunlogxanto (
-    idHMendo int(11) REFERENCES k_logxejo_mendo(id),
-    idKAligxinto int(11) REFERENCES k_aligxinto(id),
-    PRIMARY KEY(idHMendo, idKAligxinto)
-);
-
-/*datumoj el uea:akpk*/
-CREATE TABLE k_antauxKajPost (
-    id int(11) PRIMARY KEY REFERENCES antauxDumPostKongreso(id),
-    idKongreso int(11) REFERENCES kongreso(id),
-    titolo varchar(255),
-    komencdato date,
-    findato date,
-    revenLoko varchar(255),
-    priskribo varchar(255),
-    kvanto int(11)
-);
-
-CREATE TABLE k_ekskurso (
+CREATE TABLE kongresa_ekskurso (
     id int(11) PRIMARY KEY,
-    idKongresoAuxAntauxPost int(11) REFERENCES antauxDumPostKongreso(id),
+    idKongreso int(11) REFERENCES kongreso(id),
     titolo varchar(255),
     priskribo varchar(255),
     dato date,
     kvanto int(11)
 );
 
-CREATE TABLE ref_k_ekskurso_mendo (
-  idKAligxinto int(11) REFERENCES k_aligxinto(id),
-  idKEkskurso int(11) REFERENCES k_ekskurso(id),
+CREATE TABLE ref_kongresa_ekskurso_mendo (
+  idKAligxinto int(11) REFERENCES kongresa_aligxinto(id),
+  idKEkskurso int(11) REFERENCES kongresa_ekskurso(id),
   PRIMARY KEY(idKAligxinto, idKEkskurso)
 );
 

@@ -33,19 +33,23 @@ CREATE TABLE urbo (
     idLando int(11) REFERENCES lando(id)
 );
 
+CREATE TABLE faktemo (
+    id int(11) PRIMARY KEY,
+    nomo varchar(255),
+    priskribo varchar(255)
+);
 
  /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
 CREATE TABLE uzantoAuxAsocio (
     id int(11) PRIMARY KEY,
     ueakodo varchar(255),
-    kromnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
+    uzantnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
     pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
 );
 
 /*datumoj el ueadb:tuta1
  Mi nomiĝis tiun tabelon "uzanto" ĉar ĝi povas havi linioj pri ne membroj sed
-simplaj uzantoj. Estas la tabelo ref_uzantoAuxAsocio_anokategorio kiu permesas
-dedukti la membrecon.
+simplaj uzantoj. Estas la tabelo aneco kiu permesas dedukti la membrecon.
  */
 CREATE TABLE uzanto (
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
@@ -75,6 +79,7 @@ CREATE TABLE uzanto (
     abc varchar(255) /*estis abc */
 );
 
+/*kaze iu uzanto kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
 CREATE TABLE uzanto_sangxpropono (
     id int(11) PRIMARY KEY,
     id_uzanto int(11) REFERENCES uzanto(id),
@@ -104,45 +109,6 @@ CREATE TABLE uzanto_sangxpropono (
     abc varchar(255) /*estis abc */
 );
 
-CREATE TABLE adminrajto (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
-);
-
-/*Permesas havi grupojn da uzantoj kun samaj rajtoj*/
-CREATE TABLE rajtgrupo (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
-);
-
-CREATE TABLE ref_rajtgrupo_uzanto (
-    idRajtgrupo int(11) REFERENCES rajtgrupo(id),
-    idUzanto int(11) REFERENCES uzanto(id),
-    PRIMARY KEY(idRajtgrupo, idUzanto)
-);
-
-/*uzantoj povas havi rajton indivdue (ekstere de grupo)*/
-CREATE TABLE ref_rajtgrupo_adminrajto (
-    idRajtgrupo int(11) REFERENCES rajtgrupo(id),
-    idAdminrajto int(11) REFERENCES adminrajto(id),
-    PRIMARY KEY(idRajtgrupo, idAdminrajto)
-);
-
-
-/*uzantoj povas havi rajton indivdue (ekstere de grupo)*/
-CREATE TABLE ref_uzanto_adminrajto (
-    idAdminrajto int(11) REFERENCES adminrajto(id),
-    idUzanto int(11) REFERENCES uzanto(id),
-    PRIMARY KEY(idAdminrajto, idUzanto)
-);
-
-CREATE TABLE komitatkategorio (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255)
-);
-
 /*datumoj el ueadb:membroj, ueadb:asocioj kaj retdb:fakasocioj*/
 CREATE TABLE asocio(
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
@@ -160,6 +126,7 @@ CREATE TABLE asocio(
     abc varchar(255)
 );
 
+/*kaze iu asocio kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
 CREATE TABLE asocio_sangxpropono(
     id int(11) PRIMARY KEY,
     id_asocio int(11) REFERENCES asocio(id),
@@ -177,70 +144,6 @@ CREATE TABLE asocio_sangxpropono(
     abc varchar(255)
 );
 
-/*datumoj el ueadb:komit*/
-CREATE TABLE komitato (
-    id int(11) PRIMARY KEY,
-    idUzanto int(11) REFERENCES uzanto(id),
-    idAsocio int(11) NULL REFERENCES asocio(id),
-    idKomitatkategorio int(11) REFERENCES komitatkategorio(id)
-);
-
-CREATE TABLE estarano (
-    id int(11) PRIMARY KEY,
-    idUzanto int(11) REFERENCES uzanto(id),
-    rolo varchar(255),
-    jaro date
-);
-
-/*La peranto povas esti asocio aŭ membro*/
-/*datumoj el ueadb:perant*/
-CREATE TABLE peranto (
-    id int(11) PRIMARY KEY,
-    idUeakodo int(11) REFERENCES uzantoAuxAsocio(id),
-    idLando int(11) REFERENCES lando(id)
-);
-
-/*datumoj el retdb:taskoj*/
-CREATE TABLE tasko (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
-);
-
-/*datumoj el retdb:taskoj*/
-CREATE TABLE ref_tasko_uzantoAuxAsocio (
-    idTasko int(11) REFERENCES tasko(id),
-    idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
-    PRIMARY KEY(idTasko, idUzanto)
-);
-
-/*datumoj el retdb:respondecoj*/
-CREATE TABLE respondeco (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
-);
-
-/*datumoj el retdb:respondecoj*/
-CREATE TABLE ref_respondeco_uzantoAuxAsocio (
-    idRespondeco int(11) REFERENCES respondeco(id),
-    idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
-    PRIMARY KEY(idRespondeco, idUzanto)
-);
-
-/*nova tablo, sed el retdb:fakasocio columno 'kategorio'*/
-CREATE TABLE delegito (
-    idUzanto int(11) REFERENCES uzanto(id),
-    idLando int(11) REFERENCES lando(id),
-    PRIMARY KEY(idUzanto, idLando)
-);
-
-CREATE TABLE faktemo (
-    id int(11) PRIMARY KEY,
-    nomo varchar(255),
-    priskribo varchar(255)
-);
-
 CREATE TABLE ref_fakasocio(
     idAsocio int(11) REFERENCES asocio(id),
     idFaktemo int(11) REFERENCES faktemo(id),
@@ -253,44 +156,57 @@ CREATE TABLE ref_landasocio(
     PRIMARY KEY(idAsocio, idLando)
 );
 
-/*nova tablo, permesas fari grupojn de uzantoj laŭ kriterioj kiuj ne rilatas al membreco aŭ kotizo. */
-CREATE TABLE uzantogrupo (
+/*La peranto povas esti asocio aŭ membro*/
+/*datumoj el ueadb:perant*/
+CREATE TABLE peranto (
+    id int(11) PRIMARY KEY,
+    idUeakodo int(11) REFERENCES uzantoAuxAsocio(id),
+    idLando int(11) REFERENCES lando(id)
+);
+
+/*** PRI GRUPOJ DE UZANTOJ ***/
+/*la uzantoj povas esti en grupoj, kiel estraro, komisiono, delegito, indivudua membraro ktp*/
+CREATE TABLE grupo (
+  id int(11) PRIMARY KEY,
+  nomo varchar(255),
+  priskribo varchar(255),
+  id_asocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+);
+
+CREATE TABLE aneco (
+  id int(11) PRIMARY KEY, /*povas esti ke iu anu plurfoje en malsimilaj tempoj en la sama grupo, pro tio ne estas id_uzanto + id_grupo*/
+  id_uzanto int(11) REFERENCES uzanto(id),
+  id_grupo int(11) REFERENCES grupo(id),
+  komencdato date, /*la dato en kiu la uzanto ekanis en la grupo*/
+  findato date NULL, /*la dato en kiu la uzanto eliris la grupon*/
+  dumviva boolean, /*ĉu temas pri dumviva aneco?*/
+  tasko varchar(255) NULL, /*kiu estas la tasko de la ano en la grupo?*/
+  respondeco varchar(255) NULL, /*kiu estas la respondeco de la ano en la grupo?*/
+  observoj varchar(255) NULL /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
+);
+
+/*** PRI LA ADMINISTRADO ***/
+CREATE TABLE administranto (
+  id int(11) PRIMARY KEY,
+  idUzantoAuxAsocio int(11) NULL REFERENCES uzantoAuxAsocio(id), /*la admnistranto povas esti aǔ ne uzanto aǔ asocio*/
+  uzantnomo varchar(255),
+  pasvorto varchar(255) /*devus iĝi sha1*/
+);
+
+CREATE TABLE ref_administranto_adminrajto (
+  idAdministranto int(11) REFERENCES administranto(id),
+  idAdminrajto int(11) REFERENCES adminrajto(id),
+  PRIMARY KEY(idAdministranto, idAdminrajto)
+);
+
+CREATE TABLE adminrajto (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
     priskribo varchar(255)
 );
 
-/*nova tablo, enhavas la diversajn membrecajn kategoriojn*/
-CREATE TABLE anokategorio (
-    id int(11) PRIMARY KEY REFERENCES uzantogrupo
-);
-
-/*nova tablo, povas esti kreita rigardante ueadb:asocioj:konstkat kaj ueadb:membroj:konstkat*/
-CREATE TABLE ref_uzantoAuxAsocio_anokategorio(
-    id int(11) PRIMARY KEY,
-    idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
-    jaro int(11) NULL,
-    idKategorio int(11) REFERENCES anokategorio(id)
-);
-
-/*Mi ne vidis tiun tablon en la ekzistantaj datumbazoj, sed ĝi ie devas ekzisti por permesi akiri prezon pro kotizo laŭ lando.
- Ĝi eventuale povus esti tiel farita ke ni konsideru lando kategorio sistemo.
- */
-CREATE TABLE ref_anokategorio_lando (
-  idAnokategorio int(11) REFERENCES anokategorio(id),
-  idLando int(11) REFERENCES lando(id),
-  aligxPrezo int(11),
-  PRIMARY KEY(idAnokategorio, idLando)
-);
-
-CREATE TABLE ref_uzantoAuxAsocio_uzantogrupo(
-    idUzanto int(11) REFERENCES uzantoAuxAsocio(id),
-    idGrupo int(11) REFERENCES uzantogrupo(id),
-    PRIMARY KEY (idUzanto, idGrupo)
-);
-
 /***** LIGITA AL LA dissenda sistemo *****/
-/*dissendo temas pri iu dissendaĵo farita al specifaj anokategorioj.*/
+/*dissendo temas pri iu dissendaĵo farita al specifaj grupoj.*/
 /*datumoj el ueadb:dissendoj*/
 CREATE TABLE dissendo (
   id int(11) PRIMARY KEY,
@@ -299,13 +215,6 @@ CREATE TABLE dissendo (
   dato date,
   temo varchar(255),
   teksto varchar(255)
-);
-
-/*La tabelo kiu diras al kiu iu dissendo estas sendita.*/
-CREATE TABLE ref_dissendo_uzantogrupo (
-  idDissendo int(11) REFERENCES dissendo(id),
-  idUzantoGrupo int(11) REFERENCES uzantogrupo(id),
-  PRIMARY KEY(idDissendo, idUzantoGrupo)
 );
 
 /*dissendoj povas enhavi enketojn, tiu kaze la demanderon aperas en tiu ĉi
@@ -379,9 +288,9 @@ CREATE TABLE kongreso (
 
 /*por kongresoj kiuj povas okazi krom la ĉefa kongreso, ekzemple, antaǔ kongreso dum UK*/
 CREATE TABLE ref_kongreso_kroma_kongreso (
-   cxefa_kongreso int(11) REFERENCES kongreso(id),
-   kroma_kongreso int(11) REFERENCES kongreso(id),
-   PRIMARY KEY(cxefa_kongreso, kroma_kongreso)
+   id_cxefa_kongreso int(11) REFERENCES kongreso(id),
+   id_kroma_kongreso int(11) REFERENCES kongreso(id),
+   PRIMARY KEY(id_cxefa_kongreso, id_kroma_kongreso)
 );
 
 /*nova tablo
@@ -428,7 +337,7 @@ CREATE TABLE kongresa_logxejo (
 );
 
 
-CREATE TABLE kongresa_cxambrsxablono (
+CREATE TABLE kongresa_dormcxambrsxablono (
     id int(11) PRIMARY KEY,
     litKvanto int(11),
     personKvanto int(11),
@@ -436,17 +345,17 @@ CREATE TABLE kongresa_cxambrsxablono (
     nomo varchar(255)
 );
 
-CREATE TABLE kongresa_cxambro (
+CREATE TABLE kongresa_dormcxambro (
     id int(11) PRIMARY KEY,
     nomo varchar(255) NULL,
     logxejo int(11) REFERENCES kongresa_logxejo(id),
-    cxambrsxablono int(11) REFERENCES cxambrsxablono(id)
+    id_dormcxambrsxablono int(11) REFERENCES dormcxambrsxablono(id)
 );
 
 /*Permesas al iu aligxinto mendi logxejon*/
 CREATE TABLE ref_aligxinto_logxejo(
-    idKAligxinto int(11) REFERENCES kongresa_aligxinto(id),
-    cxambro int(11) NULL REFERENCES kongresa_cxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
+    id_aligxinto int(11) REFERENCES kongresa_aligxinto(id),
+    id_dormcxambro int(11) NULL REFERENCES kongresa_cxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur
@@ -570,8 +479,8 @@ CREATE TABLE gxen_spezraporto_kotizo (
   id int(11) PRIMARY KEY,
   idGxenSpezraporto int(11) REFERENCES gxen_spezraporto(id),
   idUzanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*povas esti 'NULL' ĉar ni povas havi spezraporton pri ne uzanto. Tiu kaze nomo_uzanto ne devas esti 'NULL.*/
-  nomoUzanto varchar(255) NULL, /*Null por uea uzanto, alkaze permesas identigi la perata ento.*/
-  idAnokategorio int(11) REFERENCES anokategorio(id)
+  nomoUzanto varchar(255) NULL, /*Null por uea uzanto, alikaze permesas identigi la perata ento.*/
+  idAnoGrupo int(11) REFERENCES grupo(id)
 
 );
 

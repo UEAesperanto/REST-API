@@ -71,10 +71,13 @@ CREATE TABLE uzanto (
     notoj varchar(255),
     profesio varchar(255),
     retposxto varchar(255),
-    telhejmo varchar(255),
-    teloficejo varchar(255),
-    telportebla varchar(255),
-    tttpagxo varchar(255),
+    telhejmo varchar(255) NULL,
+    teloficejo varchar(255) NULL,
+    telportebla varchar(255) NULL,
+    kerekzameno boolean, /*ĉu oni sukcesis KER Ekzamenko?*/
+    kernivelo varchar(2) NULL, /*la nivelo laux eǔropa referenckadro, A2, B1, ktp. */
+    kerdato date NULL, /*dato en kiu KER ekzameno estis farita*/
+    tttpagxo varchar(255) NULL,
     validaKonto bool,
     abc varchar(255) /*estis abc */
 );

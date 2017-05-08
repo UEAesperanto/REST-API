@@ -425,7 +425,7 @@ CREATE TABLE teko(
 /*el retdb:abmendo */
 CREATE TABLE ref_teko_grupo (
   id int(11) PRIMARY KEY,
-  idRevuaAbono int(11) REFERENCES revua_abono(id),
+  idTeko int(11) REFERENCES teko(id),
   idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
   jaro int(11)
 );

@@ -173,19 +173,27 @@ CREATE TABLE grupo (
   id int(11) PRIMARY KEY,
   nomo varchar(255),
   priskribo varchar(255),
+  kategorio varchar(255), /*ekzemple, komisiono*/
   id_asocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
 );
 
 CREATE TABLE aneco (
   id int(11) PRIMARY KEY, /*povas esti ke iu anu plurfoje en malsimilaj tempoj en la sama grupo, pro tio ne estas id_uzanto + id_grupo*/
-  id_uzanto int(11) REFERENCES uzanto(id),
-  id_grupo int(11) REFERENCES grupo(id),
+  idUzanto int(11) REFERENCES uzanto(id),
+  idGrupo int(11) REFERENCES grupo(id),
   komencdato date, /*la dato en kiu la uzanto ekanis en la grupo*/
   findato date NULL, /*la dato en kiu la uzanto eliris la grupon*/
   dumviva boolean, /*ĉu temas pri dumviva aneco?*/
   tasko varchar(255) NULL, /*kiu estas la tasko de la ano en la grupo?*/
   respondeco varchar(255) NULL, /*kiu estas la respondeco de la ano en la grupo?*/
   observoj varchar(255) NULL /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
+);
+
+CREATE TABLE aneckotizo (
+  id int(11) PRIMARY KEY,
+  prezo int(11),
+  priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
+  idGrupo int(11) REFERENCES grupo(id)
 );
 
 /*** PRI LA ADMINISTRADO ***/
@@ -236,18 +244,6 @@ CREATE TABLE ref_dissendo_respondoj (
   PRIMARY KEY(idUzantoAuxAsocio, idDissendoDemandero)
 );
 
-/*datumoj el ueadb:gazkom*/
-CREATE TABLE gazkom(
-  id int(11) PRIMARY KEY,
-  num int(11),
-  numero int(11),
-  dato date,
-  titolo varchar(255),
-  subtitolo varchar(255), /* el gazkom:ttit*/
-  htmlTeksto varchar(255),
-  bazTeksto varchar(255)
-);
-
 /*datumoj el retdb:abonoj:abono */
 CREATE TABLE retlisto(
   id int(11) PRIMARY KEY,
@@ -264,16 +260,6 @@ CREATE TABLE retlist_abono(
   formato_html boolean, /*se true do html, se ne do teksto */
   kodigxo_utf8 boolean, /*se true do utf8, se ne do x-sistemo*/
   retadreso varchar(255) NULL /*null signifas ke id_uzanto estas definita kaj ke ni uzas retadreson de la uzanto.*/
-);
-
-CREATE TABLE teko(
-  id int(11) PRIMARY KEY,
-  titolo varchar(255),
-  elnomo varchar(255), /*nomo de la pdf dosiero*/
-  kodnomo varchar(255), /*ekzemplo: `eo_okt06`*/
-  jaro int(11),
-  absnum varchar(255),
-  vido boolean
 );
 
 /***** LIGITA AL VOĈDONA SISTEMO *****/
@@ -320,6 +306,13 @@ CREATE TABLE kongreso (
     findato date
 );
 
+CREATE TABLE aligxkotizo (
+    id int(11) PRIMARY KEY,
+    idKongreso int(11) REFERENCES kongreso(id),
+    prezo int(11),
+    priskribo varchar(255)
+);
+
 /*por kongresoj kiuj povas okazi krom la ĉefa kongreso, ekzemple, antaǔ kongreso dum UK*/
 CREATE TABLE ref_kongreso_kroma_kongreso (
    id_cxefa_kongreso int(11) REFERENCES kongreso(id),
@@ -352,7 +345,8 @@ CREATE TABLE kongresa_aligxinto (
     id int(11) PRIMARY KEY,
     kongresaNumero int(11),
     idUzanto int(11) REFERENCES uzanto(id),
-    id_kongreso int(11) REFERENCES kongreso(id)
+    idAligxkotizo int(11) REFERENCES aligxkotizo (id),
+    idKongreso int(11) REFERENCES kongreso(id)
 );
 
 CREATE TABLE kongresa_logxejo (
@@ -388,8 +382,8 @@ CREATE TABLE kongresa_dormcxambro (
 
 /*Permesas al iu aligxinto mendi logxejon*/
 CREATE TABLE ref_aligxinto_logxejo(
-    id_aligxinto int(11) REFERENCES kongresa_aligxinto(id),
-    id_dormcxambro int(11) NULL REFERENCES kongresa_cxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
+    idAligxinto int(11) REFERENCES kongresa_aligxinto(id),
+    idDormcxambro int(11) NULL REFERENCES kongresa_dormcxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur
@@ -404,6 +398,7 @@ CREATE TABLE kongresa_ekskurso (
     titolo varchar(255),
     priskribo varchar(255),
     dato date,
+    prezo int(11),
     kvanto int(11)
 );
 
@@ -414,41 +409,25 @@ CREATE TABLE ref_kongresa_ekskurso_mendo (
 );
 
 /**** PRI LA REVUO ESPERANTO KAJ KONTAKTO ***/
-
 /*datumoj el uea:abonoj*/
-CREATE TABLE revua_abono (
+CREATE TABLE teko(
   id int(11) PRIMARY KEY,
-  kodo varchar(255),
   titolo varchar(255),
-  klarigo varchar(255),
-  ofteco int(11),
-  prezo int(11),
-  aerposxto int(11),
-  rete int(11),
-  difinebla varchar(255),
-  dprez int(11)
+  elnomo varchar(255), /*nomo de la pdf dosiero*/
+  kodnomo varchar(255), /*ekzemplo: `eo_okt06`*/
+  jaro int(11),
+  absnum varchar(255),
+  vido boolean
 );
+
 
 /*nova tablo: mi ne trovis kie estas konservita tiun rilaton*/
 /*el retdb:abmendo */
-CREATE TABLE ref_revua_abonantoj (
+CREATE TABLE ref_teko_grupo (
   id int(11) PRIMARY KEY,
   idRevuaAbono int(11) REFERENCES revua_abono(id),
   idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
   jaro int(11)
-);
-
-/*Por abonoj al revuoj
-el retdb:abmendo
- */
-CREATE TABLE varmendo_abono (
-    id int(11) PRIMARY KEY,
-    idVarmendo int(11) REFERENCES varmendo(id),
-    idRevuaAbono int(11) REFERENCES revua_abono(id),
-    prioritataPosxto bool,
-    difino int(11),
-    pagsumo int(11),
-    avi int(11)
 );
 
 /***** LIGITA AL LA spezoj (peranto) *****/

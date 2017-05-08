@@ -273,11 +273,42 @@ CREATE TABLE teko(
   kodnomo varchar(255), /*ekzemplo: `eo_okt06`*/
   jaro int(11),
   absnum varchar(255),
-  vido bool
+  vido boolean
+);
+
+/***** LIGITA AL VOĈDONA SISTEMO *****/
+CREATE TABLE vocxdonado (
+  id int(11) PRIMARY KEY,
+  titolo varchar(255),
+  priskribo varchar(1200),
+  pluraj_opcioj boolean, /*Ĉu oni rajtos elekti pluraj opcioj?*/
+  anonima boolean, /*Ĉu oni rajtos voĉdoni anonime?*/
+  aperdato date, /*la tago je kiu la voĉdonado ekis*/
+  limdato date /*la tago je kiu la voĉdonado finiĝ(is/os)*/
+);
+
+/*la opcioj elekteblaj*/
+CREATE TABLE opcio (
+  id int(11) PRIMARY KEY,
+  priskribo varchar(255),
+  idVocxdonado int(11) REFERENCES vocxdonado(id)
+);
+
+/*rilato inter la grupoj de homoj kiuj rajtas voĉdoni kaj voĉdonadoj*/
+CREATE TABLE rajtas_vocxdoni (
+  idVocxdonado int(11) REFERENCES vocxdonado(id),
+  idGrupo int(11) REFERENCES grupo(id),
+  PRIMARY KEY(idVocxdonado, idGrupo)
+);
+
+/*la rezultoj estos kalkulataj laux la apero de opcioj en vocxoj*/
+CREATE TABLE vocxo (
+  id int(11) PRIMARY KEY,
+  idUzanto int(11) NULL REFERENCES uzanto(id), /*Null kaze oni rajtos voĉdoni anonime*/
+  idOpcio int(11) REFERENCES opcio(id)
 );
 
 /***** LIGITA AL LA UK (aŭ aliaj kongresoj)*****/
-
 CREATE TABLE kongreso (
     id int(11) PRIMARY KEY,
     titolo varchar(255),

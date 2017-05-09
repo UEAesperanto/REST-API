@@ -17,12 +17,33 @@ CREATE TABLE sxangxhistorio (
   dato date /*kiam la ŝanĝo okazis*/
 );
 
+CREATE TABLE gxirpropono (
+  id int(11) PRIMARY KEY,
+  idGxiranto int(11) REFERENCES uzantoAuxAsocio(id),
+  idRicevanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*kaze la konto ne estos asociigita nek al lando nek al asocio*/
+  konto varchar(255), /*iu maniero por identifii la konton, povus esti auxtomate uea-kodo*/
+  kialo varchar(1500) /*la kialo por tiu gxiro*/
+);
+
 /*datumoj el ueadb:landokodo*/
 CREATE TABLE lando (
     id int(11) PRIMARY KEY,
     nomoLoka varchar(255),
     nomoEo varchar(255),
     landkodo varchar(255)
+);
+
+/*Ekzemple, A-lando, B-lando, ktp*/
+CREATE TABLE landKategorio (
+  id int(11) PRIMARY KEY,
+  titolo varchar(255), /*Ekzemple, B-lando*/
+  priskribo varchar(1500) /*Ekzemple, B-landoj por la kongreso de 2017*/
+);
+
+CREATE TABLE ref_lando_landKategorio (
+  idLando int(11) REFERENCES lando(id),
+  idLandkategorio int(11) REFERENCES landKategorio(id),
+  PRIMARY KEY(idLando, idLandkategorio)
 );
 
 /*datumoj el ueadb:urboj*/
@@ -177,23 +198,30 @@ CREATE TABLE grupo (
   id_asocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
 );
 
+/*rilato inter uzanto kaj asocio al grupoj*/
 CREATE TABLE aneco (
   id int(11) PRIMARY KEY, /*povas esti ke iu anu plurfoje en malsimilaj tempoj en la sama grupo, pro tio ne estas id_uzanto + id_grupo*/
-  idUzanto int(11) REFERENCES uzanto(id),
-  idGrupo int(11) REFERENCES grupo(id),
+  idAno int(11) NOT NULL REFERENCES uzantoAuxAsocio(id), /*la uzanto aǔ asocio kiu anas je la grupo*/
+  idGrupo int(11) NOT NULL REFERENCES grupo(id),
   komencdato date, /*la dato en kiu la uzanto ekanis en la grupo*/
   findato date NULL, /*la dato en kiu la uzanto eliris la grupon*/
   dumviva boolean, /*ĉu temas pri dumviva aneco?*/
   tasko varchar(255) NULL, /*kiu estas la tasko de la ano en la grupo?*/
   respondeco varchar(255) NULL, /*kiu estas la respondeco de la ano en la grupo?*/
+  idAsocio int(11) NULL REFERENCES asocio(id), /*Ĉu la ano reprezentas iun asocion, kiel en kazoj de komitatanoj A*/
+  idUrbo int(11) NULL REFERENCES urbo(id), /*Ĉu la ano reprezentas urbon en sia aneco, kiel en kazoj de delegitoj*/
+  idFako int(11) NULL REFERENCES faktemo(id), /*Ĉu la ano reprezentas fakon en sia aneco, kiel en kazoj de delegitoj*/
   observoj varchar(255) NULL /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
 );
 
+/*Kiom oni devas pagi por ani en grupo*/
 CREATE TABLE aneckotizo (
   id int(11) PRIMARY KEY,
   prezo int(11),
   priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
-  idGrupo int(11) REFERENCES grupo(id)
+  gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aneco*/
+  landKategorio int(11) REFERENCES landKategorio(id), /*al kiu(j) lando(j) tiu kotizo indas*/
+  idGrupo int(11) REFERENCES grupo(id) /*la grupo al kiu oni anas*/
 );
 
 /*** PRI LA ADMINISTRADO ***/
@@ -226,6 +254,12 @@ CREATE TABLE dissendo (
   dato date,
   temo varchar(255),
   teksto varchar(255)
+);
+
+CREATE TABLE ref_dissendo_grupo (
+  idDissendo int(11) REFERENCES dissendo(id),
+  idGrupo int(11) REFERENCES grupo(id),
+  PRIMARY KEY(idDissendo, idGrupo)
 );
 
 /*dissendoj povas enhavi enketojn, tiu kaze la demanderon aperas en tiu ĉi
@@ -310,6 +344,8 @@ CREATE TABLE aligxkotizo (
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     prezo int(11),
+    gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aliĝkotizo*/
+    landKategorio int(11) REFERENCES landKategorio(id), /*al kiu(j) lando(j) tiu kotizo indas*/
     priskribo varchar(255)
 );
 
@@ -377,13 +413,14 @@ CREATE TABLE kongresa_dormcxambro (
     id int(11) PRIMARY KEY,
     nomo varchar(255) NULL,
     logxejo int(11) REFERENCES kongresa_logxejo(id),
-    id_dormcxambrsxablono int(11) REFERENCES dormcxambrsxablono(id)
+    id_dormcxambrsxablono int(11) REFERENCES kongresa_dormcxambrsxablono(id)
 );
 
 /*Permesas al iu aligxinto mendi logxejon*/
 CREATE TABLE ref_aligxinto_logxejo(
     idAligxinto int(11) REFERENCES kongresa_aligxinto(id),
     idDormcxambro int(11) NULL REFERENCES kongresa_dormcxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
+    PRIMARY KEY(idAligxinto, idDormcxambro),
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur
@@ -421,12 +458,11 @@ CREATE TABLE teko(
 );
 
 
-/*nova tablo: mi ne trovis kie estas konservita tiun rilaton*/
-/*el retdb:abmendo */
+/*al kiuj grupoj estos la teko*/
 CREATE TABLE ref_teko_grupo (
   id int(11) PRIMARY KEY,
   idTeko int(11) REFERENCES teko(id),
-  idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
+  idgrupo int(11) REFERENCES grupo(id),
   jaro int(11)
 );
 
@@ -494,7 +530,6 @@ CREATE TABLE gxen_spezraporto_kotizo (
   idUzanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*povas esti 'NULL' ĉar ni povas havi spezraporton pri ne uzanto. Tiu kaze nomo_uzanto ne devas esti 'NULL.*/
   nomoUzanto varchar(255) NULL, /*Null por uea uzanto, alikaze permesas identigi la perata ento.*/
   idAnoGrupo int(11) REFERENCES grupo(id)
-
 );
 
 CREATE TABLE gxen_spezraportero (

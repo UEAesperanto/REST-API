@@ -1,9 +1,12 @@
+/*
+Tiu ĉi datumbazo estas kunkreaĵo de Ana Maria da Costa Ribeiro,
+Pierre Vittet kaj Victor Hugo Fernandes de Souza en 2017,
+Kaj ĝiaj rajtoj apartenas al la Universala Esperanta Asocio.
+*/
+
 /*Notoj:
-
 Ĉiuj prezoj estas konservitaj kiel integer laŭ valuto cento da eŭro: tio permesas ne bezoni konservi al float.
-
- */
-
+*/
 
 /***** ĜENERALAĴOJ PRI LA DATUMBAZO *****/
 
@@ -25,7 +28,6 @@ CREATE TABLE gxirpropono (
   kialo varchar(1500) /*la kialo por tiu gxiro*/
 );
 
-/*datumoj el ueadb:landokodo*/
 CREATE TABLE lando (
     id int(11) PRIMARY KEY,
     nomoLoka varchar(255),
@@ -106,7 +108,7 @@ CREATE TABLE uzanto (
 /*kaze iu uzanto kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
 CREATE TABLE uzanto_sangxpropono (
     id int(11) PRIMARY KEY,
-    id_uzanto int(11) REFERENCES uzanto(id),
+    idUzanto int(11) REFERENCES uzanto(id),
     personanomo varchar(255),
     familianomo varchar(255),
     personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
@@ -147,14 +149,14 @@ CREATE TABLE asocio (
     retposxto varchar(255),
     delegFako varchar(255),
     tttpagxo varchar(255),
-    cxu_junulara boolean, /*Ĉu tiu asocio estas junulara*/
+    junulara boolean, /*Ĉu tiu asocio estas junulara?*/
     abc varchar(255)
 );
 
 /*kaze iu asocio kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
-CREATE TABLE asocio_sangxpropono(
+CREATE TABLE asocio_sangxpropono (
     id int(11) PRIMARY KEY,
-    id_asocio int(11) REFERENCES asocio(id),
+    idAsocio int(11) REFERENCES asocio(id),
     nomo varchar(255),
     siglo varchar(255),
     adreso varchar(255),
@@ -169,13 +171,13 @@ CREATE TABLE asocio_sangxpropono(
     abc varchar(255)
 );
 
-CREATE TABLE ref_fakasocio(
+CREATE TABLE ref_fakasocio (
     idAsocio int(11) REFERENCES asocio(id),
     idFaktemo int(11) REFERENCES faktemo(id),
     PRIMARY KEY(idAsocio, idFaktemo)
 );
 
-CREATE TABLE ref_landasocio(
+CREATE TABLE ref_landasocio (
     idAsocio int(11) REFERENCES asocio(id),
     idLando int(11) REFERENCES lando(id),
     PRIMARY KEY(idAsocio, idLando)
@@ -195,7 +197,7 @@ CREATE TABLE grupo (
   id int(11) PRIMARY KEY,
   nomo varchar(255),
   priskribo varchar(255),
-  id_asocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+  idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
 );
 
 /*ekzemple, membro, komisiono, ktp*/
@@ -291,14 +293,14 @@ CREATE TABLE ref_dissendo_respondoj (
 );
 
 /*datumoj el retdb:abonoj:abono */
-CREATE TABLE retlisto(
+CREATE TABLE retlisto (
   id int(11) PRIMARY KEY,
   nomo varchar(255),
   priskribo varchar(255)
 );
 
 /*datumoj el retdb:abonoj */
-CREATE TABLE retlist_abono(
+CREATE TABLE retlist_abono (
   id int(11) PRIMARY KEY,
   ekde date,  /*estis tempo*/
   abono int(11) REFERENCES retlisto(id),
@@ -371,7 +373,7 @@ CREATE TABLE ref_kongreso_kroma_kongreso (
 /*nova tablo
  Por la historiaĵo, oni povas uzi uea:programo:loko
 */
-CREATE TABLE kongresa_programejo(
+CREATE TABLE kongresa_programejo (
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     nomo varchar(255),
@@ -429,7 +431,7 @@ CREATE TABLE kongresa_dormcxambro (
 );
 
 /*Permesas al iu aligxinto mendi logxejon*/
-CREATE TABLE ref_aligxinto_logxejo(
+CREATE TABLE ref_aligxinto_logxejo (
     idAligxinto int(11) REFERENCES kongresa_aligxinto(id),
     idDormcxambro int(11) NULL REFERENCES kongresa_dormcxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
     PRIMARY KEY(idAligxinto, idDormcxambro),
@@ -459,7 +461,7 @@ CREATE TABLE ref_kongresa_ekskurso_mendo (
 
 /**** PRI LA REVUO ESPERANTO KAJ KONTAKTO ***/
 /*datumoj el uea:abonoj*/
-CREATE TABLE teko(
+CREATE TABLE teko (
   id int(11) PRIMARY KEY,
   titolo varchar(255),
   elnomo varchar(255), /*nomo de la pdf dosiero*/
@@ -512,13 +514,13 @@ CREATE TABLE kongresa_spezraportero (
     - triamonda,
     - volontula
   */
-CREATE TABLE ks_pag_kampo(
+CREATE TABLE ks_pag_kampo (
   id int(11) PRIMARY KEY,
   priskribo varchar(255),
   defauxltaValuto int(11) DEFAULT 0
 );
 
-CREATE TABLE ref_kongresa_spezraportero_ks_pag_kampo(
+CREATE TABLE ref_kongresa_spezraportero_ks_pag_kampo (
   idKongresaSpezraportero int(11) REFERENCES kongresa_spezraportero(id),
   idKsPagKampo int(11) REFERENCES ks_pag_kampo(id),
   sumo int(11),

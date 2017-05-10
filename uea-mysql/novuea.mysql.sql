@@ -134,7 +134,7 @@ CREATE TABLE uzanto_sangxpropono (
 );
 
 /*datumoj el ueadb:membroj, ueadb:asocioj kaj retdb:fakasocioj*/
-CREATE TABLE asocio(
+CREATE TABLE asocio (
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
     nomo varchar(255),
     siglo varchar(255),
@@ -147,6 +147,7 @@ CREATE TABLE asocio(
     retposxto varchar(255),
     delegFako varchar(255),
     tttpagxo varchar(255),
+    cxu_junulara boolean, /*Ĉu tiu asocio estas junulara*/
     abc varchar(255)
 );
 
@@ -194,8 +195,19 @@ CREATE TABLE grupo (
   id int(11) PRIMARY KEY,
   nomo varchar(255),
   priskribo varchar(255),
-  kategorio varchar(255), /*ekzemple, komisiono*/
   id_asocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+);
+
+/*ekzemple, membro, komisiono, ktp*/
+CREATE TABLE grupa_kategorio (
+  id int(11) PRIMARY KEY,
+  nomo varchar(255)
+);
+
+CREATE TABLE ref_grupo_grupa_kategorio (
+  idGrupo int(11) REFERENCES grupo(id),
+  idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),
+  PRIMARY KEY (idGrupo, idGrupaKategorio)
 );
 
 /*rilato inter uzanto kaj asocio al grupoj*/

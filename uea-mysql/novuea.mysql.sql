@@ -350,6 +350,7 @@ CREATE TABLE kongreso (
     jaro date,
     numero int(11),
     komencdato date,
+    temo varchar(255),
     priskribo varchar(255),
     findato date
 );

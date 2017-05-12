@@ -78,6 +78,8 @@ CREATE TABLE uzanto (
     id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id),
     personanomo varchar(255),
     familianomo varchar(255),
+    titolo varchar(255), /*doktoro, sinjoro, ktp*/
+    bildo varchar(255), /*ligilo al bildo*/
     personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
     eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
     interfaco.*/

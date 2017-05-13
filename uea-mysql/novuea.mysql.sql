@@ -437,7 +437,7 @@ CREATE TABLE kongresa_dormcxambro (
 CREATE TABLE ref_aligxinto_logxejo (
     idAligxinto int(11) REFERENCES kongresa_aligxinto(id),
     idDormcxambro int(11) NULL REFERENCES kongresa_dormcxambro(id), /*kaze ne estos ankoraǔ difinita, povus esti NULL*/
-    PRIMARY KEY(idAligxinto, idDormcxambro),
+    UNIQUE KEY (idAligxinto, idDormcxambro),
     alvendato date,
     forirdato date,
     kvanto int(11), /*Ĝenerale devas esti nur 1. Ni ĝenerale volas ke homoj nur

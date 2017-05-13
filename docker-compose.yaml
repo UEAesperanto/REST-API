@@ -43,7 +43,7 @@ services:
         - mysql-test:mysql-test
       depends_on:
         - mysql-test
-        
+
     mysql-test:
         image: mysql
         restart: always

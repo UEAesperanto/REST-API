@@ -25,7 +25,34 @@ var _getAsocio = function(req, res){
   });
 }
 
+
+/*
+  GET /asocio/tejo
+*/
+var _getTejoAsocioj = function(req, res){
+  Asocio.findTejo().then(function(sucess){
+        var asocioj = sucess;
+        res.send(asocioj);
+  });
+}
+
+/*
+  GET /asocio/tejo/:id
+*/
+var _getTejoAsocio = function(req, res){
+  Asocio.findTejo(req.params.id).then(function(sucess){
+      var asocio = sucess;
+      if(asocio.length <= 0)
+        res.status(404).send({message: 'Not Found'});
+      else
+        res.status(200).send(asocio);
+  });
+}
+
+
 module.exports = {
   getAsocioj: _getAsocioj,
-  getAsocio: _getAsocio
+  getAsocio: _getAsocio,
+  getTejoAsocio:_getTejoAsocio,
+  getTejoAsocioj:_getTejoAsocioj
 }

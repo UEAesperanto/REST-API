@@ -13,10 +13,46 @@ var _getAsocioj = function(req, res){
 }
 
 /*
-  GET /asocio/:id
+  GET /asocio/id/:id
 */
 var _getAsocio = function(req, res){
   Asocio.find(req.params.id).then(function(sucess){
+      var asocio = sucess;
+      if(asocio.length <= 0)
+        res.status(404).send({message: 'Not Found'});
+      else
+        res.status(200).send(asocio);
+  });
+}
+
+/*
+  GET /asocio/lando/:id
+*/
+var _getLandoAsocio = function(req, res){
+  Asocio.findLando(req.params.id).then(function(sucess){
+      var asocio = sucess;
+      if(asocio.length <= 0)
+        res.status(404).send({message: 'Not Found'});
+      else
+        res.status(200).send(asocio);
+  });
+}
+
+/*
+  GET /asocio/uea
+*/
+var _getUeaAsocioj = function(req, res){
+  Asocio.findUea().then(function(sucess){
+        var asocioj = sucess;
+        res.send(asocioj);
+  });
+}
+
+/*
+  GET /asocio/uea/:id
+*/
+var _getUeaAsocio = function(req, res){
+  Asocio.findUea(req.params.id).then(function(sucess){
       var asocio = sucess;
       if(asocio.length <= 0)
         res.status(404).send({message: 'Not Found'});
@@ -54,5 +90,8 @@ module.exports = {
   getAsocioj: _getAsocioj,
   getAsocio: _getAsocio,
   getTejoAsocio:_getTejoAsocio,
-  getTejoAsocioj:_getTejoAsocioj
+  getTejoAsocioj:_getTejoAsocioj,
+  getUeaAsocio:_getUeaAsocio,
+  getUeaAsocioj:_getUeaAsocioj,
+  getLandoAsocio:_getLandoAsocio
 }

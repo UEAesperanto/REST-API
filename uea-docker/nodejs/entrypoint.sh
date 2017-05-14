@@ -1,12 +1,18 @@
 #!/bin/bash
+cd /app
 
 #Wait MySql is Ready!
 while ! mysqladmin ping -h"$DB_HOST" -uroot -p"$DB_PASSWORD" --silent; do
     sleep 1
 done
 
-cd /app
 #Create database
+echo "ALDONO UEA DATUMBAZO"
 mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/novuea.mysql.sql
-mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/enigi.sql
-npm install --unsafe-perm --dev && nodemon
+
+if [ -z "$TEST" ]; then
+  bash /app/mysql/enigi.sh
+  npm install --unsafe-perm --dev && nodemon
+else
+  npm install --unsafe-perm --dev &&  nodemon --ext js --watch ./ --exec 'mocha ./test || true' --delay 1
+fi

@@ -25,7 +25,7 @@ CREATE TABLE gxirpropono (
   idGxiranto int(11) REFERENCES uzantoAuxAsocio(id),
   idRicevanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*kaze la konto ne estos asociigita nek al lando nek al asocio*/
   konto varchar(255), /*iu maniero por identifii la konton, povus esti auxtomate uea-kodo*/
-  kialo varchar(1500) /*la kialo por tiu gxiro*/
+  kialo varchar(1600) /*la kialo por tiu gxiro*/
 );
 
 CREATE TABLE lando (
@@ -59,7 +59,7 @@ CREATE TABLE urbo (
 CREATE TABLE faktemo (
     id int(11) PRIMARY KEY,
     nomo varchar(255),
-    priskribo varchar(255)
+    priskribo varchar(1600)
 );
 
  /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
@@ -316,7 +316,7 @@ CREATE TABLE retlist_abono (
 CREATE TABLE vocxdonado (
   id int(11) PRIMARY KEY,
   titolo varchar(255),
-  priskribo varchar(1200),
+  priskribo varchar(1600),
   pluraj_opcioj boolean, /*Ĉu oni rajtos elekti pluraj opcioj?*/
   anonima boolean, /*Ĉu oni rajtos voĉdoni anonime?*/
   aperdato date, /*la tago je kiu la voĉdonado ekis*/

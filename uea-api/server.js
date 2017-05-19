@@ -10,6 +10,7 @@ require('shelljs/global');
 uzanto = require('./services/uzanto');
 lando = require('./services/lando');
 asocio = require('./services/asocio');
+faktemo = require('./services/faktemo');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -36,6 +37,7 @@ app.get('/', function (req, res) {
 app.use('/uzanto', uzanto);
 app.use('/lando', lando);
 app.use('/asocio', asocio);
+app.use('/faktemo', faktemo);
 
 
 // Start the server

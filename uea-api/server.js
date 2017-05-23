@@ -11,6 +11,7 @@ uzanto = require('./services/uzanto');
 lando = require('./services/lando');
 asocio = require('./services/asocio');
 faktemo = require('./services/faktemo');
+urbo = require('./services/urbo');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -38,7 +39,7 @@ app.use('/uzantoj', uzanto);
 app.use('/landoj', lando);
 app.use('/asocioj', asocio);
 app.use('/faktemoj', faktemo);
-
+app.use('/urboj', urbo);
 
 // Start the server
 app.listen(PORT, () => {

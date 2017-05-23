@@ -1,6 +1,7 @@
 var util = require('util');
 var Uzanto = require('../models/uzanto');
 var db = require('../../modules/db');
+var query = require('../../modules/query');
 
 /*
   GET /uzantoj

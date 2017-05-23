@@ -3,17 +3,21 @@ var Uzanto = require('../models/uzanto');
 var db = require('../../modules/db');
 
 /*
-  GET /uzanto
+  GET /uzantoj
 */
 var _getUzantoj = function(req, res){
   Uzanto.find().then(function(sucess){
         var uzantoj = sucess;
-        res.send(uzantoj);
+        uzantoj = uzantoj.filter(query.search(req.query));
+        if(uzantoj.length <= 0)
+          res.status(404).send({message: 'Ne trovita'});
+        else
+          res.status(200).send(uzantoj);
   });
 }
 
 /*
-  GET /uzanto/:id
+  GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
   Uzanto.find(req.params.id).then(function(sucess){

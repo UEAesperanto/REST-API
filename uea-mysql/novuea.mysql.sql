@@ -146,12 +146,15 @@ CREATE TABLE asocio (
     fondigxdato date,
     posxtkodo varchar(255),
     urbo int(11) NULL REFERENCES urbo(id),
+    fako int(11) NULL REFERENCES fako(id),
+    lando varchar(255) NULL REFERENCES lando(id),
     telhejmo varchar(255),
-    landokodo varchar(255),
     retposxto varchar(255),
     delegFako varchar(255),
     tttpagxo varchar(255),
     junulara boolean, /*Ĉu tiu asocio estas junulara?*/
+    faka boolean, /*Ĉu tiu asocio estas faka?*/
+    landa boolean, /*Ĉu tiu asocio estas landa?*/
     abc varchar(255)
 );
 
@@ -171,18 +174,6 @@ CREATE TABLE asocio_sangxpropono (
     delegFako varchar(255),
     tttpagxo varchar(255),
     abc varchar(255)
-);
-
-CREATE TABLE ref_fakasocio (
-    idAsocio int(11) REFERENCES asocio(id),
-    idFaktemo int(11) REFERENCES faktemo(id),
-    PRIMARY KEY(idAsocio, idFaktemo)
-);
-
-CREATE TABLE ref_landasocio (
-    idAsocio int(11) REFERENCES asocio(id),
-    idLando int(11) REFERENCES lando(id),
-    PRIMARY KEY(idAsocio, idLando)
 );
 
 /*La peranto povas esti asocio aŭ membro*/
@@ -390,6 +381,7 @@ CREATE TABLE kongresa_programo (
     komenctempo date,
     fintempo date,
     evento varchar(255),
+    priskribo varchar(1600),
     programejo int(11) REFERENCES kongresa_programejo(id)
 );
 

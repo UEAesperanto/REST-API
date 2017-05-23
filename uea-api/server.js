@@ -34,10 +34,10 @@ app.get('/', function (req, res) {
 });
 
 // Mouting applications.
-app.use('/uzanto', uzanto);
-app.use('/lando', lando);
-app.use('/asocio', asocio);
-app.use('/faktemo', faktemo);
+app.use('/uzantoj', uzanto);
+app.use('/landoj', lando);
+app.use('/asocioj', asocio);
+app.use('/faktemoj', faktemo);
 
 
 // Start the server

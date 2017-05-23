@@ -10,7 +10,7 @@ var Faktemo = require('../controllers/models/faktemo');
 
 
 chai.use(chaiHttp);
-describe('Faktemo', function() {
+describe('Faktemoj', function() {
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `faktemo`');
       db.mysqlExec(query).then(function(result){
@@ -18,10 +18,10 @@ describe('Faktemo', function() {
       })
     });
 
-   describe('GET /faktemo', function(){
+   describe('GET /faktemoj', function(){
      it('it should GET all the faktemoj', function(done){
        chai.request(server)
-           .get('/faktemo')
+           .get('/faktemoj')
            .end((err, res) => {
                res.should.have.status(200);
                res.body.should.be.a('array');
@@ -35,7 +35,7 @@ describe('Faktemo', function() {
          message : "Teste"
        }
        chai.request(server)
-           .get('/faktemo')
+           .get('/faktemoj')
            .send(user)
            .end((err, res) => {
                res.should.have.status(200);

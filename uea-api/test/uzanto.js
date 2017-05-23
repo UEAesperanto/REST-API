@@ -8,7 +8,7 @@ var should = chai.should();
 var Uzanto = require('../controllers/models/uzanto');
 
 chai.use(chaiHttp);
-describe('Uzanto', function() {
+describe('Uzantoj', function() {
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `uzanto`');
       db.mysqlExec(query).then(function(result){
@@ -16,14 +16,12 @@ describe('Uzanto', function() {
       })
     });
 
-    describe('GET /uzanto', function(){
-     it('it should GET all the uzantoj', function(done){
+    describe('GET /uzantoj', function(){
+     it('it should GET all the uzantoj sen uzantoj en la sistemo', function(done){
        chai.request(server)
-           .get('/uzanto')
+           .get('/uzantoj')
            .end((err, res) => {
-               res.should.have.status(200);
-               res.body.should.be.a('array');
-               res.body.length.should.be.eql(0);
+               res.should.have.status(404);
              done();
            });
      });
@@ -39,9 +37,7 @@ describe('Uzanto', function() {
           .get('/uzanto')
           .send(user)
           .end((err, res) => {
-              res.should.have.status(200);
-              res.body.should.be.a('array');
-              res.body.length.should.be.eql(0);
+              res.should.have.status(404);
             done();
           });
     });

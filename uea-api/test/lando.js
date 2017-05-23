@@ -9,7 +9,7 @@ var expect = chai.expect;
 var Lando = require('../controllers/models/lando');
 
 chai.use(chaiHttp);
-describe('Lando', function() {
+describe('Landoj', function() {
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `lando`');
       db.mysqlExec(query).then(function(result){
@@ -17,10 +17,10 @@ describe('Lando', function() {
       })
     });
 
-    describe('GET /lando', function(){
+    describe('GET /landoj', function(){
      it('it should GET all the landoj', function(done){
        chai.request(server)
-           .get('/lando')
+           .get('/landoj')
            .end((err, res) => {
                res.should.have.status(200);
                res.body.should.be.a('array');
@@ -34,7 +34,7 @@ describe('Lando', function() {
          message : "Teste"
        }
        chai.request(server)
-           .get('/lando')
+           .get('/landoj')
            .send(user)
            .end((err, res) => {
                res.should.have.status(200);
@@ -45,12 +45,12 @@ describe('Lando', function() {
      });
    });
 
-   describe('GET /lando/:id', function(){
+   describe('GET /landoj/:id', function(){
      it('it should GET a lando given id', function(done){
       var lando = {id : 1,nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
       Lando.insert(lando).then(function(sucess){
         chai.request(server)
-          .get('/lando/' + lando.id)
+          .get('/landoj/' + lando.id)
           .end(function(err, res){
             res.should.have.status(200);
             //expect(res.body).to.deep.equal({message: 'sucess'})
@@ -60,11 +60,11 @@ describe('Lando', function() {
       });
     });
 
-    it('it NOT should GET a lando given id', function(done){
+    it('it NOT should GET a landoj given id', function(done){
      var lando = {id : 2,nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
      Lando.insert(lando).then(function(sucess){
        chai.request(server)
-         .get('/lando/' + lando.id + 1)
+         .get('/landoj/' + lando.id + 1)
          .end(function(err, res){
            res.should.have.status(404);
            //expect(res.body).to.deep.equal({message: 'sucess'})
@@ -75,11 +75,11 @@ describe('Lando', function() {
    });
   });
 
-  describe('POST /lando', function(){
+  describe('POST /landoj', function(){
    it('it should POST a lando', function(done){
      var lando = {id : 1, nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
      chai.request(server)
-         .post('/lando')
+         .post('/landoj')
          .send(lando)
          .end(function(err, res){
              res.should.have.status(201);
@@ -95,7 +95,7 @@ describe('Lando', function() {
    it('it NOT should POST a lando (miss ID)', function(done){
      var lando = {nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
      chai.request(server)
-         .post('/lando')
+         .post('/landoj')
          .send(lando)
          .end(function(err, res){
              res.should.have.status(400); //Bad Request
@@ -105,14 +105,14 @@ describe('Lando', function() {
  });
 
 
- describe('DELETE /lando', function(){
+ describe('DELETE /landoj', function(){
   it('it should DELETE a landoj given id', function(done){
     var lando = {id : 1, nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
     Lando.insert(lando).then(function(sucess){
       chai.request(server)
-        .delete('/lando/' + lando.id)
+        .delete('/landoj/' + lando.id)
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(204);
           done();
       });
     })

@@ -9,7 +9,7 @@ var expect = chai.expect;
 var Asocio = require('../controllers/models/asocio');
 
 chai.use(chaiHttp);
-describe('Asocio', function() {
+describe('Asocioj', function() {
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `asocio`');
       db.mysqlExec(query).then(function(result){
@@ -17,14 +17,12 @@ describe('Asocio', function() {
       })
     });
 
-    describe('GET /asocio', function(){
+    describe('GET /asocioj sen asocioj en la sistemo', function(){
      it('it should GET all the asocioj', function(done){
        chai.request(server)
-           .get('/asocio')
+           .get('/asocioj')
            .end((err, res) => {
-               res.should.have.status(200);
-               res.body.should.be.a('array');
-               res.body.length.should.be.eql(0);
+               res.should.have.status(404);
              done();
            });
      });
@@ -34,12 +32,10 @@ describe('Asocio', function() {
          message : "Teste"
        }
        chai.request(server)
-           .get('/asocio')
+           .get('/asocioj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(200);
-               res.body.should.be.a('array');
-               res.body.length.should.be.eql(0);
+               res.should.have.status(404);
              done();
            });
      });

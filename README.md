@@ -4,6 +4,6 @@
 Por pliaj detaloj pri kiel ĝi funkcias, vidu la [vikion](https://github.com/RibeiroAna/datumbazoUEA/wiki) de tiu ĉi ujo.
 
 La aǔtoroj de la kodoj estas la jenaj:
-- Ana Maria da Costa Ribeiro @RibeiroAna
-- Victor Hugo Fernandes de Sousa @VictorHundo
-- Pierre Vittet @pvittet
+- Ana Maria da Costa Ribeiro [@RibeiroAna](https://github.com/RibeiroAna/)
+- Victor Hugo Fernandes de Sousa [@VictorHundo](https://github.com/VictorHundo/)
+- Pierre Vittet @PVittet [@PVittet](https://github.com/PVittet/)

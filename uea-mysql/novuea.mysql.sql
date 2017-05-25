@@ -348,13 +348,21 @@ CREATE TABLE kongreso (
     findato date
 );
 
-CREATE TABLE aligxkotizo (
+CREATE TABLE kongresa_aligxkotizo (
     id int(11) PRIMARY KEY,
     idKongreso int(11) REFERENCES kongreso(id),
     prezo int(11),
     gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aliĝkotizo*/
     landKategorio int(11) REFERENCES landKategorio(id), /*al kiu(j) lando(j) tiu kotizo indas*/
-    priskribo varchar(255)
+    grupo int(11) REFERENCES grupo(id), /*al kiu grupo de uzantoj tiu kategorio estas*/
+    aligxperiodo int(11) REFERENCES aligxperiodo(id), /*al kiu aligxperiodo tio estas*/
+    priskribo varchar(1600)
+);
+
+CREATE TABLE aligxperiodo (
+    id int(11) PRIMARY KEY,
+    komencdato date,
+    findato date
 );
 
 /*por kongresoj kiuj povas okazi krom la ĉefa kongreso, ekzemple, antaǔ kongreso dum UK*/
@@ -362,6 +370,19 @@ CREATE TABLE ref_kongreso_kroma_kongreso (
    id_cxefa_kongreso int(11) REFERENCES kongreso(id),
    id_kroma_kongreso int(11) REFERENCES kongreso(id),
    PRIMARY KEY(id_cxefa_kongreso, id_kroma_kongreso)
+);
+
+CREATE TABLE kongresa_servo (
+    id int(11) PRIMARY KEY,
+    nomo varchar(255),
+    priskribo varchar(255),
+    prezo int(11)
+);
+
+CREATE TABLE ref_kongresa_servo_aligxinto (
+    idAligxinto int(11) REFERENCES kongresa_aligxinto(id),
+    idServo int(11) REFERENCES servo(id),
+    pagita boolean
 );
 
 /*nova tablo
@@ -391,6 +412,7 @@ CREATE TABLE kongresa_aligxinto (
     kongresaNumero int(11),
     idUzanto int(11) REFERENCES uzanto(id),
     idAligxkotizo int(11) REFERENCES aligxkotizo (id),
+    pagita boolean, /*Ĉu la aliĝinto pagis la kotizon?*/
     idKongreso int(11) REFERENCES kongreso(id)
 );
 
@@ -466,6 +488,16 @@ CREATE TABLE teko (
   vido boolean
 );
 
+CREATE TABLE teka_kategorio (
+  id int(11) PRIMARY KEY,
+  titolo varchar(255)
+);
+
+CREATE TABLE ref_teko_kategorio (
+  idKategorio int(11) REFERENCES teka_kategorio(id),
+  idTeko int(11) REFERENCES teko(id),
+  PRIMARY KEY (idKategorio, idTeko)
+);
 
 /*al kiuj grupoj estos la teko*/
 CREATE TABLE ref_teko_grupo (

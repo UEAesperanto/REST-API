@@ -12,7 +12,7 @@ Kaj ĝiaj rajtoj apartenas al la Universala Esperanta Asocio.
 
 /*La celo de tiu ĉi tabelo estas gardi la ŝanĝojn faritajn en la datumbazo*/
 CREATE TABLE sxangxhistorio (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   tabelo varchar(255), /*la tabelo en kiu la ŝanĝoj estis faritaj, ekzemple: lando*/
   kampo varchar(255), /*la kampo en kiu la ŝanĝoj estis faritaj, ekzemple: nomoEo*/
   antauxa_valoro varchar(255), /*la antaǔa valoro de la kampo, eĉ se ĝi ne estis varchar, ĝi iĝos, ekzemple: Brasilo*/
@@ -21,7 +21,7 @@ CREATE TABLE sxangxhistorio (
 );
 
 CREATE TABLE gxirpropono (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idGxiranto int(11) REFERENCES uzantoAuxAsocio(id),
   idRicevanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*kaze la konto ne estos asociigita nek al lando nek al asocio*/
   konto varchar(255), /*iu maniero por identifii la konton, povus esti auxtomate uea-kodo*/
@@ -29,15 +29,16 @@ CREATE TABLE gxirpropono (
 );
 
 CREATE TABLE lando (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomoLoka varchar(255),
-    nomoEo varchar(255),
+    radikoEo varchar(255),
+    finajxoEo varchar(255),
     landkodo varchar(255)
 );
 
 /*Ekzemple, A-lando, B-lando, ktp*/
 CREATE TABLE landKategorio (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   titolo varchar(255), /*Ekzemple, B-lando*/
   priskribo varchar(1500) /*Ekzemple, B-landoj por la kongreso de 2017*/
 );
@@ -50,21 +51,21 @@ CREATE TABLE ref_lando_landKategorio (
 
 /*datumoj el ueadb:urboj*/
 CREATE TABLE urbo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomoLoka varchar(255),
     nomoEo varchar(255),
     idLando int(11) REFERENCES lando(id)
 );
 
 CREATE TABLE faktemo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomo varchar(255),
     priskribo varchar(1600)
 );
 
  /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
 CREATE TABLE uzantoAuxAsocio (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     ueakodo varchar(255),
     uzantnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
     pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
@@ -109,7 +110,7 @@ CREATE TABLE uzanto (
 
 /*kaze iu uzanto kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
 CREATE TABLE uzanto_sangxpropono (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idUzanto int(11) REFERENCES uzanto(id),
     personanomo varchar(255),
     familianomo varchar(255),
@@ -160,7 +161,7 @@ CREATE TABLE asocio (
 
 /*kaze iu asocio kreos sanĝproponon al sia profilo, ĝi devos atendi aprobon de oficisto*/
 CREATE TABLE asocio_sangxpropono (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idAsocio int(11) REFERENCES asocio(id),
     nomo varchar(255),
     siglo varchar(255),
@@ -179,7 +180,7 @@ CREATE TABLE asocio_sangxpropono (
 /*La peranto povas esti asocio aŭ membro*/
 /*datumoj el ueadb:perant*/
 CREATE TABLE peranto (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idUeakodo int(11) REFERENCES uzantoAuxAsocio(id),
     idLando int(11) REFERENCES lando(id)
 );
@@ -187,7 +188,7 @@ CREATE TABLE peranto (
 /*** PRI GRUPOJ DE UZANTOJ ***/
 /*la uzantoj povas esti en grupoj, kiel estraro, komisiono, delegito, indivudua membraro ktp*/
 CREATE TABLE grupo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   nomo varchar(255),
   priskribo varchar(255),
   idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
@@ -195,19 +196,19 @@ CREATE TABLE grupo (
 
 /*ekzemple, membro, komisiono, ktp*/
 CREATE TABLE grupa_kategorio (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   nomo varchar(255)
 );
 
 CREATE TABLE ref_grupo_grupa_kategorio (
   idGrupo int(11) REFERENCES grupo(id),
   idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),
-  PRIMARY KEY (idGrupo, idGrupaKategorio)
+  PRIMARY KEY(idGrupo, idGrupaKategorio)
 );
 
 /*rilato inter uzanto kaj asocio al grupoj*/
 CREATE TABLE aneco (
-  id int(11) PRIMARY KEY, /*povas esti ke iu anu plurfoje en malsimilaj tempoj en la sama grupo, pro tio ne estas id_uzanto + id_grupo*/
+  id int(11) PRIMARY KEY AUTO_INCREMENT, /*povas esti ke iu anu plurfoje en malsimilaj tempoj en la sama grupo, pro tio ne estas id_uzanto + id_grupo*/
   idAno int(11) NOT NULL REFERENCES uzantoAuxAsocio(id), /*la uzanto aǔ asocio kiu anas je la grupo*/
   idGrupo int(11) NOT NULL REFERENCES grupo(id),
   komencdato date, /*la dato en kiu la uzanto ekanis en la grupo*/
@@ -223,7 +224,7 @@ CREATE TABLE aneco (
 
 /*Kiom oni devas pagi por ani en grupo*/
 CREATE TABLE aneckotizo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   prezo int(11),
   priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
   gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aneco*/
@@ -233,7 +234,7 @@ CREATE TABLE aneckotizo (
 
 /*** PRI LA ADMINISTRADO ***/
 CREATE TABLE administranto (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idUzantoAuxAsocio int(11) NULL REFERENCES uzantoAuxAsocio(id), /*la admnistranto povas esti aǔ ne uzanto aǔ asocio*/
   uzantnomo varchar(255),
   pasvorto varchar(255) /*devus iĝi sha1*/
@@ -242,11 +243,11 @@ CREATE TABLE administranto (
 CREATE TABLE ref_administranto_adminrajto (
   idAdministranto int(11) REFERENCES administranto(id),
   idAdminrajto int(11) REFERENCES adminrajto(id),
-  PRIMARY KEY(idAdministranto, idAdminrajto)
+  PRIMARY KEY (idAdministranto, idAdminrajto)
 );
 
 CREATE TABLE adminrajto (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomo varchar(255),
     priskribo varchar(255)
 );
@@ -255,7 +256,7 @@ CREATE TABLE adminrajto (
 /*dissendo temas pri iu dissendaĵo farita al specifaj grupoj.*/
 /*datumoj el ueadb:dissendoj*/
 CREATE TABLE dissendo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   dissendanto int(11) REFERENCES uzanto(id),
   nomede varchar(255), /*Kampo pri la nomo de la aŭtoro, povas esti `Mark Fettes - Prezidanto de UEA`*/
   dato date,
@@ -266,14 +267,14 @@ CREATE TABLE dissendo (
 CREATE TABLE ref_dissendo_grupo (
   idDissendo int(11) REFERENCES dissendo(id),
   idGrupo int(11) REFERENCES grupo(id),
-  PRIMARY KEY(idDissendo, idGrupo)
+  PRIMARY KEY (idDissendo, idGrupo)
 );
 
 /*dissendoj povas enhavi enketojn, tiu kaze la demanderon aperas en tiu ĉi
  * tabelo.*/
 /*datumoj el ueadb:dissendo_enketoj*/
 CREATE TABLE dissendo_demandero (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idDissendo int(11) REFERENCES dissendo(id),
   demNum int(11),  /*pozicio de la demandero*/
   demTeksto  varchar(255)
@@ -282,19 +283,19 @@ CREATE TABLE dissendo_demandero (
 CREATE TABLE ref_dissendo_respondoj (
   idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id), /*la respondanto*/
   idDissendoDemandero int(11) REFERENCES dissendo_demandero(id),
-  PRIMARY KEY(idUzantoAuxAsocio, idDissendoDemandero)
+  PRIMARY KEY (idUzantoAuxAsocio, idDissendoDemandero)
 );
 
 /*datumoj el retdb:abonoj:abono */
 CREATE TABLE retlisto (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   nomo varchar(255),
   priskribo varchar(255)
 );
 
 /*datumoj el retdb:abonoj */
 CREATE TABLE retlist_abono (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   ekde date,  /*estis tempo*/
   abono int(11) REFERENCES retlisto(id),
   id_uzanto int(11) REFERENCES uzanto(id), /*povas esti null se ne farita tra iu konto*/
@@ -305,7 +306,7 @@ CREATE TABLE retlist_abono (
 
 /***** LIGITA AL VOĈDONA SISTEMO *****/
 CREATE TABLE vocxdonado (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   titolo varchar(255),
   priskribo varchar(1600),
   pluraj_opcioj boolean, /*Ĉu oni rajtos elekti pluraj opcioj?*/
@@ -316,7 +317,7 @@ CREATE TABLE vocxdonado (
 
 /*la opcioj elekteblaj*/
 CREATE TABLE opcio (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   priskribo varchar(255),
   idVocxdonado int(11) REFERENCES vocxdonado(id)
 );
@@ -325,19 +326,19 @@ CREATE TABLE opcio (
 CREATE TABLE rajtas_vocxdoni (
   idVocxdonado int(11) REFERENCES vocxdonado(id),
   idGrupo int(11) REFERENCES grupo(id),
-  PRIMARY KEY(idVocxdonado, idGrupo)
+  PRIMARY KEY (idVocxdonado, idGrupo)
 );
 
 /*la rezultoj estos kalkulataj laux la apero de opcioj en vocxoj*/
 CREATE TABLE vocxo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idUzanto int(11) NULL REFERENCES uzanto(id), /*Null kaze oni rajtos voĉdoni anonime*/
   idOpcio int(11) REFERENCES opcio(id)
 );
 
 /***** LIGITA AL LA UK (aŭ aliaj kongresoj)*****/
 CREATE TABLE kongreso (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     titolo varchar(255),
     idUrbo int(11) REFERENCES urbo(id),
     jaro date,
@@ -349,7 +350,7 @@ CREATE TABLE kongreso (
 );
 
 CREATE TABLE kongresa_aligxkotizo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idKongreso int(11) REFERENCES kongreso(id),
     prezo int(11),
     gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aliĝkotizo*/
@@ -360,7 +361,7 @@ CREATE TABLE kongresa_aligxkotizo (
 );
 
 CREATE TABLE aligxperiodo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     komencdato date,
     findato date
 );
@@ -369,11 +370,11 @@ CREATE TABLE aligxperiodo (
 CREATE TABLE ref_kongreso_kroma_kongreso (
    id_cxefa_kongreso int(11) REFERENCES kongreso(id),
    id_kroma_kongreso int(11) REFERENCES kongreso(id),
-   PRIMARY KEY(id_cxefa_kongreso, id_kroma_kongreso)
+   PRIMARY KEY (id_cxefa_kongreso, id_kroma_kongreso)
 );
 
 CREATE TABLE kongresa_servo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomo varchar(255),
     priskribo varchar(255),
     prezo int(11)
@@ -389,7 +390,7 @@ CREATE TABLE ref_kongresa_servo_aligxinto (
  Por la historiaĵo, oni povas uzi uea:programo:loko
 */
 CREATE TABLE kongresa_programejo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idKongreso int(11) REFERENCES kongreso(id),
     nomo varchar(255),
     priskribo varchar(255)
@@ -397,7 +398,7 @@ CREATE TABLE kongresa_programejo (
 
 /*datumoj el uea:programo*/
 CREATE TABLE kongresa_programo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idKongreso int(11) REFERENCES kongreso(id),
     komenctempo date,
     fintempo date,
@@ -408,7 +409,7 @@ CREATE TABLE kongresa_programo (
 
 /*datumoj el ueadb:uk_aliĝintoj kaj uea:kongresanoj */
 CREATE TABLE kongresa_aligxinto (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     kongresaNumero int(11),
     idUzanto int(11) REFERENCES uzanto(id),
     idAligxkotizo int(11) REFERENCES aligxkotizo (id),
@@ -417,7 +418,7 @@ CREATE TABLE kongresa_aligxinto (
 );
 
 CREATE TABLE kongresa_logxejo (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     kongreso int(11) REFERENCES kongreso(id),
     ordig int(11), /*ordo de apero sur la retejo aŭ kongresa libro*/
     rango int(11), /*kvalito, kvanto da steloj*/
@@ -433,7 +434,7 @@ CREATE TABLE kongresa_logxejo (
 
 
 CREATE TABLE kongresa_dormcxambrsxablono (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     litKvanto int(11),
     personKvanto int(11),
     prezo int(11),
@@ -441,7 +442,7 @@ CREATE TABLE kongresa_dormcxambrsxablono (
 );
 
 CREATE TABLE kongresa_dormcxambro (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomo varchar(255) NULL,
     logxejo int(11) REFERENCES kongresa_logxejo(id),
     id_dormcxambrsxablono int(11) REFERENCES kongresa_dormcxambrsxablono(id)
@@ -461,7 +462,7 @@ CREATE TABLE ref_aligxinto_logxejo (
 );
 
 CREATE TABLE kongresa_ekskurso (
-    id int(11) PRIMARY KEY,
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
     idKongreso int(11) REFERENCES kongreso(id),
     titolo varchar(255),
     priskribo varchar(255),
@@ -473,13 +474,13 @@ CREATE TABLE kongresa_ekskurso (
 CREATE TABLE ref_kongresa_ekskurso_mendo (
   idKAligxinto int(11) REFERENCES kongresa_aligxinto(id),
   idKEkskurso int(11) REFERENCES kongresa_ekskurso(id),
-  PRIMARY KEY(idKAligxinto, idKEkskurso)
+  PRIMARY KEY (idKAligxinto, idKEkskurso)
 );
 
 /**** PRI LA REVUO ESPERANTO KAJ KONTAKTO ***/
 /*datumoj el uea:abonoj*/
 CREATE TABLE teko (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   titolo varchar(255),
   elnomo varchar(255), /*nomo de la pdf dosiero*/
   kodnomo varchar(255), /*ekzemplo: `eo_okt06`*/
@@ -489,7 +490,7 @@ CREATE TABLE teko (
 );
 
 CREATE TABLE teka_kategorio (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   titolo varchar(255)
 );
 
@@ -501,7 +502,7 @@ CREATE TABLE ref_teko_kategorio (
 
 /*al kiuj grupoj estos la teko*/
 CREATE TABLE ref_teko_grupo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idTeko int(11) REFERENCES teko(id),
   idgrupo int(11) REFERENCES grupo(id),
   jaro int(11)
@@ -511,7 +512,7 @@ CREATE TABLE ref_teko_grupo (
 
 /*el ueadb:spezaro (ili havas tipon 1 kaj kategorio kiel "270;;0;0;0;;0;0;0".*/
 CREATE TABLE kongresa_spezraporto (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   dato date,
   idPeranto int(11) REFERENCES peranto(id),
   valuto varchar(255),
@@ -523,7 +524,7 @@ CREATE TABLE kongresa_spezraporto (
 
 /*Ero de kongresa spezraporto*/
 CREATE TABLE kongresa_spezraportero (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idKongresaSpezraporto int(11) REFERENCES kongresa_spezraporto(id),
   idUzanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*povas esti 'NULL' ĉar ni povas havi spezraporton pri ne uzanto. Tiu kaze nomo_uzanto ne devas esti 'NULL.*/
   nomoUzanto varchar(255) NULL, /*Null por uea uzanto, alkaze permesas identigi la perata ento.*/
@@ -542,7 +543,7 @@ CREATE TABLE kongresa_spezraportero (
     - volontula
   */
 CREATE TABLE ks_pag_kampo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   priskribo varchar(255),
   defauxltaValuto int(11) DEFAULT 0
 );
@@ -551,12 +552,12 @@ CREATE TABLE ref_kongresa_spezraportero_ks_pag_kampo (
   idKongresaSpezraportero int(11) REFERENCES kongresa_spezraportero(id),
   idKsPagKampo int(11) REFERENCES ks_pag_kampo(id),
   sumo int(11),
-  PRIMARY KEY(idKongresaSpezraportero, idKsPagKampo)
+  PRIMARY KEY (idKongresaSpezraportero, idKsPagKampo)
 );
 
 /*el ueadb:spezaro kaj ueadb:spezo (ili havas tipon 0) */
 CREATE TABLE gxen_spezraporto (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   dato date,
   idPeranto int(11) REFERENCES peranto(id),
   valuto varchar(255),
@@ -566,7 +567,7 @@ CREATE TABLE gxen_spezraporto (
 );
 
 CREATE TABLE gxen_spezraporto_kotizo (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idGxenSpezraporto int(11) REFERENCES gxen_spezraporto(id),
   idUzanto int(11) NULL REFERENCES uzantoAuxAsocio(id), /*povas esti 'NULL' ĉar ni povas havi spezraporton pri ne uzanto. Tiu kaze nomo_uzanto ne devas esti 'NULL.*/
   nomoUzanto varchar(255) NULL, /*Null por uea uzanto, alikaze permesas identigi la perata ento.*/
@@ -574,7 +575,7 @@ CREATE TABLE gxen_spezraporto_kotizo (
 );
 
 CREATE TABLE gxen_spezraportero (
-  id int(11) PRIMARY KEY,
+  id int(11) PRIMARY KEY AUTO_INCREMENT,
   idGxenSpezraporto int(11) REFERENCES gxen_spezraporto(id),
   enspezo bool, /*Se true do enspezo, Se false do elspezo*/
   priskribo varchar(255),

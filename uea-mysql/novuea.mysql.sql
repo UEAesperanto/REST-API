@@ -31,7 +31,8 @@ CREATE TABLE gxirpropono (
 CREATE TABLE lando (
     id int(11) PRIMARY KEY,
     nomoLoka varchar(255),
-    nomoEo varchar(255),
+    radikoEo varchar(255),
+    finajxoEo varchar(255),
     landkodo varchar(255)
 );
 

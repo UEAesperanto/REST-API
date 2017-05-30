@@ -6,4 +6,4 @@ Por pliaj detaloj pri kiel ĝi funkcias, vidu la [vikion](https://github.com/Rib
 La aǔtoroj de la kodoj estas la jenaj:
 - Ana Maria da Costa Ribeiro [@RibeiroAna](https://github.com/RibeiroAna/)
 - Victor Hugo Fernandes de Sousa [@VictorHundo](https://github.com/VictorHundo/)
-- Pierre Vittet @PVittet [@PVittet](https://github.com/PVittet/)
+- Pierre Vittet [@Piervit](https://github.com/Piervit/)

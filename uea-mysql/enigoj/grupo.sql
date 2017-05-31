@@ -8,8 +8,8 @@ INSERT INTO grupo ()
 
 INSERT INTO grupo ()
   VALUES (
-    2 /*id int(11) PRIMARY KEY,*/,
-    "komitato", /*nomo varchar(255)*/,
+    2, /*id int(11) PRIMARY KEY,*/
+    "komitato", /*nomo varchar(255)*/
     "priskribo varchar(255)",
     1 /*"idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
   );

@@ -340,6 +340,7 @@ CREATE TABLE vocxo (
 CREATE TABLE kongreso (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
     titolo varchar(255),
+    bildo varchar(255), /*la kongresa bildo aux logoo*/
     idUrbo int(11) REFERENCES urbo(id),
     jaro date,
     numero int(11),
@@ -404,7 +405,14 @@ CREATE TABLE kongresa_programo (
     fintempo date,
     evento varchar(255),
     priskribo varchar(1600),
+    kategorio int (11) REFERENCES kongresa_programo_kategorio(id),
     programejo int(11) REFERENCES kongresa_programejo(id)
+);
+
+/*Ekzemple, IKU, koncerto, komencanto, ktp*/
+CREATE TABLE kongresa_programo_kategorio (
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
+    titolo varchar (255)
 );
 
 /*datumoj el ueadb:uk_aliĝintoj kaj uea:kongresanoj */

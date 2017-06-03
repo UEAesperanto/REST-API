@@ -71,3 +71,11 @@ INSERT INTO uzantoAuxAsocio ()
           NULL, /* uzantnomo */
           NULL /* pasvorto */
       );
+
+      INSERT INTO uzantoAuxAsocio ()
+            VALUES (
+                10, /* id */
+                "0", /* ueakodo */
+                NULL, /* uzantnomo */
+                NULL /* pasvorto */
+            );

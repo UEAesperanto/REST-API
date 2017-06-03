@@ -20,9 +20,15 @@ var _findEstraranoj = function() {
   return db.mysqlExec(query);
 }
 
+var _findKomitatanoj = function() {
+  query = util.format('SELECT A.personanomo, A.familianomo, A.titolo, A.bildo, A.nacialando, A.retposxto, B.idGrupo FROM uzanto A INNER JOIN aneco B ON (A.id = B.idAno) WHERE B.idGrupo = 2 OR B.idGrupo = 3 OR B.idGrupo = 4 OR B.idGrupo = 5');
+  return db.mysqlExec(query);
+}
+
 
 module.exports = {
   find:_find,
   findKategorio: _findKategorio,
+  findKomitatanoj: _findKomitatanoj,
   findEstraranoj: _findEstraranoj
 }

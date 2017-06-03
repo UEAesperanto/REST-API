@@ -47,6 +47,9 @@ var _getLaborgrupoj = function(req, res){
   );
 }
 
+/*
+   GET /grupo/laboroj/estraranoj
+*/
 var _getEstraranoj = function(req, res){
   Grupo.findEstraranoj().then(function(sucess){
         var estraranoj = sucess;
@@ -61,11 +64,27 @@ var _getEstraranoj = function(req, res){
 );
 }
 
-
+/*
+   GET /grupo/laboroj/komitatanoj
+*/
+var _getKomitatanoj = function(req, res){
+  Grupo.findKomitatanoj().then(function(sucess){
+        var komitatanoj = sucess;
+        komitatanoj = komitatanoj.filter(query.search(req.query));
+        if(komitatanoj.length <= 0)
+          res.status(404).send({message: 'Ne trovita'});
+        else
+          res.status(200).send(komitatanoj);
+  }).catch(function(error) {
+    res.status(500).send({message: 'Eraro'});
+  }
+);
+}
 
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
   getLaborgrupoj: _getLaborgrupoj,
-  getEstraranoj: _getEstraranoj
+  getEstraranoj: _getEstraranoj,
+  getKomitatanoj: _getKomitatanoj
 }

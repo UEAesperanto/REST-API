@@ -15,5 +15,6 @@ router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
 router.route('/laboroj/estraranoj')
     .get(grupo.getEstraranoj);
-
+router.route('/laboroj/komitatanoj')
+    .get(grupo.getKomitatanoj);
 module.exports = app;

@@ -22,24 +22,16 @@ describe('Landoj', function() {
        chai.request(server)
            .get('/landoj')
            .end((err, res) => {
-               res.should.have.status(200);
-               res.body.should.be.a('array');
-               res.body.length.should.be.eql(0);
+               res.should.have.status(404);
              done();
            });
      });
 
      it('it should GET all the landoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/landoj')
-           .send(user)
            .end((err, res) => {
-               res.should.have.status(200);
-               res.body.should.be.a('array');
-               res.body.length.should.be.eql(0);
+               res.should.have.status(404);
              done();
            });
      });
@@ -47,7 +39,7 @@ describe('Landoj', function() {
 
    describe('GET /landoj/:id', function(){
      it('it should GET a lando given id', function(done){
-      var lando = {id : 1,nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
+      var lando = {id : 1,nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
       Lando.insert(lando).then(function(sucess){
         chai.request(server)
           .get('/landoj/' + lando.id)
@@ -77,7 +69,7 @@ describe('Landoj', function() {
 
   describe('POST /landoj', function(){
    it('it should POST a lando', function(done){
-     var lando = {id : 1, nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
+     var lando = {id : 1, nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
      chai.request(server)
          .post('/landoj')
          .send(lando)

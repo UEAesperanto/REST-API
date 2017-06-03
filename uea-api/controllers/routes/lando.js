@@ -1,6 +1,7 @@
 var util = require('util');
 var Lando = require('../models/lando');
 var db = require('../../modules/db');
+var query = require('../../modules/query');
 
 /*
   GET /lando
@@ -8,7 +9,11 @@ var db = require('../../modules/db');
 var _getLandoj = function(req, res){
   Lando.find().then(function(sucess){
         var landoj = sucess;
-        res.send(landoj);
+        landoj = landoj.filter(query.search(req.query));
+        if(landoj.length <= 0)
+          res.status(404).send({message: 'Ne trovita'});
+        else
+          res.status(200).send(landoj);
   });
 }
 
@@ -19,7 +24,7 @@ var _getLando = function(req, res){
   Lando.find(req.params.id).then(function(sucess){
       var lando = sucess;
       if(lando.length <= 0)
-        res.status(404).send({message: 'Not Found'});
+        res.status(404).send({message: 'Ne trovita'});
       else
         res.status(200).send(lando);
   });

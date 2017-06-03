@@ -23,8 +23,8 @@ var _create = function(obj){
 var _insert = function(lando){
   var query = util.format(
   'INSERT INTO lando () \
-  VALUES (%s, "%s", "%s", "%s");'
-  , lando.id, lando.nomoLoka, lando.nomoEo, lando.landKodo);
+  VALUES (%s, "%s", "%s", ""%s", "%s");'
+  , lando.id, lando.nomoLoka, lando.nomoEo, lando.finajxoEo, lando.landKodo);
   return db.mysqlExec(query);
 }
 

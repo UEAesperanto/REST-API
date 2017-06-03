@@ -6,6 +6,7 @@ var _landoNull = function(){
     id : null,
     nomoLoka : null,
     nomoEo : null,
+    finajxoEo: null,
     landKodo : null
   }
 }
@@ -16,14 +17,14 @@ var _create = function(obj){
   for(i=0; i < keys.length; i++){
     lando[keys[i]] = obj[keys[i]];
   }
-  lando["id"] = obj["id"]
+  lando["id"] = obj["id"];
   return lando;
 }
 
 var _insert = function(lando){
   var query = util.format(
   'INSERT INTO lando () \
-  VALUES (%s, "%s", "%s", ""%s", "%s");'
+  VALUES (%s, "%s", "%s", "%s", "%s");'
   , lando.id, lando.nomoLoka, lando.nomoEo, lando.finajxoEo, lando.landKodo);
   return db.mysqlExec(query);
 }

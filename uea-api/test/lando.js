@@ -39,7 +39,7 @@ describe('Landoj', function() {
 
    describe('GET /landoj/:id', function(){
      it('it should GET a lando given id', function(done){
-      var lando = {id : 1,nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
+      var lando = {id : 1, nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
       Lando.insert(lando).then(function(sucess){
         chai.request(server)
           .get('/landoj/' + lando.id)
@@ -53,7 +53,7 @@ describe('Landoj', function() {
     });
 
     it('it NOT should GET a landoj given id', function(done){
-     var lando = {id : 2,nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
+     var lando = {id : 2, nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
      Lando.insert(lando).then(function(sucess){
        chai.request(server)
          .get('/landoj/' + lando.id + 1)
@@ -99,7 +99,7 @@ describe('Landoj', function() {
 
  describe('DELETE /landoj', function(){
   it('it should DELETE a landoj given id', function(done){
-    var lando = {id : 1, nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
+    var lando = {id : 1, nomoLoka : "nomoLoka", nomoEo : "nomoEo",landKodo : "landKodo" };
     Lando.insert(lando).then(function(sucess){
       chai.request(server)
         .delete('/landoj/' + lando.id)

@@ -25,13 +25,11 @@ VALUES (
 INSERT INTO ref_grupo_grupa_kategorio ()
   VALUES (
    1, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1, /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-  PRIMARY KEY (idGrupo, idGrupaKategorio)
+   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
 );
 
 INSERT INTO ref_grupo_grupa_kategorio ()
   VALUES (
    2, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1, /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-  PRIMARY KEY (idGrupo, idGrupaKategorio)
+   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
 );

@@ -39,5 +39,18 @@ describe('Grupoj', function() {
              done();
            });
      });
+
+     it('it should GET all the grupoj/laboroj with body', function(done){
+       var user = {
+         message : "Teste"
+       }
+       chai.request(server)
+           .get('/grupoj/laboroj')
+           .send(user)
+           .end((err, res) => {
+               res.should.have.status(404);
+             done();
+           });
+     });
    });
 });

@@ -30,11 +30,30 @@ var _getGrupo = function(req, res){
 }
 
 /*
-   GET /grupo/laboroj
+   GET /grupoj/laboroj
 */
 
 var _getLaborgrupoj = function(req, res){
   Grupo.findKategorio('1').then(function(sucess){
+        var grupoj = sucess;
+        grupoj = grupoj.filter(query.search(req.query));
+        if(grupoj.length <= 0)
+          res.status(404).send({message: 'Ne trovita'});
+        else
+          res.status(200).send(grupoj);
+  }).catch(function(error) {
+    res.status(500).send({message: 'Eraro'});
+  }
+  );
+}
+
+
+/*
+   GET /grupoj/laboroj/komisionoj
+*/
+
+var _getKomisionoj = function(req, res){
+  Grupo.findKategorio('3').then(function(sucess){
         var grupoj = sucess;
         grupoj = grupoj.filter(query.search(req.query));
         if(grupoj.length <= 0)
@@ -86,5 +105,6 @@ module.exports = {
   getGrupo: _getGrupo,
   getLaborgrupoj: _getLaborgrupoj,
   getEstraranoj: _getEstraranoj,
-  getKomitatanoj: _getKomitatanoj
+  getKomitatanoj: _getKomitatanoj,
+  getKomisionoj: _getKomisionoj
 }

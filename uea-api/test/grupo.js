@@ -78,7 +78,18 @@ describe('Grupoj', function() {
             done();
            });
      });
-
+     it('it should GET all the grupoj/laboroj/komisionoj with body', function(done){
+       var user = {
+         message : "Teste"
+       }
+       chai.request(server)
+           .get('/grupoj/laboroj/komisionoj')
+           .send(user)
+           .end((err, res) => {
+               res.should.have.status(404);
+            done();
+           });
+     });
 
    });
 });

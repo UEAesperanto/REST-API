@@ -38,6 +38,23 @@ INSERT INTO grupo ()
         1 /*"idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
     );
 
+INSERT INTO grupo ()
+      VALUES (
+          6, /*id int(11) PRIMARY KEY,*/
+          "afrika agado", /*nomo varchar(255)*/
+          "priskribo varchar(255)",
+          1 /*"idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+      );
+
+INSERT INTO grupo ()
+      VALUES (
+          7, /*id int(11) PRIMARY KEY,*/
+          "amerika agado", /*nomo varchar(255)*/
+          "priskribo varchar(255)",
+          1 /*"idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+      );
+
+
 
 INSERT INTO grupo ()
 VALUES (
@@ -45,50 +62,4 @@ VALUES (
   "alia",
   "priskribo",
   NULL
-);
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   1, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   2, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   2, /*idGrupo int(11) REFERENCES grupo(id)*/
-   2 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   3, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   3, /*idGrupo int(11) REFERENCES grupo(id)*/
-   2 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   4, /*idGrupo int(11) REFERENCES grupo(id)*/
-   1 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
-);
-
-
-INSERT INTO ref_grupo_grupa_kategorio ()
-  VALUES (
-   4, /*idGrupo int(11) REFERENCES grupo(id)*/
-   2 /*idGrupaKategorio int(11) REFERENCES grupa_kategorio(id),*/
 );

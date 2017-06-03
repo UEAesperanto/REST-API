@@ -25,7 +25,6 @@ var _findKomitatanoj = function() {
   return db.mysqlExec(query);
 }
 
-
 module.exports = {
   find:_find,
   findKategorio: _findKategorio,

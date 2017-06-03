@@ -9,7 +9,7 @@
     "node": ">=4.3.2"
   },
   "scripts": {
-    "start": "npm install && node server.js",
+    "start": "node server.js",
     "test": "mocha --timeout 10000"
   },
   "dependencies": {

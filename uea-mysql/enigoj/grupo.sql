@@ -14,6 +14,14 @@ INSERT INTO grupo ()
     1 /*"idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
   );
 
+INSERT INTO grupo ()
+VALUES (
+  99,
+  "alia",
+  "priskribo",
+  NULL
+);
+
 INSERT INTO ref_grupo_grupa_kategorio ()
   VALUES (
    1, /*idGrupo int(11) REFERENCES grupo(id)*/

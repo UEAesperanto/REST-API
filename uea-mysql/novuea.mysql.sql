@@ -405,8 +405,8 @@ CREATE TABLE kongresa_programo (
     fintempo date,
     evento varchar(255),
     priskribo varchar(1600),
-    kategorio int (11) REFERENCES kongresa_programo_kategorio(id),
-    programejo int(11) REFERENCES kongresa_programejo(id)
+    idkategorio int (11) REFERENCES kongresa_programo_kategorio(id),
+    idprogramejo int(11) REFERENCES kongresa_programejo(id)
 );
 
 /*Ekzemple, IKU, koncerto, komencanto, ktp*/

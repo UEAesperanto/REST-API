@@ -13,5 +13,7 @@ app.route('/:id')
     .get(grupo.getGrupo);
 router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
+router.route('/laboroj/estraranoj')
+    .get(grupo.getEstraranoj);
 
 module.exports = app;

@@ -52,5 +52,19 @@ describe('Grupoj', function() {
              done();
            });
      });
+
+     it('it should GET all the grupoj/laboroj/estraranoj with body', function(done){
+       var user = {
+         message : "Teste"
+       }
+       chai.request(server)
+           .get('/grupoj/laboroj/estraranoj')
+           .send(user)
+           .end((err, res) => {
+               res.should.have.status(404);
+             done();
+           });
+     });
+
    });
 });

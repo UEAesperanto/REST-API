@@ -30,3 +30,44 @@ INSERT INTO uzantoAuxAsocio ()
     NULL, /* uzantnomo */
     NULL /* pasvorto */
   );
+
+INSERT INTO uzantoAuxAsocio ()
+  VALUES (
+    5, /* id */
+    "4", /* ueakodo */
+    NULL, /* uzantnomo */
+    NULL /* pasvorto */
+  );
+
+INSERT INTO uzantoAuxAsocio ()
+    VALUES (
+      6, /* id */
+      "4", /* ueakodo */
+      NULL, /* uzantnomo */
+      NULL /* pasvorto */
+    );
+
+INSERT INTO uzantoAuxAsocio ()
+      VALUES (
+        7, /* id */
+        "4", /* ueakodo */
+        NULL, /* uzantnomo */
+        NULL /* pasvorto */
+      );
+
+INSERT INTO uzantoAuxAsocio ()
+        VALUES (
+          8, /* id */
+          "0", /* ueakodo */
+          NULL, /* uzantnomo */
+          NULL /* pasvorto */
+      );
+
+
+INSERT INTO uzantoAuxAsocio ()
+      VALUES (
+          9, /* id */
+          "0", /* ueakodo */
+          NULL, /* uzantnomo */
+          NULL /* pasvorto */
+      );

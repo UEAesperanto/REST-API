@@ -47,8 +47,25 @@ var _getLaborgrupoj = function(req, res){
   );
 }
 
+var _getEstraranoj = function(req, res){
+  Grupo.findEstraranoj().then(function(sucess){
+        var estraranoj = sucess;
+        estraranoj = estraranoj.filter(query.search(req.query));
+        if(estraranoj.length <= 0)
+          res.status(404).send({message: 'Ne trovita'});
+        else
+          res.status(200).send(estraranoj);
+  }).catch(function(error) {
+    res.status(500).send({message: 'Eraro'});
+  }
+);
+}
+
+
+
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
-  getLaborgrupoj: _getLaborgrupoj
+  getLaborgrupoj: _getLaborgrupoj,
+  getEstraranoj: _getEstraranoj
 }

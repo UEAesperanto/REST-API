@@ -46,7 +46,7 @@ INSERT INTO asocio ()
 
 INSERT INTO asocio ()
     VALUES(
-      4, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
+      5, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
       "Brazila Esperantista Junulara Organizo ", /*nomo varchar(255) */
       "BEJO", /*siglo varchar(255) */
       "SDS Bl.P 36, Ed. Venâncio III Sala 303, 70393-902 Brasília - DF, Brazilo", /*adreso varchar(255) */
@@ -68,7 +68,7 @@ INSERT INTO asocio ()
 
   INSERT INTO asocio ()
       VALUES(
-        5, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
+        7, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
         "Junulara Esperanto Britio ", /*nomo varchar(255) */
         "JEB", /*siglo varchar(255) */
         "ie, londono", /*adreso varchar(255) */
@@ -89,7 +89,7 @@ INSERT INTO asocio ()
 
     INSERT INTO asocio ()
         VALUES(
-          6, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
+          9, /*id int(11) PRIMARY KEY REFERENCES uzantoAuxAsocio(id)*/
           "Internacia Scienca Esperantista-Asocio ", /*nomo varchar(255) */
           "ISAE", /*siglo varchar(255) */
           "ie, Londono", /*adreso varchar(255) */

@@ -15,8 +15,14 @@ var _findKategorio = function(kategorio){
   return db.mysqlExec(query);
 }
 
+var _findEstraranoj = function() {
+  var query = util.format('SELECT A.personanomo, A.familianomo, A.titolo, A.bildo, A.nacialando, A.retposxto, B.respondeco, B.tasko FROM uzanto A INNER JOIN aneco B ON (A.id = B.idAno) WHERE B.idGrupo = 1;');
+  return db.mysqlExec(query);
+}
+
 
 module.exports = {
   find:_find,
-  findKategorio: _findKategorio
+  findKategorio: _findKategorio,
+  findEstraranoj: _findEstraranoj
 }

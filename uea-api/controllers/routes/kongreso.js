@@ -29,7 +29,21 @@ var _getKongreso = function(req, res){
   });
 }
 
+/*
+  GET /kongresoj/:id
+*/
+var _getKromaj = function(req, res){
+  Kongreso.findKromaj(req.params.id).then(function(sucess){
+      var kongreso = sucess;
+      if(kongreso.length <= 0)
+        res.status(404).send({message: 'Ne trovita'});
+      else
+        res.status(200).send(kongreso);
+  });
+}
+
 module.exports = {
   getKongresoj: _getKongresoj,
-  getKongreso: _getKongreso
+  getKongreso: _getKongreso,
+  getKromaj: _getKromaj
 }

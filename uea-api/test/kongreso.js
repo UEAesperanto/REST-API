@@ -26,5 +26,14 @@ describe('Kongresoj', function() {
              done();
            });
      });
-   });
+
+      it('it should GET all the kromaj kongresoj', function(done){
+        chai.request(server)
+            .get('/kongresoj/1/kromaj')
+            .end((err, res) => {
+                res.should.have.status(404);
+              done();
+            });
+       });
+    });
 });

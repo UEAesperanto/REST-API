@@ -13,5 +13,7 @@ app.route('/:id')
     .get(kongreso.getKongreso);
 router.route('/:id/kromaj/')
     .get(kongreso.getKromaj);
+router.route('/:id/aligxintoj')
+    .get(kongreso.getAligxintoj);
 
 module.exports = app;

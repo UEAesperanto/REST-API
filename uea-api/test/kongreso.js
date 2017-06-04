@@ -35,5 +35,23 @@ describe('Kongresoj', function() {
               done();
             });
        });
+
+       it('it should GET all the aligxintoj to kongresoj', function(done){
+         chai.request(server)
+             .get('/kongresoj/1/aligxintoj')
+             .end((err, res) => {
+                 res.should.have.status(404);
+               done();
+             });
+        });
+
+        it('it should GET all the aligxikotizoj to kongresoj', function(done){
+          chai.request(server)
+              .get('/kongresoj/1/aligxkotizoj')
+              .end((err, res) => {
+                  res.should.have.status(404);
+                done();
+              });
+         });
     });
 });

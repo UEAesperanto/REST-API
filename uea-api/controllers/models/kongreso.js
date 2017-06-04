@@ -19,8 +19,14 @@ var _findAligxintoj = function(id){
   return db.mysqlExec(query);
 }
 
+var _findAligxikotizoj = function(id){
+  var query = util.format('SELECT *  FROM kongresa_aligxkotizo WHERE idKongreso = %s;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   findKromaj: _findKromaj,
-  findAligxintoj: _findAligxintoj
+  findAligxintoj: _findAligxintoj,
+  findAligxikotizoj: _findAligxikotizoj
 }

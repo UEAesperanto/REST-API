@@ -57,9 +57,21 @@ var _getAligxintoj = function(req, res){
   });
 }
 
+var _getAligxkotizoj = function(req, res){
+  Kongreso.findAligxikotizoj(req.params.id).then(function(sucess){
+      var aligxikotizoj = sucess;
+      aligxikotizoj = aligxikotizoj.filter(query.search(req.query));
+      if(aligxikotizoj.length <= 0)
+        res.status(404).send({message: 'Ne trovita'});
+      else
+        res.status(200).send(aligxikotizoj);
+  });
+}
+
 module.exports = {
   getKongresoj: _getKongresoj,
   getKongreso: _getKongreso,
   getKromaj: _getKromaj,
-  getAligxintoj: _getAligxintoj
+  getAligxintoj: _getAligxintoj,
+  getAligxkotizoj: _getAligxkotizoj
 }

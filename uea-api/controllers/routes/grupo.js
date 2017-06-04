@@ -47,64 +47,27 @@ var _getLaborgrupoj = function(req, res){
   );
 }
 
-
-/*
-   GET /grupoj/laboroj/komisionoj
-*/
-
-var _getKomisionoj = function(req, res){
-  Grupo.findKategorio('3').then(function(sucess){
-        var grupoj = sucess;
-        grupoj = grupoj.filter(query.search(req.query));
-        if(grupoj.length <= 0)
-          res.status(404).send({message: 'Ne trovita'});
-        else
-          res.status(200).send(grupoj);
-  }).catch(function(error) {
-    res.status(500).send({message: 'Eraro'});
-  }
-  );
-}
-
 /*
    GET /grupo/laboroj/estraranoj
 */
-var _getEstraranoj = function(req, res){
-  Grupo.findEstraranoj().then(function(sucess){
-        var estraranoj = sucess;
-        estraranoj = estraranoj.filter(query.search(req.query));
-        if(estraranoj.length <= 0)
+var _getLaboranoj = function(req, res){
+  Grupo.findLaboranoj(req.params.id).then(function(sucess){
+        var anoj = sucess;
+        anoj = anoj.filter(query.search(req.query));
+        if(anoj.length <= 0)
           res.status(404).send({message: 'Ne trovita'});
         else
-          res.status(200).send(estraranoj);
+          res.status(200).send(anoj);
   }).catch(function(error) {
     res.status(500).send({message: 'Eraro'});
   }
 );
 }
 
-/*
-   GET /grupo/laboroj/komitatanoj
-*/
-var _getKomitatanoj = function(req, res){
-  Grupo.findKomitatanoj().then(function(sucess){
-        var komitatanoj = sucess;
-        komitatanoj = komitatanoj.filter(query.search(req.query));
-        if(komitatanoj.length <= 0)
-          res.status(404).send({message: 'Ne trovita'});
-        else
-          res.status(200).send(komitatanoj);
-  }).catch(function(error) {
-    res.status(500).send({message: 'Eraro'});
-  }
-);
-}
 
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
   getLaborgrupoj: _getLaborgrupoj,
-  getEstraranoj: _getEstraranoj,
-  getKomitatanoj: _getKomitatanoj,
-  getKomisionoj: _getKomisionoj
+  getLaboranoj: _getLaboranoj
 }

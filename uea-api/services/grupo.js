@@ -13,10 +13,6 @@ app.route('/:id')
     .get(grupo.getGrupo);
 router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
-router.route('/laboroj/estraranoj')
-    .get(grupo.getEstraranoj);
-router.route('/laboroj/komitatanoj')
-    .get(grupo.getKomitatanoj);
-router.route('/laboroj/komisionoj')
-    .get(grupo.getKomisionoj);
+router.route('/laboroj/:id/anoj')
+    .get(grupo.getLaboranoj);
 module.exports = app;

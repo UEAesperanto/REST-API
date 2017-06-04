@@ -53,37 +53,12 @@ describe('Grupoj', function() {
            });
      });
 
-     it('it should GET all the grupoj/laboroj/estraranoj with body', function(done){
+     it('it should GET all the grupoj/laboroj/:id/anoj with body', function(done){
        var user = {
          message : "Teste"
        }
        chai.request(server)
-           .get('/grupoj/laboroj/estraranoj')
-           .send(user)
-           .end((err, res) => {
-               res.should.have.status(404);
-             done();
-           });
-     });
-
-     it('it should GET all the grupoj/laboroj/komitatanoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
-       chai.request(server)
-           .get('/grupoj/laboroj/komitatanoj')
-           .send(user)
-           .end((err, res) => {
-               res.should.have.status(404);
-            done();
-           });
-     });
-     it('it should GET all the grupoj/laboroj/komisionoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
-       chai.request(server)
-           .get('/grupoj/laboroj/komisionoj')
+           .get('/grupoj/laboroj/1/anoj')
            .send(user)
            .end((err, res) => {
                res.should.have.status(404);

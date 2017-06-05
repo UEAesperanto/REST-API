@@ -19,5 +19,7 @@ router.route('/:id/aligxkotizoj')
     .get(kongreso.getAligxkotizoj);
 router.route('/:id/programeroj')
     .get(kongreso.getProgrameroj);
+router.route('/:id/programejoj')
+    .get(kongreso.getProgramejoj);
 
 module.exports = app;

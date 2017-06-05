@@ -62,5 +62,14 @@ describe('Kongresoj', function() {
                  done();
                });
           });
+
+          it('it should GET all the programejoj to kongresoj', function(done){
+            chai.request(server)
+                .get('/kongresoj/1/programejoj')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                  done();
+                });
+           });
     });
 });

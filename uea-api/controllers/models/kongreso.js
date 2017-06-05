@@ -29,10 +29,16 @@ var _findProgrameroj = function(id) {
   return db.mysqlExec(query);
 }
 
+var _findProgramejoj = function(id) {
+  var query = util.format('SELECT *  FROM kongresa_programejo WHERE idKongreso = %s;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   findKromaj: _findKromaj,
   findAligxintoj: _findAligxintoj,
   findProgrameroj: _findProgrameroj,
+  findProgramejoj: _findProgramejoj,
   findAligxikotizoj: _findAligxikotizoj
 }

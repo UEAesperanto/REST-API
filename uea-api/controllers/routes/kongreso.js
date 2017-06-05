@@ -61,11 +61,20 @@ var _getProgrameroj = function(req, res) {
   });
 }
 
+var _getProgramejoj = function(req, res) {
+  Kongreso.findProgramejoj(req.params.id).then(function(sucess){
+      var programeroj = sucess;
+      programeroj = programeroj.filter(query.search(req.query));
+      res.status(200).send(programeroj);
+  });
+}
+
 module.exports = {
   getKongresoj: _getKongresoj,
   getKongreso: _getKongreso,
   getKromaj: _getKromaj,
   getAligxintoj: _getAligxintoj,
   getAligxkotizoj: _getAligxkotizoj,
-  getProgrameroj: _getProgrameroj
+  getProgrameroj: _getProgrameroj,
+  getProgramejoj: _getProgramejoj
 }

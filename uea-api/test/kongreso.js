@@ -53,5 +53,14 @@ describe('Kongresoj', function() {
                 done();
               });
          });
+
+         it('it should GET all the programeroj to kongresoj', function(done){
+           chai.request(server)
+               .get('/kongresoj/1/programeroj')
+               .end((err, res) => {
+                   res.should.have.status(404);
+                 done();
+               });
+          });
     });
 });

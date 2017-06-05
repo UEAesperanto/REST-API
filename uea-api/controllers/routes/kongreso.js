@@ -68,10 +68,22 @@ var _getAligxkotizoj = function(req, res){
   });
 }
 
+var _getProgrameroj = function(req, res) {
+  Kongreso.findProgrameroj(req.params.id).then(function(sucess){
+      var programeroj = sucess;
+      programeroj = programeroj.filter(query.search(req.query));
+      if(programeroj.length <= 0)
+        res.status(404).send({message: 'Ne trovita'});
+      else
+        res.status(200).send(programeroj);
+  });
+}
+
 module.exports = {
   getKongresoj: _getKongresoj,
   getKongreso: _getKongreso,
   getKromaj: _getKromaj,
   getAligxintoj: _getAligxintoj,
-  getAligxkotizoj: _getAligxkotizoj
+  getAligxkotizoj: _getAligxkotizoj,
+  getProgrameroj: _getProgrameroj
 }

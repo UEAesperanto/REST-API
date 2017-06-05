@@ -69,6 +69,14 @@ var _getProgramejoj = function(req, res) {
   });
 }
 
+var _getProgramkategorioj = function(req, res) {
+  Kongreso.findProgramkategorioj().then(function(sucess){
+      var programkat = sucess;
+      programkat = programkat.filter(query.search(req.query));
+      res.status(200).send(programkat);
+  });
+}
+
 module.exports = {
   getKongresoj: _getKongresoj,
   getKongreso: _getKongreso,
@@ -76,5 +84,6 @@ module.exports = {
   getAligxintoj: _getAligxintoj,
   getAligxkotizoj: _getAligxkotizoj,
   getProgrameroj: _getProgrameroj,
-  getProgramejoj: _getProgramejoj
+  getProgramejoj: _getProgramejoj,
+  getProgramkategorioj: _getProgramkategorioj
 }

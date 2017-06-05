@@ -71,5 +71,14 @@ describe('Kongresoj', function() {
                   done();
                 });
            });
+
+           it('it should GET all the programekategorioj', function(done){
+             chai.request(server)
+                 .get('/kongresoj/programkategorioj')
+                 .end((err, res) => {
+                     res.should.have.status(200);
+                   done();
+                 });
+            });
     });
 });

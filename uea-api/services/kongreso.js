@@ -21,5 +21,8 @@ router.route('/:id/programeroj')
     .get(kongreso.getProgrameroj);
 router.route('/:id/programejoj')
     .get(kongreso.getProgramejoj);
+router.route('/programkategorioj')
+    .get(kongreso.getProgramkategorioj);
+
 
 module.exports = app;

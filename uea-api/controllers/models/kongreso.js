@@ -34,11 +34,17 @@ var _findProgramejoj = function(id) {
   return db.mysqlExec(query);
 }
 
+var _findProgramkategorioj = function() {
+  var query = util.format('SELECT *  FROM kongresa_programo_kategorio');
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   findKromaj: _findKromaj,
   findAligxintoj: _findAligxintoj,
   findProgrameroj: _findProgrameroj,
   findProgramejoj: _findProgramejoj,
-  findAligxikotizoj: _findAligxikotizoj
+  findAligxikotizoj: _findAligxikotizoj,
+  findProgramkategorioj: _findProgramkategorioj
 }

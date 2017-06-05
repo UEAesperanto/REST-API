@@ -21,23 +21,23 @@ describe('Uzantoj', function() {
        chai.request(server)
            .get('/uzantoj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
    });
 
 
-   describe('GET /uzanto', function(){
+   describe('GET /uzantoj', function(){
     it('it should GET all the uzantoj with body', function(done){
       var user = {
         message : "Teste"
       }
       chai.request(server)
-          .get('/uzanto')
+          .get('/uzantoj')
           .send(user)
           .end((err, res) => {
-              res.should.have.status(404);
+              res.should.have.status(200);
             done();
           });
     });

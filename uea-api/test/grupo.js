@@ -22,7 +22,7 @@ describe('Grupoj', function() {
        chai.request(server)
            .get('/grupoj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -35,7 +35,7 @@ describe('Grupoj', function() {
            .get('/grupoj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -48,7 +48,7 @@ describe('Grupoj', function() {
            .get('/grupoj/laboroj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
             done();
            });
      });
@@ -61,7 +61,7 @@ describe('Grupoj', function() {
            .get('/grupoj/laboroj/1/anoj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
             done();
            });
      });

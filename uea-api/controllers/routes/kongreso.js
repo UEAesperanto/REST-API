@@ -9,10 +9,7 @@ var _getKongresoj = function(req, res){
   Kongreso.find().then(function(sucess){
         var kongresoj = sucess;
         kongresoj = kongresoj.filter(query.search(req.query));
-        if(kongresoj.length <= 0)
-          res.status(404).send({message: 'Ne trovita'});
-        else
-          res.status(200).send(kongresoj);
+        res.status(200).send(kongresoj);
   });
 }
 
@@ -23,10 +20,7 @@ var _getKongreso = function(req, res){
   Kongreso.find(req.params.id).then(function(sucess){
       var kongreso = sucess;
       kongreso = kongreso.filter(query.search(req.query));
-      if(kongreso.length <= 0)
-        res.status(404).send({message: 'Ne trovita'});
-      else
-        res.status(200).send(kongreso);
+      res.status(200).send(kongreso);
   });
 }
 
@@ -36,10 +30,7 @@ var _getKongreso = function(req, res){
 var _getKromaj = function(req, res){
   Kongreso.findKromaj(req.params.id).then(function(sucess){
       var kongreso = sucess;
-      if(kongreso.length <= 0)
-        res.status(404).send({message: 'Ne trovita'});
-      else
-        res.status(200).send(kongreso);
+      res.status(200).send(kongreso);
   });
 }
 
@@ -50,10 +41,7 @@ var _getAligxintoj = function(req, res){
   Kongreso.findAligxintoj(req.params.id).then(function(sucess){
       var aligxintoj = sucess;
       aligxintoj = aligxintoj.filter(query.search(req.query));
-      if(aligxintoj.length <= 0)
-        res.status(404).send({message: 'Ne trovita'});
-      else
-        res.status(200).send(aligxintoj);
+      res.status(200).send(aligxintoj);
   });
 }
 
@@ -61,10 +49,7 @@ var _getAligxkotizoj = function(req, res){
   Kongreso.findAligxikotizoj(req.params.id).then(function(sucess){
       var aligxikotizoj = sucess;
       aligxikotizoj = aligxikotizoj.filter(query.search(req.query));
-      if(aligxikotizoj.length <= 0)
-        res.status(404).send({message: 'Ne trovita'});
-      else
-        res.status(200).send(aligxikotizoj);
+      res.status(200).send(aligxikotizoj);
   });
 }
 
@@ -72,10 +57,7 @@ var _getProgrameroj = function(req, res) {
   Kongreso.findProgrameroj(req.params.id).then(function(sucess){
       var programeroj = sucess;
       programeroj = programeroj.filter(query.search(req.query));
-      if(programeroj.length <= 0)
-        res.status(404).send({message: 'Ne trovita'});
-      else
-        res.status(200).send(programeroj);
+      res.status(200).send(programeroj);
   });
 }
 

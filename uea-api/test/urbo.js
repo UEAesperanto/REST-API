@@ -22,7 +22,7 @@ describe('Urboj', function() {
        chai.request(server)
            .get('/urboj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -35,7 +35,7 @@ describe('Urboj', function() {
            .get('/urboj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });

@@ -10,10 +10,7 @@ var _getUzantoj = function(req, res){
   Uzanto.find().then(function(sucess){
         var uzantoj = sucess;
         uzantoj = uzantoj.filter(query.search(req.query));
-        if(uzantoj.length <= 0)
-          res.status(404).send({message: 'Ne trovita'});
-        else
-          res.status(200).send(uzantoj);
+        res.status(200).send(uzantoj);
   });
 }
 
@@ -23,7 +20,7 @@ var _getUzantoj = function(req, res){
 var _getUzanto = function(req, res){
   Uzanto.find(req.params.id).then(function(sucess){
       var uzanto = sucess;
-      res.send(uzanto);
+      res.status(200).send(uzanto);
   });
 }
 

@@ -9,10 +9,7 @@ var _getUrboj = function(req, res){
   Urbo.find().then(function(sucess){
         var urboj = sucess;
         urboj = urboj.filter(query.search(req.query));
-        if(urboj.length <= 0)
-          res.status(404).send({message: 'Ne trovita'});
-        else
-          res.status(200).send(urboj);
+        res.status(200).send(urboj);
   });
 }
 
@@ -22,10 +19,7 @@ var _getUrboj = function(req, res){
 var _getUrbo = function(req, res){
   Urbo.find(req.params.id).then(function(sucess){
       var urbo = sucess;
-      if(urbo.length <= 0)
-        res.status(404).send({message: 'Not Found'});
-      else
-        res.status(200).send(urbo);
+      res.status(200).send(urbo);
   });
 }
 

@@ -22,7 +22,7 @@ describe('Landoj', function() {
        chai.request(server)
            .get('/landoj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -31,7 +31,7 @@ describe('Landoj', function() {
        chai.request(server)
            .get('/landoj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -58,7 +58,7 @@ describe('Landoj', function() {
        chai.request(server)
          .get('/landoj/' + lando.id + 1)
          .end(function(err, res){
-           res.should.have.status(404);
+           res.should.have.status(200);
            //expect(res.body).to.deep.equal({message: 'sucess'})
            //res.body.should.be.a('object');
            done();

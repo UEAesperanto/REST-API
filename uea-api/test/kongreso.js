@@ -22,7 +22,7 @@ describe('Kongresoj', function() {
        chai.request(server)
            .get('/kongresoj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -31,7 +31,7 @@ describe('Kongresoj', function() {
         chai.request(server)
             .get('/kongresoj/1/kromaj')
             .end((err, res) => {
-                res.should.have.status(404);
+                res.should.have.status(200);
               done();
             });
        });
@@ -40,7 +40,7 @@ describe('Kongresoj', function() {
          chai.request(server)
              .get('/kongresoj/1/aligxintoj')
              .end((err, res) => {
-                 res.should.have.status(404);
+                 res.should.have.status(200);
                done();
              });
         });
@@ -49,7 +49,7 @@ describe('Kongresoj', function() {
           chai.request(server)
               .get('/kongresoj/1/aligxkotizoj')
               .end((err, res) => {
-                  res.should.have.status(404);
+                  res.should.have.status(200);
                 done();
               });
          });
@@ -58,7 +58,7 @@ describe('Kongresoj', function() {
            chai.request(server)
                .get('/kongresoj/1/programeroj')
                .end((err, res) => {
-                   res.should.have.status(404);
+                   res.should.have.status(200);
                  done();
                });
           });

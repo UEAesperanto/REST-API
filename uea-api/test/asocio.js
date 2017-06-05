@@ -22,7 +22,7 @@ describe('Asocioj', function() {
        chai.request(server)
            .get('/asocioj')
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });
@@ -35,7 +35,7 @@ describe('Asocioj', function() {
            .get('/asocioj')
            .send(user)
            .end((err, res) => {
-               res.should.have.status(404);
+               res.should.have.status(200);
              done();
            });
      });

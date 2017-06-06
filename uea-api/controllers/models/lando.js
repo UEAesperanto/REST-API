@@ -3,7 +3,6 @@ var db = require('../../modules/db');
 
 var _landoNull = function(){
   return {
-    id : null,
     nomoLoka : null,
     nomoEo : null,
     finajxoEo: null,
@@ -17,15 +16,14 @@ var _create = function(obj){
   for(i=0; i < keys.length; i++){
     lando[keys[i]] = obj[keys[i]];
   }
-  lando["id"] = obj["id"];
+  console.log(lando);
   return lando;
 }
 
 var _insert = function(lando){
   var query = util.format(
-  'INSERT INTO lando () \
-  VALUES (%s, "%s", "%s", "%s", "%s");'
-  , lando.id, lando.nomoLoka, lando.nomoEo, lando.finajxoEo, lando.landKodo);
+  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landKodo) VALUES ("%s", "%s", "%s", "%s");',
+  lando.nomoLoka, lando.nomoEo, lando.finajxoEo, lando.landKodo);
   return db.mysqlExec(query);
 }
 

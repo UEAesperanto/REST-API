@@ -31,12 +31,7 @@ var _postLando = function(req, res){
   var novaLando = Lando.create(req.body);
   Lando.insert(novaLando).then(
     function(sucess){
-      Lando.find(novaLando.id).then(function(sucess){
-        if(sucess.length <= 0)
-          res.status(400).send({message: 'Bad Request'});
-        else
-          res.status(201).send(novaLando);
-      });
+      res.status(201).send(novaLando);
     },
     function(fail){
       res.status(500).send({message: 'Internal Error'})

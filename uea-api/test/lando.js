@@ -69,28 +69,16 @@ describe('Landoj', function() {
 
   describe('POST /landoj', function(){
    it('it should POST a lando', function(done){
-     var lando = {id : 1, nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
+     var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
      chai.request(server)
          .post('/landoj')
          .send(lando)
          .end(function(err, res){
              res.should.have.status(201);
-             res.body.should.have.property('id');
              res.body.should.have.property('nomoLoka');
              res.body.should.have.property('nomoEo');
              res.body.should.have.property('landKodo');
              //res.body.should.be.a('object');
-           done();
-         });
-   });
-
-   it('it NOT should POST a lando (miss ID)', function(done){
-     var lando = {nomoLoka : "nomoLoka",nomoEo : "nomoEo",landKodo : "landKodo" };
-     chai.request(server)
-         .post('/landoj')
-         .send(lando)
-         .end(function(err, res){
-             res.should.have.status(400); //Bad Request
            done();
          });
    });

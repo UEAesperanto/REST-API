@@ -89,8 +89,8 @@ CREATE TABLE uzanto (
     interfaco.*/
     adreso varchar(255),
     posxtkodo varchar(255),
-    logxurbo int(11) REFERENCES urbo(id),
-    nacialando int(11) REFERENCES lando(id),
+    idLogxurbo int(11) REFERENCES urbo(id),
+    idNacialando int(11) REFERENCES lando(id),
     naskigxtago date,
     mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
     mortdato date NULL, /*vera mortdato*/
@@ -122,8 +122,8 @@ CREATE TABLE uzanto_sangxpropono (
     interfaco.*/
     adreso varchar(255),
     posxtkodo varchar(255),
-    logxurbo int(11) REFERENCES urbo(id),
-    nacialando int(11) REFERENCES lando(id),
+    idLogxurbo int(11) REFERENCES urbo(id),
+    idNacialando int(11) REFERENCES lando(id),
     naskigxtago date,
     mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
     mortdato date NULL, /*vera mortdato*/
@@ -146,8 +146,8 @@ CREATE TABLE asocio (
     adreso varchar(255),
     fondigxdato date,
     posxtkodo varchar(255),
-    urbo int(11) NULL REFERENCES urbo(id),
-    fako int(11) NULL REFERENCES fako(id),
+    idUrbo int(11) NULL REFERENCES urbo(id),
+    idFako int(11) NULL REFERENCES fako(id),
     lando varchar(255) NULL REFERENCES lando(id),
     telhejmo varchar(255),
     retposxto varchar(255),
@@ -168,7 +168,7 @@ CREATE TABLE asocio_sangxpropono (
     adreso varchar(255),
     fondigxdato date,
     posxtkodo varchar(255),
-    urbo int(11) NULL REFERENCES urbo(id),
+    idUrbo int(11) NULL REFERENCES urbo(id),
     telhejmo varchar(255),
     landokodo varchar(255),
     retposxto varchar(255),
@@ -298,7 +298,7 @@ CREATE TABLE retlist_abono (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   ekde date,  /*estis tempo*/
   abono int(11) REFERENCES retlisto(id),
-  id_uzanto int(11) REFERENCES uzanto(id), /*povas esti null se ne farita tra iu konto*/
+  idUzanto int(11) REFERENCES uzanto(id), /*povas esti null se ne farita tra iu konto*/
   formato_html boolean, /*se true do html, se ne do teksto */
   kodigxo_utf8 boolean, /*se true do utf8, se ne do x-sistemo*/
   retadreso varchar(255) NULL /*null signifas ke id_uzanto estas definita kaj ke ni uzas retadreson de la uzanto.*/
@@ -369,8 +369,8 @@ CREATE TABLE aligxperiodo (
 
 /*por kongresoj kiuj povas okazi krom la ĉefa kongreso, ekzemple, antaǔ kongreso dum UK*/
 CREATE TABLE ref_kongreso_kroma_kongreso (
-   id_cxefa_kongreso int(11) REFERENCES kongreso(id),
-   id_kroma_kongreso int(11) REFERENCES kongreso(id),
+   idCxefaKongreso int(11) REFERENCES kongreso(id),
+   idKromaKongreso int(11) REFERENCES kongreso(id),
    PRIMARY KEY (id_cxefa_kongreso, id_kroma_kongreso)
 );
 
@@ -405,8 +405,8 @@ CREATE TABLE kongresa_programo (
     fintempo date,
     evento varchar(255),
     priskribo varchar(1600),
-    idkategorio int (11) REFERENCES kongresa_programo_kategorio(id),
-    idprogramejo int(11) REFERENCES kongresa_programejo(id)
+    idKategorio int (11) REFERENCES kongresa_programo_kategorio(id),
+    idProgramejo int(11) REFERENCES kongresa_programejo(id)
 );
 
 /*Ekzemple, IKU, koncerto, komencanto, ktp*/
@@ -512,7 +512,7 @@ CREATE TABLE ref_teko_kategorio (
 CREATE TABLE ref_teko_grupo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   idTeko int(11) REFERENCES teko(id),
-  idgrupo int(11) REFERENCES grupo(id),
+  idGrupo int(11) REFERENCES grupo(id),
   jaro int(11)
 );
 

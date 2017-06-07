@@ -4,17 +4,17 @@ var db = require('../../modules/db');
 
 
 var _insert = function(id, personanomo, familianomo, titolo,
-                       bildo, adreso, posxtkodo, nacialando,
+                       bildo, adreso, posxtkodo, idNacialando, idUrbo,
                        naskigxtago, notoj, retposxto, telhejmo,
                        teloficejo, telportebla,  tttpagxo) {
     var query = util.format('INSERT INTO uzanto(id, personanomo, familianomo, titolo,\
-                            bildo, adreso, posxtkodo, nacialando,\
+                            bildo, adreso, posxtkodo, idNacialando, idUrbo\
                             naskigxtago, notoj, retposxto, telhejmo,\
                             teloficejo, telportebla,  tttpagxo, validaKonto)\
                             VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s",\
                             "%s", "%s", "%s", "%s", "%s", "%s", 1)',
                             id, personanomo, familianomo, titolo,
-                            bildo, adreso, posxtkodo, nacialando,
+                            bildo, adreso, posxtkodo, idNacialando, idUrbo,
                             naskigxtago, notoj, retposxto, telhejmo,
                             teloficejo, telportebla,  tttpagxo);
 

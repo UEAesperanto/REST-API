@@ -9,7 +9,7 @@ var _getAsocioj = function(req, res){
   Asocio.find().then(function(sucess){
         var asocioj = sucess;
         asocioj = asocioj.filter(query.search(req.query));
-        res.status(200).send(asocioj);
+        res.status(404).send(asocioj);
   });
 }
 
@@ -20,7 +20,7 @@ var _getAsocio = function(req, res){
   Asocio.find(req.params.id).then(function(sucess){
       var asocio = sucess;
       asocio = asocio.filter(query.search(req.query));
-      res.status(200).send(asocio);
+      res.status(404).send(asocio);
   });
 }
 

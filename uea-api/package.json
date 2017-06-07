@@ -15,8 +15,10 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "config": "^1.25.1",
+    "crypto": "0.0.3",
     "express": "^4.14.0",
     "express-request-proxy": "^2.0.0",
+    "jsonwebtoken": "^7.4.1",
     "morgan": "^1.8.1",
     "multer": "^1.2.0",
     "mysql2": "^1.2.0",

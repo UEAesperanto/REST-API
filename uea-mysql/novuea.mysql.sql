@@ -68,7 +68,8 @@ CREATE TABLE uzantoAuxAsocio (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
     ueakodo varchar(255) NULL UNIQUE,
     uzantnomo varchar(255) NULL UNIQUE, /*por reteja uzado: datumoj el retdb:uzantaro*/
-    pasvorto text NULL  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
+    pasvortoHash text,
+    pasvortoSalt text
 );
 
 /*datumoj el ueadb:tuta1
@@ -237,7 +238,8 @@ CREATE TABLE administranto (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   idUzantoAuxAsocio int(11) NULL REFERENCES uzantoAuxAsocio(id), /*la admnistranto povas esti aǔ ne uzanto aǔ asocio*/
   uzantnomo varchar(255),
-  pasvorto varchar(255) /*devus iĝi sha1*/
+  pasvortoHash text,
+  pasvortoSalt text
 );
 
 CREATE TABLE ref_administranto_adminrajto (
@@ -371,7 +373,7 @@ CREATE TABLE aligxperiodo (
 CREATE TABLE ref_kongreso_kroma_kongreso (
    idCxefaKongreso int(11) REFERENCES kongreso(id),
    idKromaKongreso int(11) REFERENCES kongreso(id),
-   PRIMARY KEY (id_cxefa_kongreso, id_kroma_kongreso)
+   PRIMARY KEY (idCxefaKongreso, idKromaKongreso)
 );
 
 CREATE TABLE kongresa_servo (
@@ -420,7 +422,7 @@ CREATE TABLE kongresa_aligxinto (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
     kongresaNumero int(11),
     idUzanto int(11) REFERENCES uzanto(id),
-    idAligxkotizo int(11) REFERENCES aligxkotizo (id),
+    idAligxkotizo int(11) REFERENCES aligxkotizo(id),
     pagita boolean, /*Ĉu la aliĝinto pagis la kotizon?*/
     idKongreso int(11) REFERENCES kongreso(id)
 );

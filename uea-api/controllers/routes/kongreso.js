@@ -35,7 +35,7 @@ var _getKromaj = function(req, res){
 }
 
 /*
-  GET /kongresoj/:id/Kromaj
+  GET /kongresoj/:id/aligxintoj
 */
 var _getAligxintoj = function(req, res){
   Kongreso.findAligxintoj(req.params.id).then(function(sucess){
@@ -45,6 +45,9 @@ var _getAligxintoj = function(req, res){
   });
 }
 
+/*
+  GET /kongresoj/:id/aligxkotizoj
+*/
 var _getAligxkotizoj = function(req, res){
   Kongreso.findAligxikotizoj(req.params.id).then(function(sucess){
       var aligxikotizoj = sucess;
@@ -53,6 +56,9 @@ var _getAligxkotizoj = function(req, res){
   });
 }
 
+/*
+  GET /kongresoj/:id/programeroj
+*/
 var _getProgrameroj = function(req, res) {
   Kongreso.findProgrameroj(req.params.id).then(function(sucess){
       var programeroj = sucess;
@@ -61,6 +67,9 @@ var _getProgrameroj = function(req, res) {
   });
 }
 
+/*
+  GET /kongresoj/:id/programejoj
+*/
 var _getProgramejoj = function(req, res) {
   Kongreso.findProgramejoj(req.params.id).then(function(sucess){
       var programeroj = sucess;
@@ -69,6 +78,10 @@ var _getProgramejoj = function(req, res) {
   });
 }
 
+
+/*
+  GET /kongresoj/:id/programkategorioj
+*/
 var _getProgramkategorioj = function(req, res) {
   Kongreso.findProgramkategorioj().then(function(sucess){
       var programkat = sucess;

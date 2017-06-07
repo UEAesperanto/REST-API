@@ -4,7 +4,8 @@ INSERT INTO uzantoAuxAsocio ()
     1, /* id */
     "1", /* ueakodo */
     NULL, /* uzantnomo */
-    NULL /* pasvorto */
+    NULL, /** pasvortohash */
+    NULL /* pasvortosalt */
   );
 
 INSERT INTO uzantoAuxAsocio ()
@@ -12,6 +13,7 @@ INSERT INTO uzantoAuxAsocio ()
     2, /* id */
     "2", /* ueakodo */
     NULL, /* uzantnomo */
+    NULL, /** pasvortohash */
     NULL /* pasvorto */
   );
 
@@ -20,6 +22,7 @@ INSERT INTO uzantoAuxAsocio ()
     3, /* id */
     "3", /* ueakodo */
     NULL, /* uzantnomo */
+    NULL, /** pasvortohash */
     NULL /* pasvorto */
   );
 
@@ -28,38 +31,43 @@ INSERT INTO uzantoAuxAsocio ()
     4, /* id */
     "4", /* ueakodo */
     NULL, /* uzantnomo */
+    NULL, /** pasvortohash */
     NULL /* pasvorto */
   );
 
 INSERT INTO uzantoAuxAsocio ()
   VALUES (
     5, /* id */
-    "4", /* ueakodo */
+    "5", /* ueakodo */
     NULL, /* uzantnomo */
+    NULL, /** pasvortohash */
     NULL /* pasvorto */
   );
 
 INSERT INTO uzantoAuxAsocio ()
     VALUES (
       6, /* id */
-      "4", /* ueakodo */
+      "6", /* ueakodo */
       NULL, /* uzantnomo */
+      NULL, /** pasvortohash */
       NULL /* pasvorto */
     );
 
 INSERT INTO uzantoAuxAsocio ()
       VALUES (
         7, /* id */
-        "4", /* ueakodo */
+        "8", /* ueakodo */
         NULL, /* uzantnomo */
+        NULL, /** pasvortohash */
         NULL /* pasvorto */
       );
 
 INSERT INTO uzantoAuxAsocio ()
         VALUES (
           8, /* id */
-          "0", /* ueakodo */
+          "9", /* ueakodo */
           NULL, /* uzantnomo */
+          NULL, /** pasvortohash */
           NULL /* pasvorto */
       );
 
@@ -67,15 +75,17 @@ INSERT INTO uzantoAuxAsocio ()
 INSERT INTO uzantoAuxAsocio ()
       VALUES (
           9, /* id */
-          "0", /* ueakodo */
+          "10", /* ueakodo */
           NULL, /* uzantnomo */
+          NULL, /** pasvortohash */
           NULL /* pasvorto */
       );
 
       INSERT INTO uzantoAuxAsocio ()
             VALUES (
                 10, /* id */
-                "0", /* ueakodo */
+                "101", /* ueakodo */
                 NULL, /* uzantnomo */
+                NULL, /** pasvortohash */
                 NULL /* pasvorto */
             );

@@ -15,7 +15,9 @@ var _findKategorio = function(kategorio){
 }
 
 var _findLaboranoj = function(id) {
-  var query = util.format('SELECT A.personanomo, A.familianomo, A.titolo, A.bildo, A.nacialando, A.retposxto, B.respondeco, B.tasko FROM uzanto A INNER JOIN aneco B ON (A.id = B.idAno) WHERE B.idGrupo = %s;', id);
+  var query = util.format('SELECT A.personanomo, A.familianomo, A.titolo, A.bildo, A.idNacialando,\
+                           A.retposxto, B.respondeco, B.tasko FROM uzanto A INNER JOIN aneco B \
+                           ON (A.id = B.idAno) WHERE B.idGrupo = %s;', id);
   return db.mysqlExec(query);
 }
 

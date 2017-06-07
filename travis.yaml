@@ -1,0 +1,9 @@
+sudo: required
+
+language: nodejs
+
+services:
+  - docker
+
+script:
+  - docker logs -f datumbazouea_api_1

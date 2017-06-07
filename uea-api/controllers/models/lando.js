@@ -16,7 +16,6 @@ var _create = function(obj){
   for(i=0; i < keys.length; i++){
     lando[keys[i]] = obj[keys[i]];
   }
-  console.log(lando);
   return lando;
 }
 

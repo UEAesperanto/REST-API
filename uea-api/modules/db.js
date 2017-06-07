@@ -11,6 +11,8 @@ var _mysqlExec = function(query){
   return new Promise(function(resolve, reject){
     _connection.query(query, function (err, results, fields) {
       resolve(results);
+      //console.log(results);
+      return results;
     });
   });
 }

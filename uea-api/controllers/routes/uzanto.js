@@ -1,5 +1,6 @@
 var util = require('util');
 var Uzanto = require('../models/uzanto');
+var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 var db = require('../../modules/db');
 var query = require('../../modules/query');
 
@@ -25,7 +26,22 @@ var _getUzanto = function(req, res){
 }
 
 var _postUzanto = function(req, res){
-//fari
+
+   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto).then(
+    function (result){
+      if (result) {
+        Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
+                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idNacialando,
+                      req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
+                      req.body.teloficejo, req.body.telportebla,  req.body.tttpagxo).then(
+              function(success) {
+                res.status(201).send({message: result.insertId});
+              });
+      }
+      else {
+        res.status(400).send({message: "La uzantnomo jam ekzistas je nia sistemo"});
+      }
+    });
 }
 
 var _deleteUzanto = function(req, res){

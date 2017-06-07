@@ -4,7 +4,8 @@ const app = express();
 
 // Uzanto routes
 app.route('/')
-    .get(uzanto.getUzantoj);
+    .get(uzanto.getUzantoj)
+    .post(uzanto.postUzanto);
 app.route('/:id')
     .get(uzanto.getUzanto);
 

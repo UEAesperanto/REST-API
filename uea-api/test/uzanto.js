@@ -43,4 +43,19 @@ describe('Uzantoj', function() {
     });
   });
 
+  describe('POST /uzantoj', function(){
+   it('it should POST a uzanto', function(done){
+     var uzanto = {"uzantnomo" : "34res2weda", "pasvorto" : "nomoLoka", "personanomo": "personanomo", "titolo":"titolo", "bildo":"bildo", "adreso":"adreso",
+"posxtkodo":"idNacialando", "idNacialando": 25, "naskigxtago": "1996-05-05", "retposxto":"retposxto"};
+     chai.request(server)
+         .post('/uzantoj')
+         .send(uzanto)
+         .end(function(err, res){
+             res.should.have.status(201);
+             res.body.should.have.property('message');
+           done();
+         });
+   });
+ });
+
 });

@@ -66,9 +66,9 @@ CREATE TABLE faktemo (
  /***** KERNO PRI MEMBROJ KAJ ASOCIOJ *****/
 CREATE TABLE uzantoAuxAsocio (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
-    ueakodo varchar(255),
-    uzantnomo varchar(255), /*por reteja uzado: datumoj el retdb:uzantaro*/
-    pasvorto text  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
+    ueakodo varchar(255) NULL UNIQUE,
+    uzantnomo varchar(255) NULL UNIQUE, /*por reteja uzado: datumoj el retdb:uzantaro*/
+    pasvorto text NULL  /*devus iĝi sha1 (laŭ transirebleco) datumoj el retdb:uzantaro*/
 );
 
 /*datumoj el ueadb:tuta1
@@ -80,11 +80,11 @@ CREATE TABLE uzanto (
     personanomo varchar(255),
     familianomo varchar(255),
     titolo varchar(255), /*doktoro, sinjoro, ktp*/
-    bildo varchar(255), /*ligilo al bildo*/
-    personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    bildo varchar(255) NULL, /*ligilo al bildo*/
+    personanomoIdentigilo varchar(255) NULL, /*defaulte malplena, utila por
     eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
     interfaco.*/
-    familianomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    familianomoIdentigilo varchar(255) NULL, /*defaulte malplena, utila por
     eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
     interfaco.*/
     adreso varchar(255),
@@ -95,8 +95,8 @@ CREATE TABLE uzanto (
     mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
     mortdato date NULL, /*vera mortdato*/
     notoj varchar(255),
-    profesio varchar(255),
-    retposxto varchar(255),
+    profesio varchar(255) NULL,
+    retposxto varchar(255) NULL,
     telhejmo varchar(255) NULL,
     teloficejo varchar(255) NULL,
     telportebla varchar(255) NULL,
@@ -114,10 +114,10 @@ CREATE TABLE uzanto_sangxpropono (
     idUzanto int(11) REFERENCES uzanto(id),
     personanomo varchar(255),
     familianomo varchar(255),
-    personanomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    personanomoIdentigilo varchar(255) NULL, /*defaulte malplena, utila por
     eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
     interfaco.*/
-    familianomoIdentigilo varchar(255), /*defaulte malplena, utila por
+    familianomoIdentigilo varchar(255) NULL, /*defaulte malplena, utila por
     eviti pasportan aŭ invitletera eraro, ne videbla devige videbla el uzanta
     interfaco.*/
     adreso varchar(255),

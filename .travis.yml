@@ -5,6 +5,9 @@ language: nodejs
 services:
   - docker
 
+before:
+    - docker-compose up --build -d
+    - docker exec -it datumbazouea_api-test_1 bash
+
 script:
-  - docker-compose up --build -d
-  - docker logs datumbazouea_api-test_1
+    - npm test

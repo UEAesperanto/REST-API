@@ -7,7 +7,7 @@ services:
 
 before:
     - docker-compose up --build -d
-    - docker exec -it datumbazouea_api-test_1 bash
 
 script:
+    - docker exec -it datumbazouea_api-test_1 bash
     - npm test

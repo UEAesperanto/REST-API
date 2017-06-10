@@ -54,8 +54,7 @@ describe('Uzantoj', function() {
          .send(uzanto)
          .end(function(err, res){
              res.should.have.status(201);
-             res.body.should.have.property('message');
-             console.log(err);
+             res.body.should.have.property('id');
            done();
          });
    });

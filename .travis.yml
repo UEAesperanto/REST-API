@@ -6,5 +6,6 @@ services:
   - docker
 
 script:
-  - docker-compose up --build -d
-  - docker logs -f datumbazouea_api-test_1
+    - docker-compose up --build -d
+    - docker exec -it datumbazouea_api-test_1 bash
+    - npm test

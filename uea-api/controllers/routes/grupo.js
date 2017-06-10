@@ -1,6 +1,7 @@
 var util = require('util');
 var Grupo = require('../models/grupo');
 var query = require('../../modules/query');
+var config = require('../../config');
 
 /*
   GET /grupoj
@@ -29,7 +30,7 @@ var _getGrupo = function(req, res){
 */
 
 var _getLaborgrupoj = function(req, res){
-  Grupo.findKategorio('1').then(function(sucess){
+  Grupo.findKategorio(config.idLaborgrupo).then(function(sucess){
         var grupoj = sucess;
         grupoj = grupoj.filter(query.search(req.query));
         res.status(200).send(grupoj);
@@ -37,16 +38,22 @@ var _getLaborgrupoj = function(req, res){
 }
 
 /*
-   GET /grupo/laboroj/estraranoj
+   GET /grupo/laboroj/:id/anoj
 */
 var _getLaboranoj = function(req, res){
-  Grupo.findLaboranoj(req.params.id).then(function(sucess){
-        var anoj = sucess;
-        anoj = anoj.filter(query.search(req.query));
-        res.status(200).send(anoj);
+  Grupo.findKategorio(config.idLaborgrupo).then(function(result){
+    for (var i = 0; i < result.length; i++) {
+      if(result[i].id == req.params.id) {
+        Grupo.findLaboranoj(req.params.id).then(function(sucess){
+              var anoj = sucess;
+              anoj = anoj.filter(query.search(req.query));
+              res.status(200).send(anoj);
+        });
+      }
+    }
+    res.status(400).send({message: 'ne valida id por la grupo'});
   });
 }
-
 
 module.exports = {
   getGrupoj: _getGrupoj,

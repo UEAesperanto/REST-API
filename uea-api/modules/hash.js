@@ -29,7 +29,7 @@ var _sha512 = function(password, salt){
 
 function _valigiPasvorto (salt, password, hash) {
   var passwordData = _sha512(password, salt);
-  if (passwordData.passwordHash == hash) {
+  if (passwordData.hash == hash) {
     return true;
   } else {
     return false;

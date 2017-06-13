@@ -18,33 +18,6 @@ describe('Uzantoj', function() {
       })
     });
 
-    describe('GET /uzantoj', function(){
-     it('it should GET all the uzantoj sen uzantoj en la sistemo', function(done){
-       chai.request(server)
-           .get('/uzantoj')
-           .end((err, res) => {
-               res.should.have.status(200);
-             done();
-           });
-     });
-   });
-
-
-   describe('GET /uzantoj', function(){
-    it('it should GET all the uzantoj with body', function(done){
-      var user = {
-        message : "Teste"
-      }
-      chai.request(server)
-          .get('/uzantoj')
-          .send(user)
-          .end((err, res) => {
-              res.should.have.status(200);
-            done();
-          });
-    });
-  });
-
   describe('POST /uzantoj', function(){
    it('it should POST a uzanto', function(done){
      var uzanto = {"uzantnomo" : "uzantnomo", "pasvorto" : "nomoLoka", "personanomo": "personanomo", "titolo":"titolo", "bildo":"bildo", "adreso":"adreso",

@@ -54,8 +54,10 @@ var _getMembrecgrupoj = function(req, res){
 */
 var _getLaboranoj = function(req, res){
   Grupo.findKategorio(config.idLaborgrupo).then(function(result){
+    var found = false;
     for (var i = 0; i < result.length; i++) {
-      if(result[i].id == req.params.id) {
+      if(result[i].id.toString() == req.params.id) {
+        found = true;
         Grupo.findLaboranoj(req.params.id).then(function(sucess){
               var anoj = sucess;
               anoj = anoj.filter(query.search(req.query));
@@ -63,7 +65,9 @@ var _getLaboranoj = function(req, res){
         });
       }
     }
-    res.status(400).send({message: 'ne valida id por la grupo'});
+    if (!found) {
+      res.status(400).send({message: 'ne valida id por la grupo'});
+    }
   });
 }
 

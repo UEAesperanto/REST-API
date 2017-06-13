@@ -15,4 +15,6 @@ router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
 router.route('/laboroj/:id/anoj')
     .get(grupo.getLaboranoj);
+router.route('/membrecoj')
+    .get(grupo.getMembrecgrupoj);
 module.exports = app;

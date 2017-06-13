@@ -38,6 +38,18 @@ var _getLaborgrupoj = function(req, res){
 }
 
 /*
+   GET /grupoj/membroj
+*/
+
+var _getMembrecgrupoj = function(req, res){
+  Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
+        var grupoj = sucess;
+        grupoj = grupoj.filter(query.search(req.query));
+        res.status(200).send(grupoj);
+  });
+}
+
+/*
    GET /grupo/laboroj/:id/anoj
 */
 var _getLaboranoj = function(req, res){
@@ -58,6 +70,7 @@ var _getLaboranoj = function(req, res){
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
+  getMembrecgrupoj: _getMembrecgrupoj,
   getLaborgrupoj: _getLaborgrupoj,
   getLaboranoj: _getLaboranoj
 }

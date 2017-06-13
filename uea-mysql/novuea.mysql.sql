@@ -54,6 +54,7 @@ CREATE TABLE urbo (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
     nomoLoka varchar(255),
     nomoEo varchar(255),
+    provinco varchar(255),
     idLando int(11) REFERENCES lando(id)
 );
 
@@ -190,6 +191,7 @@ CREATE TABLE peranto (
 /*la uzantoj povas esti en grupoj, kiel estraro, komisiono, delegito, indivudua membraro ktp*/
 CREATE TABLE grupo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
+  mallongigilo varchar(255),
   nomo varchar(255),
   priskribo varchar(255),
   idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/

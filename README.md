@@ -1,3 +1,5 @@
+[![Esperanto](https://img.shields.io/badge/Esperanto-jes-green.svg)](https://eo.wikipedia.org/wiki/Esperanto)
+
 # Datumbazo kaj REST-API de la Universala Esperanto-Asocio (UEA)
 
 Ĉiuj kodoj kaj ĉiuj rajtoj ligitaj al ili ĉi tie apartenas al la Universala Esperanto-Asocio (UEA), 2017.

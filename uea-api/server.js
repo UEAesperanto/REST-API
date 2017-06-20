@@ -5,6 +5,8 @@ var util = require('util');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var morgan = require('morgan');
+var db = require('./modules/db');
+
 require('shelljs/global');
 
 uzanto = require('./services/uzanto');
@@ -49,6 +51,9 @@ app.use('/kongresoj', kongreso);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
-});
+  setInterval(function () {
+      db.mysqlExec('SELECT 1');
+  }, 5000);}
+);
 
 module.exports = app; // for testing

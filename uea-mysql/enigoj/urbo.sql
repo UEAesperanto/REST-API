@@ -4,6 +4,7 @@ INSERT INTO urbo ()
     1, /* id */
     "nomoLoka", /* nomoLoka */
     "NomoEo", /* nomoEO */
+    "provinco",
     25 /* idLando */
   );
 
@@ -12,5 +13,6 @@ INSERT INTO urbo ()
     2, /* id */
     "London", /* nomoLoka */
     "Londono", /* nomoEO */
+    "provinco",
     26 /* idLando */
   );

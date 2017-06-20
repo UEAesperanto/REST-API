@@ -10,7 +10,8 @@ var _find = function(id){
 }
 
 var _findKategorio = function(kategorio){
-  var query = util.format('SELECT A.id, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio` B ON (A.id = B.idGrupo) WHERE B.idGrupaKategorio=%s;', kategorio);
+  var query = util.format('SELECT A.id, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
+                           B ON (A.id = B.idGrupo) WHERE B.idGrupaKategorio=%s;', kategorio);
   return db.mysqlExec(query);
 }
 
@@ -21,8 +22,28 @@ var _findLaboranoj = function(id) {
   return db.mysqlExec(query);
 }
 
+var _findAligxKotizoj = function(id){
+  var query = util.format(' SELECT * FROM aneckotizo WHERE idGrupo=%s;', id);
+  return db.mysqlExec(query);
+}
+
+var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
+                               tasko, respondeco, idAsocio, idUrbo, idFako, observoj) {
+  var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
+                            dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, observoj)\
+                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s");',
+                            idAno, idGrupo, komencdato, findato, dumviva, tasko,
+                            respondeco, idAsocio, idUrbo, idFako, observoj);
+  query = query.replace(/undefined/g, 'NULL');
+  query = query.replace(/"NULL"/g, 'NULL');
+  console.log(query);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   findKategorio: _findKategorio,
-  findLaboranoj: _findLaboranoj
+  findAligxKotizoj: _findAligxKotizoj,
+  findLaboranoj: _findLaboranoj,
+  insertMembreco: _insertMembreco
 }

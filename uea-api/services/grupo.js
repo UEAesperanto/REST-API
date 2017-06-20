@@ -9,12 +9,21 @@ app.use('/', router);
 
 app.route('/')
     .get(grupo.getGrupoj);
-app.route('/:id')
+app.route('/:id(\\d+)')
     .get(grupo.getGrupo);
 router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
 router.route('/laboroj/:id/anoj')
     .get(grupo.getLaboranoj);
+router.route('/membrecoj/:id(\\d+)')
+    .get(grupo.getMembrecgrupo);
+router.route('/membrecoj/:id(\\d+)')
+    .post(grupo.getMembrecgrupo);
+router.route('/:id(\\d+)/anoj')
+    .post(grupo.postAneco);
 router.route('/membrecoj')
     .get(grupo.getMembrecgrupoj);
+router.route('/membrecoj/:id(\\d+)/kotizoj')
+    .get(grupo.getAligxKotizoj);
+
 module.exports = app;

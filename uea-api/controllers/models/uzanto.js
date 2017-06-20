@@ -10,7 +10,7 @@ var _insert = function(id, personanomo, familianomo, titolo,
                             naskigxtago, notoj, retposxto, telhejmo,\
                             teloficejo, telportebla,  tttpagxo, validaKonto)\
                             VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s",\
-                            "%s", "%s", "%s", "%s", "%s", "%s", 1);',
+                            "%s", "%s", "%s", "%s", "%s", "%s", 0);', //Novaj kontoj ne estas validitaj
                             id, personanomo, familianomo, titolo,
                             bildo, adreso, posxtkodo, idNacialando,
                             naskigxtago, notoj, retposxto, telhejmo,

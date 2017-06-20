@@ -79,5 +79,18 @@ describe('Grupoj', function() {
            });
      });
 
+     it('it should GET all the grupoj/membrecoj/:id/kotizoj with body', function(done){
+       var user = {
+         message : "Teste"
+       }
+       chai.request(server)
+           .get('/grupoj/membrecoj/1/kotizoj')
+           .send(user)
+           .end((err, res) => {
+               res.should.have.status(200);
+            done();
+           });
+     });
+
    });
 });

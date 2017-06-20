@@ -11,14 +11,11 @@ app.use('/:id(\\d+)/', routerAuthID);
 
 // Uzanto routes
 app.use('/', router);
-
 app.route('/')
     .get(uzanto.getUzantoj)
     .post(uzanto.postUzanto);
-
 app.route('/:id(\\d+)/')
     .get(uzanto.getUzanto);
-
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
 

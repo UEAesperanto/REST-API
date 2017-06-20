@@ -28,7 +28,6 @@ var _getGrupo = function(req, res){
 /*
    GET /grupoj/laboroj
 */
-
 var _getLaborgrupoj = function(req, res){
   Grupo.findKategorio(config.idLaborgrupo).then(function(sucess){
         var grupoj = sucess;
@@ -40,7 +39,6 @@ var _getLaborgrupoj = function(req, res){
 /*
    GET /grupoj/membroj
 */
-
 var _getMembrecgrupoj = function(req, res){
   Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
         var grupoj = sucess;
@@ -50,25 +48,63 @@ var _getMembrecgrupoj = function(req, res){
 }
 
 /*
+   GET /grupo/membrecoj/:id/kotizoj
+*/
+var _getAligxKotizoj = function(req, res){
+  Grupo.findAligxKotizoj(req.params.id).then(function(sucess){
+        var kotizoj = sucess;
+        kotizoj = kotizoj.filter(query.search(req.query));
+        res.status(200).send(kotizoj);
+  });
+}
+
+/*
    GET /grupo/laboroj/:id/anoj
 */
 var _getLaboranoj = function(req, res){
   Grupo.findKategorio(config.idLaborgrupo).then(function(result){
-    var found = false;
-    for (var i = 0; i < result.length; i++) {
-      if(result[i].id.toString() == req.params.id) {
-        found = true;
+    var grupoj = result.filter(query.search({id:req.params.id}));
+    if (grupoj.length == 1) {
         Grupo.findLaboranoj(req.params.id).then(function(sucess){
               var anoj = sucess;
               anoj = anoj.filter(query.search(req.query));
               res.status(200).send(anoj);
         });
-      }
     }
-    if (!found) {
-      res.status(400).send({message: 'ne valida id por la grupo'});
+    else {
+      res.status(400).send({message: 'ne valida ID'});
     }
   });
+}
+
+/*
+   GET - /grupo/membrecoj/:id
+*/
+var _getMembrecgrupo = function(req, res){
+  Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
+        var grupoj = sucess;
+        grupoj = grupoj.filter(query.search({id:req.params.id}));
+        res.status(200).send(grupoj);
+  });
+}
+
+/*
+  POST - /grupoj/:id
+*/
+var _postAneco = function(req, res) {
+  Grupo.insertMembreco(req.body.idAno, req.body.idGrupo, req.body.komencdato,
+                       req.body.findato, req.body.dumviva, req.body.tasko,
+                       req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
+                       req.body.idFako, req.body.observoj).then(
+                         function(result) {
+                           if (result) {
+                             res.status(201).send({message: 'aneco sukcese registrita'});
+                           }
+                           else {
+                             res.status(400).send({message: 'Kontrolu viajn parametrojn'});
+                           }
+                         }
+              );
 }
 
 module.exports = {
@@ -76,5 +112,8 @@ module.exports = {
   getGrupo: _getGrupo,
   getMembrecgrupoj: _getMembrecgrupoj,
   getLaborgrupoj: _getLaborgrupoj,
+  getAligxKotizoj: _getAligxKotizoj,
+  getMembrecgrupo: _getMembrecgrupo,
+  postAneco: _postAneco,
   getLaboranoj: _getLaboranoj
 }

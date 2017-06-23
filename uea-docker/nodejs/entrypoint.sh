@@ -1,6 +1,9 @@
 #!/bin/bash
 cd /app
 
+# Generate https certificates
+cd /app/ssl/ && bash generate-certificates.sh && cd /app
+
 #Wait MySql is Ready!
 while ! mysqladmin ping -h"$DB_HOST" -uroot -p"$DB_PASSWORD" --silent; do
     sleep 1

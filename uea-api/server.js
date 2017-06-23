@@ -1,6 +1,7 @@
 const express = require('express');
 var fs      = require('fs');
 var path = require('path');
+var https = require('https');
 var util = require('util');
 var bodyParser = require('body-parser');
 var multer = require('multer');
@@ -8,6 +9,11 @@ var morgan = require('morgan');
 var db = require('./modules/db');
 
 require('shelljs/global');
+
+var httpsOptions = {
+  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
+  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
+}
 
 uzanto = require('./services/uzanto');
 lando = require('./services/lando');
@@ -48,12 +54,20 @@ app.use('/grupoj', grupo);
 app.use('/kongresoj', kongreso);
 
 // Start the server
-app.listen(PORT, () => {
+/*app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
   setInterval(function () {
       db.mysqlExec('SELECT 1');
   }, 5000);}
-);
+);*/
+
+https.createServer(httpsOptions, app).listen(PORT, function(){
+  console.log(`App listening on port ${PORT}`);
+  console.log('Press Ctrl+C to quit.');
+  setInterval(function () {
+      db.mysqlExec('SELECT 1');
+  }, 5000);
+})
 
 module.exports = app; // for testing

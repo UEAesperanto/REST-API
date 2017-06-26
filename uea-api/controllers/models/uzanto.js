@@ -21,7 +21,9 @@ var _insert = function(id, personanomo, familianomo, titolo,
 
 var _find = function(id){
   if(id)
-    var query = util.format('SELECT * FROM `uzanto` WHERE `id` = %s;', id);
+    var query = util.format('SELECT personanomo, familianomo, titolo, bildo,\
+                             adreso, posxtkodo, idNacialando, idLogxurbo, profesio\
+                             FROM `uzanto` WHERE `id` = %s;', id);
   else
     var query = util.format('SELECT * FROM `uzanto`;');
   return db.mysqlExec(query);

@@ -28,12 +28,12 @@ var _findAligxKotizoj = function(id){
 }
 
 var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
-                               tasko, respondeco, idAsocio, idUrbo, idFako, observoj) {
+                               tasko, respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj, aprobita) {
   var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
-                            dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, observoj)\
-                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s");',
+                            dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj)\
+                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s", %s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko,
-                            respondeco, idAsocio, idUrbo, idFako, observoj);
+                            respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj, aprobita);
   query = query.replace(/undefined/g, 'NULL');
   query = query.replace(/"NULL"/g, 'NULL');
   console.log(query);

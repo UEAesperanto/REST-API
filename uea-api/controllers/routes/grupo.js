@@ -89,13 +89,17 @@ var _getMembrecgrupo = function(req, res){
 }
 
 /*
-  POST - /grupoj/:id
+  POST - /grupoj/membrecoj/:id
 */
 var _postAneco = function(req, res) {
-  Grupo.insertMembreco(req.body.idAno, req.body.idGrupo, req.body.komencdato,
+
+  Grupo.findKategorio(config.idLaborgrupo).then(function(result){
+    var grupoj = result.filter(query.search({id:req.params.id}));
+    if (grupoj.length == 1) {
+          Grupo.insertMembreco(req.body.idAno, req.params.id, req.body.komencdato,
                        req.body.findato, req.body.dumviva, req.body.tasko,
                        req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
-                       req.body.idFako, req.body.observoj).then(
+                       req.body.idFako, req.body.idAneckotizo, req.body.observoj, 0).then(
                          function(result) {
                            if (result) {
                              res.status(201).send({message: 'aneco sukcese registrita'});
@@ -105,6 +109,10 @@ var _postAneco = function(req, res) {
                            }
                          }
               );
+    } else {
+      res.status(403).send({message: 'Vi ne rajtas membrigi iun en tiu grupo'});
+    }
+  });
 }
 
 module.exports = {

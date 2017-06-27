@@ -22,7 +22,7 @@ CREATED                       STATUS                   PORTS                    
 
 ````
 
-Tio estas ĉio, vi jam povos aliri la API je `localhost:3000` kaj sekvi nian [dokumentadon](https://github.com/RibeiroAna/datumbazoUEA/wiki) por lerni kiel uzi ĝin. 
+Tio estas ĉio, vi jam povos aliri la API je `https://localhost:3000` kaj sekvi nian [dokumentadon](https://github.com/RibeiroAna/datumbazoUEA/wiki) por lerni kiel uzi ĝin. Pro la `HTTPS`estas verŝajna ke aperos iu sekureca mesaĝo.
 
 ## Agordado
 

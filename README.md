@@ -11,6 +11,8 @@ Por faciligi la instaladon, oni uzas la teknologion [Docker](https://www.docker.
 
  `docker-compose up --build -d`
  
+ **Atentu** ke ĝi verŝajne ne bone funkcios se en la dosierujo kiun vi enmetis la kodon estus bezonata havi superuzantaj permesoj (sudo).
+ 
  Por certigi ke ĉio okazis bone, tajpu `docker ps` kaj devus aperi la jenon: 
  
 ````
@@ -22,11 +24,19 @@ CREATED                       STATUS                   PORTS                    
 
 ````
 
-Tio estas ĉio, vi jam povos aliri la API je `https://localhost:3000` kaj sekvi nian [dokumentadon](https://github.com/RibeiroAna/datumbazoUEA/wiki) por lerni kiel uzi ĝin. Pro la `HTTPS`estas verŝajna ke aperos iu sekureca mesaĝo.
+Tio estas ĉio, vi jam povos aliri la API je `https://localhost:3000` kaj sekvi nian [dokumentadon](https://github.com/RibeiroAna/datumbazoUEA/wiki) por lerni kiel uzi ĝin. Pro la `HTTPS`estas verŝajna ke aperos iu sekureca mesaĝo, do vi devas aldoni iun sekurecan escepton por uzi ĝin.
 
 ## Agordado
 
 Dependante je kiel via datumbazo estas agordita, povas esti ke la REST-API ne plene funkcios, do necesas agordi tion en la arĥivo `datumbazoUEA/uea-api/config.js`. 
+
+## Malinstalado
+
+Por malinstali, simple tajpu:
+
+`docker-compose down`
+
+Kaj forviŝu la arĥivojn de la komputilo.
 
 ## Kromaj Docker komandoj kiuj povas esti utilaj
 

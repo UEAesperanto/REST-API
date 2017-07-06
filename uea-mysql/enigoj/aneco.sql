@@ -50,6 +50,7 @@ VALUES(
     1, /*idAsocio int(11) NULL REFERENCES asocio(id), /*Ĉu la ano reprezentas iun asocion, kiel en kazoj de komitatanoj A*/
     NULL, /*Ĉu la ano reprezentas urbon en sia aneco, kiel en kazoj de delegitoj*/
     NULL, /*Ĉu la ano reprezentas fakon en sia aneco, kiel en kazoj de delegitoj*/
+    NULL, /*Aneckotizo*/
     "observoj varchar(255) NULL", /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
     1
 );
@@ -67,6 +68,7 @@ VALUES(
     "informado", /*kiu estas la respondeco de la ano en la grupo?*/
     1, /*idAsocio int(11) NULL REFERENCES asocio(id), /*Ĉu la ano reprezentas iun asocion, kiel en kazoj de komitatanoj A*/
     NULL, /*Ĉu la ano reprezentas urbon en sia aneco, kiel en kazoj de delegitoj*/
+    NULL, /*Aneckotizo*/
     NULL, /*Aneckotizo*/
     4, /*Ĉu la ano reprezentas fakon en sia aneco, kiel en kazoj de delegitoj*/
     "observoj varchar(255) NULL", /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/

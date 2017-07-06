@@ -1,5 +1,5 @@
 const express = require('express');
-asocio = require('../controllers/routes/asocio');
+var asocio = require('../controllers/routes/asocio');
 const app = express();
 
 // Asocio routes

@@ -37,10 +37,21 @@ var _getLaborgrupoj = function(req, res){
 }
 
 /*
-   GET /grupoj/membroj
+   GET /grupoj/membrecoj
 */
 var _getMembrecgrupoj = function(req, res){
   Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
+        var grupoj = sucess;
+        grupoj = grupoj.filter(query.search(req.query));
+        res.status(200).send(grupoj);
+  });
+}
+
+/*
+   GET /grupoj/membrecoj
+*/
+var _getAldonaMembrecgrupoj = function(req, res){
+  Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(sucess){
         var grupoj = sucess;
         grupoj = grupoj.filter(query.search(req.query));
         res.status(200).send(grupoj);
@@ -89,10 +100,22 @@ var _getMembrecgrupo = function(req, res){
 }
 
 /*
+   GET - /grupo/membrecoj/aldonoj/:id
+*/
+var _getAldonaMembrecgrupo = function(req, res){
+  Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(sucess){
+        var grupoj = sucess;
+        grupoj = grupoj.filter(query.search({id:req.params.id}));
+        res.status(200).send(grupoj);
+  });
+}
+
+/*
   POST - /grupoj/membrecoj/:id
 */
 var _postAneco = function(req, res) {
 
+  //Sen Ĵetono
   Grupo.findKategorio(config.idLaborgrupo).then(function(result){
     var grupoj = result.filter(query.search({id:req.params.id}));
     if (grupoj.length == 1) {
@@ -122,6 +145,8 @@ module.exports = {
   getLaborgrupoj: _getLaborgrupoj,
   getAligxKotizoj: _getAligxKotizoj,
   getMembrecgrupo: _getMembrecgrupo,
+  getAldonaMembrecgrupo: _getAldonaMembrecgrupo,
   postAneco: _postAneco,
-  getLaboranoj: _getLaboranoj
+  getLaboranoj: _getLaboranoj,
+  getAldonaMembrecgrupoj: _getAldonaMembrecgrupoj
 }

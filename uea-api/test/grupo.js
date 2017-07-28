@@ -28,12 +28,8 @@ describe('Grupoj', function() {
      });
 
      it('it should GET all the grupoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/grupoj')
-           .send(user)
            .end((err, res) => {
                res.should.have.status(200);
              done();
@@ -41,12 +37,8 @@ describe('Grupoj', function() {
      });
 
      it('it should GET all the grupoj/laboroj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/grupoj/laboroj')
-           .send(user)
            .end((err, res) => {
                res.should.have.status(200);
             done();
@@ -54,12 +46,17 @@ describe('Grupoj', function() {
      });
 
      it('it should GET all the grupoj/membrecoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/grupoj/membrecoj')
-           .send(user)
+           .end((err, res) => {
+               res.should.have.status(200);
+            done();
+           });
+     });
+
+     it('it should GET all the grupoj/membrecoj with body', function(done){
+       chai.request(server)
+           .get('/grupoj/membrecoj/aldonoj')
            .end((err, res) => {
                res.should.have.status(200);
             done();
@@ -67,12 +64,8 @@ describe('Grupoj', function() {
      });
 
      it('it should GET all the grupoj/laboroj/:id/anoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/grupoj/laboroj/1/anoj')
-           .send(user)
            .end((err, res) => {
                res.should.have.status(400);
             done();
@@ -80,12 +73,8 @@ describe('Grupoj', function() {
      });
 
      it('it should GET all the grupoj/membrecoj/:id/kotizoj with body', function(done){
-       var user = {
-         message : "Teste"
-       }
        chai.request(server)
            .get('/grupoj/membrecoj/1/kotizoj')
-           .send(user)
            .end((err, res) => {
                res.should.have.status(200);
             done();

@@ -193,8 +193,7 @@ CREATE TABLE grupo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   mallongigilo varchar(255),
   nomo varchar(255),
-  priskribo varchar(255),
-  idAsocio int(11) NULL REFERENCES asocio(id) /*la grupo povas aparteni al asocio*/
+  priskribo varchar(255)
 );
 
 /*ekzemple, membro, komisiono, ktp*/

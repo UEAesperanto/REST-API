@@ -78,8 +78,18 @@ describe('Grupoj', function() {
            .end((err, res) => {
                res.should.have.status(200);
             done();
-           });
-     });
+        });
+      });
+   });
 
+   describe('post grupoj en la sistemo', function(){
+     it('it should GET all the grupoj/:id/kotizoj with body', function(done){
+       chai.request(server)
+           .post('/grupoj/1/anoj')
+           .end((err, res) => {
+               res.should.have.status(403);
+            done();
+           });
+      });
    });
 });

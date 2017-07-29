@@ -110,32 +110,51 @@ var _getAldonaMembrecgrupo = function(req, res){
   });
 }
 
+var insertAneco = function(req, res) {
+  Grupo.insertMembreco(req.body.idAno, req.params.id, req.body.komencdato,
+               req.body.findato, req.body.dumviva, req.body.tasko,
+               req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
+               req.body.idFako, req.body.idAneckotizo, req.body.observoj, 0).then(
+                 function(result) {
+                   if (result) {
+                     res.status(201).send({message: 'aneco sukcese registrita'});
+                   }
+                   else {
+                     res.status(400).send({message: 'Kontrolu viajn parametrojn'});
+                   }
+                 }
+      );
+}
+
 /*
   POST - /grupoj/membrecoj/:id
 */
 var _postAneco = function(req, res) {
 
-  //Sen Ĵetono
-  Grupo.findKategorio(config.idLaborgrupo).then(function(result){
-    var grupoj = result.filter(query.search({id:req.params.id}));
-    if (grupoj.length == 1) {
-          Grupo.insertMembreco(req.body.idAno, req.params.id, req.body.komencdato,
-                       req.body.findato, req.body.dumviva, req.body.tasko,
-                       req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
-                       req.body.idFako, req.body.idAneckotizo, req.body.observoj, 0).then(
-                         function(result) {
-                           if (result) {
-                             res.status(201).send({message: 'aneco sukcese registrita'});
-                           }
-                           else {
-                             res.status(400).send({message: 'Kontrolu viajn parametrojn'});
-                           }
-                         }
-              );
-    } else {
-      res.status(403).send({message: 'Vi ne rajtas membrigi iun en tiu grupo'});
-    }
-  });
+  var token = req.headers['x-access-token'];
+
+  if (token) {
+      res.status(100).send({message: 'Farota'});
+  } else {
+    Grupo.findKategorio(config.idMembrecgrupo).then(function(result){
+      var grupoj = result.filter(query.search({id:req.params.id}));
+      if (grupoj.length == 1) {
+        insertAneco(req, res);
+      }
+      else {
+        Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(result){
+          var grupoj = result.filter(query.search({id:req.params.id}));
+          if (grupoj.length == 1) {
+              insertAneco(req, res);
+          }
+          else {
+             res.status(403).send({message: 'Vi ne rajtas membrigi iun en tiu grupo'});
+          }
+
+        });
+      }
+    });
+  }
 }
 
 module.exports = {

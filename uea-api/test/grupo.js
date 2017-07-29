@@ -72,9 +72,9 @@ describe('Grupoj', function() {
            });
      });
 
-     it('it should GET all the grupoj/membrecoj/:id/kotizoj with body', function(done){
+     it('it should GET all the grupoj/:id/kotizoj with body', function(done){
        chai.request(server)
-           .get('/grupoj/membrecoj/1/kotizoj')
+           .get('/grupoj/1/kotizoj')
            .end((err, res) => {
                res.should.have.status(200);
             done();

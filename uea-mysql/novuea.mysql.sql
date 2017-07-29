@@ -36,19 +36,6 @@ CREATE TABLE lando (
     landkodo varchar(255)
 );
 
-/*Ekzemple, A-lando, B-lando, ktp*/
-CREATE TABLE landKategorio (
-  id int(11) PRIMARY KEY AUTO_INCREMENT,
-  titolo varchar(255), /*Ekzemple, B-lando*/
-  priskribo varchar(1500) /*Ekzemple, B-landoj por la kongreso de 2017*/
-);
-
-CREATE TABLE ref_lando_landKategorio (
-  idLando int(11) REFERENCES lando(id),
-  idLandkategorio int(11) REFERENCES landKategorio(id),
-  PRIMARY KEY(idLando, idLandkategorio)
-);
-
 /*datumoj el ueadb:urboj*/
 CREATE TABLE urbo (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
@@ -231,8 +218,8 @@ CREATE TABLE aneckotizo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   prezo int(11),
   priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
-  gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aneco*/
-  landKategorio int(11) REFERENCES landKategorio(id), /*al kiu(j) lando(j) tiu kotizo indas*/
+  lando int(11) REFERENCES lando(id), /*al kiu lando tiu kotizo indas*/
+  monero varchar(255) DEFAULT 'EUR', /*en kiu monero tiu valoro estas*/
   idGrupo int(11) REFERENCES grupo(id) /*la grupo al kiu oni anas*/
 );
 
@@ -360,7 +347,8 @@ CREATE TABLE kongresa_aligxkotizo (
     idKongreso int(11) REFERENCES kongreso(id),
     prezo int(11),
     gxis_naskigxjaro date NULL, /*maksimuma naskiĝitago por tiu aliĝkotizo*/
-    landKategorio int(11) REFERENCES landKategorio(id), /*al kiu(j) lando(j) tiu kotizo indas*/
+    lando int(11) REFERENCES lando(id), /*al kiu(j) lando(j) tiu kotizo indas*/
+    monero varchar(255) DEFAULT 'EUR', /*en kiu monero tiu valoro estas*/
     grupo int(11) REFERENCES grupo(id), /*al kiu grupo de uzantoj tiu kategorio estas*/
     aligxperiodo int(11) REFERENCES aligxperiodo(id), /*al kiu aligxperiodo tio estas*/
     priskribo varchar(1600)

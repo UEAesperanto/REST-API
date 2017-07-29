@@ -10,7 +10,7 @@ var _find = function(id){
 }
 
 var _findKategorio = function(kategorio){
-  var query = util.format('SELECT A.id, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
+  var query = util.format('SELECT A.id, A.mallongigilo, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
                            B ON (A.id = B.idGrupo) WHERE B.idGrupaKategorio=%s;', kategorio);
   return db.mysqlExec(query);
 }

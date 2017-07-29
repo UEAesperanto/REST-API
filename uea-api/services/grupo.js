@@ -32,7 +32,7 @@ router.route('/:id(\\d+)/anoj')
     .post(grupo.postAneco);
 
 
-router.route('/membrecoj/:id(\\d+)/kotizoj')
+router.route('/:id(\\d+)/kotizoj')
     .get(grupo.getAligxKotizoj);
 
 module.exports = app;

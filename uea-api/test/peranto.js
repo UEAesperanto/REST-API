@@ -6,21 +6,14 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Urbo = require('../controllers/models/urbo');
+var Peranto = require('../controllers/models/peranto');
 
 chai.use(chaiHttp);
-describe('Urboj', function() {
-    beforeEach( function(done) { //Before each test we empty the database
-      var query = util.format('DELETE FROM `urbo`');
-      db.mysqlExec(query).then(function(result){
-        done();
-      })
-    });
-
-    describe('GET /urboj sen urboj en la sistemo', function(){
+describe('Peranto', function() {
+    describe('GET /perantoj en la sistemo', function(){
      it('it should GET all the urboj', function(done){
        chai.request(server)
-           .get('/urboj')
+           .get('/perantoj')
            .end((err, res) => {
                res.should.have.status(200);
              done();

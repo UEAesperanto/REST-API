@@ -23,6 +23,7 @@ urbo = require('./services/urbo');
 grupo = require('./services/grupo');
 kongreso = require('./services/kongreso');
 admin = require('./services/admin');
+peranto = require('./services/peranto');
 
 
 const PORT = process.env.PORT || 3000;
@@ -55,19 +56,12 @@ app.use('/urboj', urbo);
 app.use('/grupoj', grupo);
 app.use('/kongresoj', kongreso);
 app.use('/admin', admin);
+app.use('/perantoj', peranto);
 
 // Start the server
-/*app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
-  setInterval(function () {
-      db.mysqlExec('SELECT 1');
-  }, 5000);}
-);*/
-
 https.createServer(httpsOptions, app).listen(PORT, function(){
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
+  console.log(`La API aŭskultas ĉe la pordo ${PORT}`);
+  console.log('Presu Ctrl+C por ĉesi.');
   setInterval(function () {
       db.mysqlExec('SELECT 1');
   }, 5000);

@@ -36,6 +36,7 @@ var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
                              idUrbo, idFako, idAneckotizo, observoj);
   query = query.replace(/undefined/g, 'NULL');
   query = query.replace(/"NULL"/g, 'NULL');
+
   return db.mysqlExec(query);
 }
 

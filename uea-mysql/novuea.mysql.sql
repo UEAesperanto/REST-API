@@ -170,7 +170,8 @@ CREATE TABLE asocio_sangxpropono (
 /*datumoj el ueadb:perant*/
 CREATE TABLE peranto (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
-    idUeakodo int(11) REFERENCES uzantoAuxAsocio(id),
+    idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
+    publikaNomo varchar(255), /*La nomo de la peranto kiu estos publike montrata*/
     idLando int(11) REFERENCES lando(id)
 );
 

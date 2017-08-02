@@ -172,6 +172,7 @@ CREATE TABLE peranto (
     id int(11) PRIMARY KEY AUTO_INCREMENT,
     idUzantoAuxAsocio int(11) REFERENCES uzantoAuxAsocio(id),
     publikaNomo varchar(255), /*La nomo de la peranto kiu estos publike montrata*/
+    retadreso varchar(255), /*La retadreso de tiu peranto por perantaj aferoj*/
     idLando int(11) REFERENCES lando(id)
 );
 

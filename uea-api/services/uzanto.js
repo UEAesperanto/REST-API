@@ -21,5 +21,4 @@ router.route('/ensaluti')
 router.route('/forgesisPasvorton')
     .post(uzanto.forgesisPasvorton);
 
-
 module.exports = app;

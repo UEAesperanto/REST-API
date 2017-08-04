@@ -10,6 +10,15 @@ var _insert = function(uzantnomo, pasvorto) {
     return db.mysqlExec(query);
 }
 
+var _find = function(id) {
+  if (id) {
+    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = "%s";', id);
+  } else {
+    var query = util.format('SELECT * FROM `uzantoAuxAsocio`;');
+  }
+  return db.mysqlExec(query);
+}
+
 var _findUzantnomo = function(uzantnomo) {
   var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `uzantnomo` = "%s";', uzantnomo);
   return db.mysqlExec(query);
@@ -23,5 +32,6 @@ var _update = function(id, kampo, valoro) {
 module.exports = {
   insert:_insert,
   findUzantnomo: _findUzantnomo,
-  update: _update
+  update: _update,
+  find: _find
 }

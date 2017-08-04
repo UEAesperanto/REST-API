@@ -94,26 +94,29 @@ var _forgesisPasvorton = function(req, res) {
     Uzanto.findForgesis(req.body.retposxto, req.body.naskigxtago).then(
       function(sucess) {
         if (sucess.length > 0) {
-          console.log(sucess[0].id);
           var novaPasvorto = randomstring.generate(10);
           var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoSalt', pasvortajDatumoj.salt);
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoHash', pasvortajDatumoj.hash);
-          var html = util.format(
-                 'Saluton! <br><br>\
-                  La pasvorto por via membrspaco ĉe UEA estas nun: %s .  \
-                  Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
-                  <br>Kunlabore,<br><br>\
-                  La UEA-Teamo', novaPasvorto);
-          var mailOptions = {
-              from: 'reto@uea.org',
-              to: req.body.retposxto,
-              subject: 'Vi forgesis vian pasvorton por membro.uea.org',
-              html: html
-            }
-          mail.sendiRetmesagxo(mailOptions)
-          res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
-        }
+          UzantoAuxAsocio.find(sucess[0].id).then(
+          function (sucess) {
+              var html = util.format(
+                     'Saluton! <br><br>\
+                      Via uzantnomo por membrspaco ĉe UEA estas: %s <br>\
+                      La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
+                      Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
+                      <br><br>Kunlabore,<br><br>\
+                      La UEA-Teamo', sucess[0].uzantnomo, novaPasvorto);
+              var mailOptions = {
+                  from: 'reto@uea.org',
+                  to: req.body.retposxto,
+                  subject: 'Vi forgesis vian pasvorton por membro.uea.org',
+                  html: html
+                }
+              mail.sendiRetmesagxo(mailOptions)
+              res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
+        });
+      }
         else {
           res.status(400).send({message: "Ne ekzistas uzantoj kun la indikitaj datumoj je la sistemo"});
         }

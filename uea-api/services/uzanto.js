@@ -18,6 +18,8 @@ app.route('/:id(\\d+)/')
     .get(uzanto.getUzanto);
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
+router.route('/forgesisPasvorton')
+    .post(uzanto.forgesisPasvorton);
 
 
 module.exports = app;

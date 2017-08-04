@@ -1,6 +1,7 @@
 /*Libraries*/
 var util = require('util');
-var jwt    = require('jsonwebtoken');
+var jwt  = require('jsonwebtoken');
+var randomstring = require("randomstring");
 
 /*config*/
 var config = require('../../config.js');
@@ -13,6 +14,7 @@ var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 var db = require('../../modules/db');
 var query = require('../../modules/query');
 var hash = require('../../modules/hash');
+var mail = require('../../modules/mail');
 
 /*
   POST - /uzantoj/ensaluti
@@ -88,6 +90,37 @@ var _postUzanto = function(req, res){
     });
 }
 
+var _forgesisPasvorton = function(req, res) {
+    Uzanto.findForgesis(req.body.retposxto, req.body.naskigxtago).then(
+      function(sucess) {
+        if (sucess.length > 0) {
+          console.log(sucess[0].id);
+          var novaPasvorto = randomstring.generate(10);
+          var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
+          UzantoAuxAsocio.update(sucess[0].id, 'pasvortoSalt', pasvortajDatumoj.salt);
+          UzantoAuxAsocio.update(sucess[0].id, 'pasvortoHash', pasvortajDatumoj.hash);
+          var html = util.format(
+                 'Saluton! <br><br>\
+                  La pasvorto por via membrspaco ĉe UEA estas nun: %s .  \
+                  Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
+                  <br>Kunlabore,<br><br>\
+                  La UEA-Teamo', novaPasvorto);
+          var mailOptions = {
+              from: 'reto@uea.org',
+              to: req.body.retposxto,
+              subject: 'Vi forgesis vian pasvorton por membro.uea.org',
+              html: html
+            }
+          mail.sendiRetmesagxo(mailOptions)
+          res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
+        }
+        else {
+          res.status(400).send({message: "Ne ekzistas uzantoj kun la indikitaj datumoj je la sistemo"});
+        }
+      }
+    );
+}
+
 var _deleteUzanto = function(req, res){
 //fari
 }
@@ -98,6 +131,7 @@ var _updateUzanto = function(req, res){
 
 module.exports = {
   getUzantoj: _getUzantoj,
+  forgesisPasvorton:_forgesisPasvorton,
   getUzanto: _getUzanto,
   postUzanto: _postUzanto,
   deleteUzanto:_deleteUzanto,

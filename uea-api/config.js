@@ -1,4 +1,5 @@
 module.exports = {
+
   /*ID de grupaj rikordoj en grupa tabelo en la datumbazo*/
   'idLaborgrupo': 1,
   'idMembrecgrupo': 4,
@@ -11,6 +12,10 @@ module.exports = {
   'idAdminVocxdonado': 4,
   'idAdminTeko': 5,
   'idAdminRetdissedo': 6,
+
+  /*Retadreso*/
+  'sisRetadreso':'retadreso',
+  'sisPasvorto': 'pasvorto',
 
   /*Sekretoj*/
   'sekretoJWT': 'sekretoUzanto'

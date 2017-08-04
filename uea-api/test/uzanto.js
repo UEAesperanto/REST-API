@@ -31,6 +31,16 @@ describe('Uzantoj', function() {
            done();
          });
    });
+
+   it('forgesis pasvorton sen uzanto', function(done) {
+     chai.request(server)
+         .post('/uzantoj/forgesisPasvorton')
+         .end(function(err, res){
+             res.should.have.status(400);
+           done();
+         });
+   })
  });
+
 
 });

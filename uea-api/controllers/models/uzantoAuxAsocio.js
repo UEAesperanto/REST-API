@@ -15,7 +15,13 @@ var _findUzantnomo = function(uzantnomo) {
   return db.mysqlExec(query);
 }
 
+var _update = function(id, kampo, valoro) {
+  var query = util.format('UPDATE `uzantoAuxAsocio` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   insert:_insert,
-  findUzantnomo: _findUzantnomo
+  findUzantnomo: _findUzantnomo,
+  update: _update
 }

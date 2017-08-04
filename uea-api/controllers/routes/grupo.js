@@ -1,6 +1,13 @@
+/*Libraries*/
 var util = require('util');
+
+/*models*/
 var Grupo = require('../models/grupo');
+
+/*modules*/
 var query = require('../../modules/query');
+
+/*Configuration*/
 var config = require('../../config');
 
 /*

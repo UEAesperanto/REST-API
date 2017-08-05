@@ -37,8 +37,14 @@ var _findForgesis = function(retposxto, naskigxtago) {
   return db.mysqlExec(query);
 }
 
+var _update = function(id, kampo, valoro) {
+  var query = util.format('UPDATE `uzanto` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   insert: _insert,
+  update: _update,
   findForgesis: _findForgesis
 }

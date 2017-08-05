@@ -46,18 +46,6 @@ var _ensaluti = function(req, res) {
 }
 
 /*
-  GET /uzantoj
-*/
-var _getUzantoj = function(req, res){
-  //komentita pro sekurecaj kialoj
-  /*Uzanto.find().then(function(sucess){
-        var uzantoj = sucess;
-        uzantoj = uzantoj.filter(query.search(req.query));
-        res.status(200).send(uzantoj);
-  });*/
-}
-
-/*
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
@@ -129,15 +117,24 @@ var _deleteUzanto = function(req, res){
 }
 
 var _updateUzanto = function(req, res){
-//fari
+  if (req.body.kampo == 'id') {
+    res.status(400).send({message: "vi ne povas ŝanĝi vian ID"})
+  }
+  Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
+    function(sucess) {
+      if (sucess) {
+        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+      } else {
+        res.status(500).send({message: "Eraro en la servilo"});
+      }
+  });
 }
 
 module.exports = {
-  getUzantoj: _getUzantoj,
   forgesisPasvorton:_forgesisPasvorton,
   getUzanto: _getUzanto,
   postUzanto: _postUzanto,
   deleteUzanto:_deleteUzanto,
-  updateUzanto:_updateUzanto,
+  updateUzanto: _updateUzanto,
   ensaluti: _ensaluti
 }

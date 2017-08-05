@@ -14,8 +14,10 @@ module.exports = {
   'idAdminRetdissedo': 6,
 
   /*Retadreso*/
-  'sisRetadreso':'retadreso',
-  'sisPasvorto': 'pasvorto',
+  'sisRetServer': 'smtp.ekzemplo.com',
+  'sisRetPorto': '25',
+  'sisRetadreso': 'ekzemplo@ekzemplo.com',
+  'sisRetPasvorto':  'pasvorto',
 
   /*Sekretoj*/
   'sekretoJWT': 'sekretoUzanto'

@@ -1,17 +1,19 @@
 /*Libraries*/
 var nodemailer = require('nodemailer');
+var smtpTransport = require("nodemailer-smtp-transport");
 
 /*Config*/
 var config = require('../config');
 
 
-var transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: config.sisRetadreso,
-    pass: config.sisPasvorto
-  }
-});
+var transporter = nodemailer.createTransport(smtpTransport({
+    host : config.sisRetServer,
+    port: config.sisRetPorto,
+    auth : {
+        user : config.sisRetadreso,
+        pass : config.sisRetPasvorto
+    }
+}));
 
 /*var mailOptions = {
   from: 'youremail@gmail.com',

@@ -5,7 +5,6 @@ var smtpTransport = require("nodemailer-smtp-transport");
 /*Config*/
 var config = require('../config');
 
-
 var transporter = nodemailer.createTransport(smtpTransport({
     host : config.sisRetServer,
     port: config.sisRetPorto,

@@ -112,13 +112,9 @@ var _forgesisPasvorton = function(req, res) {
     );
 }
 
-var _deleteUzanto = function(req, res){
-//fari
-}
-
 var _updateUzanto = function(req, res){
   if (req.body.kampo == 'id') {
-    res.status(400).send({message: "vi ne povas ŝanĝi vian ID"})
+    res.status(403).send({message: "vi ne povas ŝanĝi vian ID"})
   }
   Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
     function(sucess) {
@@ -134,7 +130,6 @@ module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
   getUzanto: _getUzanto,
   postUzanto: _postUzanto,
-  deleteUzanto:_deleteUzanto,
   updateUzanto: _updateUzanto,
   ensaluti: _ensaluti
 }

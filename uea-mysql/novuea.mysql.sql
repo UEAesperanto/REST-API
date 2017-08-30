@@ -79,8 +79,9 @@ CREATE TABLE uzanto (
     adreso varchar(255),
     posxtkodo varchar(255),
     idLogxurbo int(11) REFERENCES urbo(id),
-    idNacialando int(11) REFERENCES lando(id),
+    idlando int(11) REFERENCES lando(id),
     naskigxtago date,
+    morta boolean,  
     mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
     mortdato date NULL, /*vera mortdato*/
     notoj varchar(255),

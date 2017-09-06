@@ -13,7 +13,8 @@ var _find = function(id){
 
 var _insert = function(idUzantoAuxAsocio, uzantnomo, pasvorto) {
     var pasvortajDatumoj = hash.sha512(pasvorto, null);
-    var query = util.format('INSERT INTO `administranto` (idUzantoAuxAsocio, uzantnomo, pasvortoHash, pasvortoSalt) \
+    var query = util.format('INSERT INTO `administranto` (idUzantoAuxAsocio,\
+                             uzantnomo, pasvortoHash, pasvortoSalt) \
                              VALUES (%s, "%s", "%s", "%s");', idUzantoAuxAsocio, uzantnomo,
                              pasvortajDatumoj.hash, pasvortajDatumoj.salt);
     query = query.replace(/undefined/g, 'NULL');
@@ -21,7 +22,8 @@ var _insert = function(idUzantoAuxAsocio, uzantnomo, pasvorto) {
 }
 
 var _insertRajto = function (idAdmin, idRajto) {
-  var query = util.format('INSERT INTO `ref_administranto_adminrajto` (idAdministranto, idAdminrajto)\
+  var query = util.format('INSERT INTO `ref_administranto_adminrajto`\
+                          (idAdministranto, idAdminrajto)\
                            VALUES (%s, %s);', idAdmin, idRajto);
   return db.mysqlExec(query);
 }

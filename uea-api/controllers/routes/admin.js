@@ -8,6 +8,7 @@ var _postAdmin = function (req, res) {
   var token = req.headers['x-access-token'];
 
   if (token) {
+    //farota
     res.status(200).send({agordita: false});
   } else {
     Admin.find().then(
@@ -15,14 +16,13 @@ var _postAdmin = function (req, res) {
         if (result.length == 0) {
           Admin.insert(req.body.idUzantoAuxAsocio, req.body.uzantnomo,
                        req.body.pasvorto).then(
-                         function (result) {
-                           Admin.insertRajto(result.insertId, config.idAdministranto).then(
-                             function(sucess) {
-                               res.status(201).send({message: 'Gratulon! La sistemo pretas por uzado.'});
-                             }
-                           );
-                         }
-                       );
+              function (result) {
+                  Admin.insertRajto(result.insertId,
+                                    config.idAdministranto).then(
+                  function(sucess) {
+                      res.status(201).send({message: 'Gratulon! La sistemo pretas por uzado.'});
+                    });
+            });
         }
         else {
           res.status(403).send({success: false, message: 'sen ĵetono (Token)'});

@@ -24,10 +24,11 @@ var _ensaluti = function(req, res) {
     function(sucess) {
 
       if (sucess.length == 0) {
-        res.status(401).send({message: 'la uzantnomo ne ekzistas'});
+        res.status(401).send({message: 'La uzantnomo ne ekzistas'});
       }
 
-      if (! hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto, sucess[0].pasvortoHash)) {
+      if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
+                                sucess[0].pasvortoHash)) {
         res.status(401).send({message: 'Malkorekta pasvorto'});
       }
 

@@ -50,14 +50,9 @@ var _deleteLando = function(req, res){
   });
 }
 
-var _updateLando = function(req, res){
-//fari
-}
-
 module.exports = {
   getLandoj: _getLandoj,
   getLando: _getLando,
   postLando: _postLando,
-  deleteLando:_deleteLando,
-  updateLando:_updateLando,
+  deleteLando:_deleteLando
 }

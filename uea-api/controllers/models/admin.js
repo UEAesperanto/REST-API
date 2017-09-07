@@ -10,6 +10,10 @@ var _find = function(id){
   return db.mysqlExec(query);
 }
 
+var _findUzantnomo = function(uzantnomo) {
+  var query = util.format('SELECT * FROM `administranto` WHERE `uzantnomo` = "%s";', uzantnomo);
+  return db.mysqlExec(query);
+}
 
 var _insert = function(idUzantoAuxAsocio, uzantnomo, pasvorto) {
     var pasvortajDatumoj = hash.sha512(pasvorto, null);
@@ -28,8 +32,16 @@ var _insertRajto = function (idAdmin, idRajto) {
   return db.mysqlExec(query);
 }
 
+var _getRajtoj = function (idAdmin) {
+  var query = util.format('SELECT * FROM `ref_administranto_adminrajto`\
+                           WHERE `idAdministranto` = "%s";', idAdmin);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   insert: _insert,
   insertRajto: _insertRajto,
-  find:_find
+  find:_find,
+  getRajtoj: _getRajtoj,
+  findUzantnomo:_findUzantnomo
 }

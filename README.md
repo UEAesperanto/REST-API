@@ -10,11 +10,11 @@ Por pliaj detaloj pri kiel ĝi funkcias, vidu la [vikion](https://github.com/Rib
 Por faciligi la instaladon, oni uzas la teknologion [Docker](https://www.docker.com/community-edition). Do la unua paŝo estas instali Docker en via komputilo kaj komencigi ĝin. Kiam vi certigus ke Docker estas boninstalita, aliru al la dosierujo per Terminal (en Vindozo, prompt) kie vi elŝutis tiun ĉi kodo kaj tajpu:
 
  `docker-compose up --build -d`
- 
+
  **Atentu** ke ĝi verŝajne ne bone funkcios se en la dosierujo kiun vi enmetis la kodon estus bezonata havi superuzantaj permesoj (sudo).
- 
- Por certigi ke ĉio okazis bone, tajpu `docker ps` kaj devus aperi la jenon: 
- 
+
+ Por certigi ke ĉio okazis bone, tajpu `docker ps` kaj devus aperi la jenon:
+
 ````
 CREATED                       STATUS                   PORTS                                NAMES
 10 minutes ago              Up 10 minutes       0.0.0.0:3000->3000/tcp   datumbazouea_api_1
@@ -28,7 +28,7 @@ Tio estas ĉio, vi jam povos aliri la API je `https://localhost:3000` kaj sekvi 
 
 ## Agordado
 
-Dependante je kiel via datumbazo estas agordita, povas esti ke la REST-API ne plene funkcios, do necesas agordi tion en la arĥivo `datumbazoUEA/uea-api/config.js`. 
+Dependante je kiel via datumbazo estas agordita, povas esti ke la REST-API ne plene funkcios, do necesas agordi tion en la arĥivo `datumbazoUEA/uea-api/config.js`.
 
 ## Malinstalado
 
@@ -47,7 +47,7 @@ Kaj forviŝu la arĥivojn de la komputilo.
 
 ## Aǔtoroj
 
-La aǔtoroj de la kodoj estas la jenaj:
+La aŭtoroj de la kodoj estas la jenaj:
 - Ana Maria da Costa Ribeiro [@RibeiroAna](https://github.com/RibeiroAna/)
 - Victor Hugo Fernandes de Sousa [@VictorHundo](https://github.com/VictorHundo/)
 - Pierre Vittet [@Piervit](https://github.com/Piervit/)

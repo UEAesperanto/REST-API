@@ -4,9 +4,9 @@ var db = require('../../modules/db');
 var _landoNull = function(){
   return {
     nomoLoka : null,
-    nomoEo : null,
+    radikoEo : null,
     finajxoEo: null,
-    landKodo : null
+    landkodo : null
   }
 }
 
@@ -21,8 +21,9 @@ var _create = function(obj){
 
 var _insert = function(lando){
   var query = util.format(
-  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landKodo) VALUES ("%s", "%s", "%s", "%s");',
-  lando.nomoLoka, lando.nomoEo, lando.finajxoEo, lando.landKodo);
+  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landkodo) VALUES ("%s", "%s", "%s", "%s");',
+  lando.nomoLoka, lando.radikoEo, lando.finajxoEo, lando.landkodo);
+  console.log(lando);
   return db.mysqlExec(query);
 }
 

@@ -81,11 +81,11 @@ INSERT INTO uzantoAuxAsocio ()
           NULL /* pasvorto */
       );
 
-      INSERT INTO uzantoAuxAsocio ()
-            VALUES (
-                10, /* id */
-                "101", /* ueakodo */
-                NULL, /* uzantnomo */
-                NULL, /** pasvortohash */
-                NULL /* pasvorto */
-            );
+INSERT INTO uzantoAuxAsocio ()
+      VALUES (
+          10, /* id */
+          "101", /* ueakodo */
+          NULL, /* uzantnomo */
+          NULL, /** pasvortohash */
+          NULL /* pasvorto */
+      );

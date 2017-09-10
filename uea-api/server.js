@@ -1,19 +1,16 @@
-const express = require('express');
-var fs      = require('fs');
-var path = require('path');
-var https = require('https');
-var util = require('util');
-var bodyParser = require('body-parser');
-var multer = require('multer');
-var morgan = require('morgan');
-var db = require('./modules/db');
+const express   = require('express');
+var fs          = require('fs');
+var path        = require('path');
+var util        = require('util');
+var bodyParser  = require('body-parser');
+var multer      = require('multer');
+var morgan      = require('morgan');
+var db          = require('./modules/db');
 
 require('shelljs/global');
 
-var httpsOptions = {
-  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
-  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
-}
+const PORT = process.env.PORT || 3000;
+const app = express();
 
 uzanto = require('./services/uzanto');
 lando = require('./services/lando');
@@ -25,9 +22,6 @@ kongreso = require('./services/kongreso');
 admin = require('./services/admin');
 peranto = require('./services/peranto');
 
-
-const PORT = process.env.PORT || 3000;
-const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -59,12 +53,12 @@ app.use('/admin', admin);
 app.use('/perantoj', peranto);
 
 // Start the server
-https.createServer(httpsOptions, app).listen(PORT, function(){
+app.listen(PORT, () => {
   console.log(`La API aŭskultas ĉe la pordo ${PORT}`);
   console.log('Presu Ctrl+C por ĉesi.');
   setInterval(function () {
       db.mysqlExec('SELECT 1');
   }, 5000);
-})
+});
 
 module.exports = app; // for testing

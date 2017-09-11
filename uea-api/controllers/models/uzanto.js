@@ -18,8 +18,6 @@ var _insert = function(id, personanomo, familianomo, titolo,
 
     query = query.replace(/undefined/g, 'NULL');
     query = query.replace(/"NULL"/g, 'NULL');
-    console.log(query);
-
     return db.mysqlExec(query);
 }
 

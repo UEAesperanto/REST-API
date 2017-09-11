@@ -41,7 +41,6 @@ var _authorizeAdminPost = function(req, res, next) {
         return res.status(403).send({ success: false,
           message: 'La ĵetono (token) ne estas korekta.' });
       } else {
-        console.log(decoded.permesoj);
         if(1 == 1) {
            req.decoded = decoded;
            next();

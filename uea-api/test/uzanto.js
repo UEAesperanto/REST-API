@@ -17,43 +17,43 @@ describe('Uzantoj', function() {
         done();
       })
     });
-});
 
-  describe('POST /uzantoj', function(){
+    describe('POST /uzantoj', function(){
 
-    var insertQuery = util.format('INSERT INTO uzanto (id, personanomo, familianomo, titolo)\
-                             VALUES (2, /* id */ "Victor Hugo", /*  personanomo */\
-                             "de Sousa", /* familianomo   */ "titolo", /* titolo  */);')
+      var insertQuery = util.format('INSERT INTO uzanto (id, personanomo, familianomo, titolo)\
+      VALUES (2, /* id */ "Victor Hugo", /*  personanomo */\
+      "de Sousa", /* familianomo   */ "titolo", /* titolo  */);')
 
-   it('it should POST a uzanto', function(done){
-     var uzanto = {"uzantnomo" : "uzantnomo",
-                   "pasvorto" : "nomoLoka",
-                   "personanomo": "personanomo",
-                   "titolo":"titolo",
-                   "bildo":"bildo",
-                   "adreso":"adreso",
-                   "posxtkodo":"idNacialando",
-                   "idNacialando": 25,
-                   "naskigxtago": "1996-05-05",
-                   "retposxto":"retposxto"};
+      it('it should POST a uzanto', function(done){
+        var uzanto = {"uzantnomo" : "uzantnomo",
+        "pasvorto" : "nomoLoka",
+        "personanomo": "personanomo",
+        "titolo":"titolo",
+        "bildo":"bildo",
+        "adreso":"adreso",
+        "posxtkodo":"idNacialando",
+        "idNacialando": 25,
+        "naskigxtago": "1996-05-05",
+        "retposxto":"retposxto"};
 
-     chai.request(server)
-         .post('/uzantoj')
-         .send(uzanto)
-         .end(function(err, res){
-             res.should.have.status(201);
-             res.body.should.have.property('id');
-           done();
-         });
-   });
+        chai.request(server)
+        .post('/uzantoj')
+        .send(uzanto)
+        .end(function(err, res){
+          res.should.have.status(201);
+          res.body.should.have.property('id');
+          done();
+        });
+      });
 
-   it('forgesis pasvorton sen uzanto', function(done) {
-     chai.request(server)
-         .post('/uzantoj/forgesisPasvorton')
-         .end(function(err, res){
-             res.should.have.status(400);
-           done();
-         });
-   });
+      it('forgesis pasvorton sen uzanto', function(done) {
+        chai.request(server)
+        .post('/uzantoj/forgesisPasvorton')
+        .end(function(err, res){
+          res.should.have.status(400);
+          done();
+        });
+      });
 
+    });
 });

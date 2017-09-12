@@ -23,5 +23,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
+    volumes:
+      - ./uea-docker/mysql/uea-custom.cnf:/etc/mysql/conf.d/custom.cnf
     ports:
       - "3306:3306"

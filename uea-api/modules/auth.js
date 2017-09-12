@@ -31,18 +31,14 @@ var _authorizeID = function(req, res, next) {
 
 var _authorizeAdminPost = function(req, res, next) {
   var token = req.headers['x-access-token'];
+
   if(token) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
-        if(req.method == "GET") {
-          req.decoded = decoded;
-          next();
-        }
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.' });
+          message: 'La ĵetono (token) ne estas korekta.'});
       } else {
-        console.log(decoded.permesoj);
-        if(1 == 1) {
+        if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
            req.decoded = decoded;
            next();
         } else {
@@ -56,13 +52,13 @@ var _authorizeAdminPost = function(req, res, next) {
       next();
     }
     else {
-    // Se ne estas ĵetono
-    // redonas eraron
-    return res.status(400).send({
-        success: false,
-        message: 'Sen ĵetono (token).'
-    });
-  }
+      // Se ne estas ĵetono
+      // redonas eraron
+      return res.status(400).send({
+          success: false,
+          message: 'Sen ĵetono (token).'
+      });
+    }
   }
 }
 

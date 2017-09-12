@@ -1,10 +1,14 @@
+//Libraries
 const express   = require('express');
+var cors        = require('cors');
 var fs          = require('fs');
 var path        = require('path');
 var util        = require('util');
 var bodyParser  = require('body-parser');
 var multer      = require('multer');
 var morgan      = require('morgan');
+
+//Modules
 var db          = require('./modules/db');
 
 require('shelljs/global');
@@ -28,11 +32,16 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: 'application/json'}));
 
+//Indas ŝanĝi origin por ebligi nur kelkajn domajnojn aliri
+app.use(cors({origin: '*'}));
+
 //Allow Cross
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Headers',
+                  'X-Requested-With, content-type, Authorization, x-access-token');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, UPDATE, DELETE');
     next();
 });
 

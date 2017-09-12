@@ -1,9 +1,13 @@
+//Libraries
 const express = require('express');
-lando = require('../controllers/routes/lando');
+
+//controllers
+var lando = require('../controllers/routes/lando');
+
+//Modulers
 var auth = require('../modules/auth');
 
 const app = express();
-
 
 var routerAuth = express.Router();
 routerAuth.use(auth.authorizeAdminPost);

@@ -23,7 +23,6 @@ var _insert = function(lando){
   var query = util.format(
   'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landkodo) VALUES ("%s", "%s", "%s", "%s");',
   lando.nomoLoka, lando.radikoEo, lando.finajxoEo, lando.landkodo);
-  console.log(lando);
   return db.mysqlExec(query);
 }
 

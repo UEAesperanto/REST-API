@@ -19,6 +19,7 @@ app.route('/')
     .post(lando.postLando);
 app.route('/:id')
     .get(lando.getLando)
-    .delete(lando.deleteLando);
+    .delete(lando.deleteLando)
+    .put(lando.updateLando);
 
 module.exports = app;

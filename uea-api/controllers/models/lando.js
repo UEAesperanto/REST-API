@@ -41,9 +41,16 @@ var _find = function(id){
   return db.mysqlExec(query);
 }
 
+var _update = function(id, kampo, valoro) {
+  var query = util.format('UPDATE `lando` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  return db.mysqlExec(query);
+}
+
+
 module.exports = {
   find:_find,
   create:_create,
   insert:_insert,
-  delete:_delete
+  delete:_delete,
+  update: _update
 }

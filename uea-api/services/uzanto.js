@@ -15,13 +15,12 @@ app.use('/', router);
 app.route('/')
     .post(uzanto.postUzanto);
 app.route('/:id(\\d+)/')
-    .get(uzanto.getUzanto);
+    .get(uzanto.getUzanto)
+    .put(uzanto.updateUzanto);
 
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
 router.route('/forgesisPasvorton')
     .post(uzanto.forgesisPasvorton);
-router.route('/:id(\\d+)/gxisdatigi')
-     .post(uzanto.updateUzanto);
 
 module.exports = app;

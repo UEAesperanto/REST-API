@@ -12,7 +12,7 @@ services:
       - DB_PASSWORD=u34p4ss-t3st3
       - DB_HOST=mysql-test
       - DB_PORT=3307
-      - TEST=local
+      - TEST=travis
     links:
       - mysql:mysql-test
     depends_on:

@@ -5,7 +5,8 @@ language: nodejs
 services:
   - docker
 
+install:
+  - docker-compose -f ./uea-teste/docker-compose-travis.yaml up --build -d
+
 script:
-    - docker-compose up --build -d
-    - docker exec -it datumbazouea_api-test_1 bash
-    - npm test
+    - docker-compose run api npm test

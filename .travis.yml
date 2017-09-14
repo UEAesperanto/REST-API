@@ -5,8 +5,11 @@ language: nodejs
 services:
   - docker
 
+pre-install:
+  - docker-compose -f ./uea-teste/docker-compose-travis.yaml build
+
 install:
-  - docker-compose -f ./uea-teste/docker-compose-travis.yaml up --build -d
+  - docker-compose -f ./uea-teste/docker-compose-travis.yaml up -d
 
 script:
-    - docker-compose run api npm test
+    - docker-compose -f ./uea-test/docker-compose-travis.yaml run api npm test

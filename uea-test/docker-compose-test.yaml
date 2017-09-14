@@ -2,7 +2,7 @@ version: '3'
 services:
   api:
     build: ../uea-docker/nodejs/
-    image: uea-nodejs
+    image: uea-test
     ports:
       - "3001:3000"
     volumes:

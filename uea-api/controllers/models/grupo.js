@@ -10,9 +10,20 @@ var _find = function(id){
 }
 
 var _insert = function(mallongigilo, nomo, priskribo) {
-  var query = util.format('INSERT into `grupo` (mallongigilo, nomo, priskrbo)\
+  var query = util.format('INSERT into `grupo` (mallongigilo, nomo, priskribo)\
                            VALUES("%s", "%s", "%s");',
                            mallongigilo, nomo, priskribo);
+  return db.mysqlExec(query);
+}
+
+var _delete = function(id){
+  var query = util.format('DELETE FROM `grupo` WHERE `id` = %s ;', id);
+  return db.mysqlExec(query);
+}
+
+var _update = function(id, kampo, valoro) {
+  var query = util.format('UPDATE `grupo` SET `%s` = "%s" WHERE `id` = %s',
+                           kampo, valoro, id);
   return db.mysqlExec(query);
 }
 
@@ -56,6 +67,8 @@ var _insertRefKategorio = function(idGrupo, idKategorio) {
 module.exports = {
   find:_find,
   insert: _insert,
+  delete: _delete,
+  update: _update,
   insertRefKategorio: _insertRefKategorio,
   findKategorio: _findKategorio,
   findAligxKotizoj: _findAligxKotizoj,

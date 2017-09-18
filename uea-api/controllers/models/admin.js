@@ -40,9 +40,7 @@ var _getRajtoj = function (idAdmin) {
 }
 
 var _delete = function(id){
-  var query = util.format(
-  'DELETE FROM `administranto` \
-  WHERE `id` = %s ;', id);
+  var query = util.format('DELETE FROM `administranto` WHERE `id` = %s ;', id);
   return db.mysqlExec(query);
 }
 

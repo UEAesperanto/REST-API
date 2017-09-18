@@ -19,7 +19,9 @@ app.route('/')
     .post(routerAuth, grupo.postGrupo);
 
 app.route('/:id(\\d+)')
-    .get(grupo.getGrupo);
+    .get(grupo.getGrupo)
+    .delete(routerAuth, grupo.deleteGrupo)
+    .put(routerAuth, grupo.updateGrupo);
 
 router.route('/laboroj/')
     .get(grupo.getLaborgrupoj);
@@ -40,7 +42,6 @@ router.route('/membrecoj/aldonoj/:id(\\d+)')
 
 router.route('/:id(\\d+)/anoj')
     .post(grupo.postAneco);
-
 
 router.route('/:id(\\d+)/kotizoj')
     .get(grupo.getAligxKotizoj);

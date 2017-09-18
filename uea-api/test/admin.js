@@ -112,6 +112,4 @@ describe('Admin', function() {
              });
           });
     });
-
-    });
 });

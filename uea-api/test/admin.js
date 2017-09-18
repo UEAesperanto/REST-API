@@ -30,21 +30,31 @@ describe('Admin', function() {
        });
      });
 
-    describe('GET /admin/agordita sen agordoj', function() {
+    describe('Admin kun agordo', function() {
+
+      var token = 1;
 
       before (function(done){
          var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
          chai.request(server)
-           .post('/admin')
+           .post('/admin/ensaluti')
            .send(uzanto)
            .end(function(err, res){
                res.should.have.status(201);
                res.body.should.have.property('message');
-            done();
           });
+          chai.request(server)
+            .post('/admin/ensaluti')
+            .send(uzanto)
+            .end(function(err, res){
+                res.should.have.status(200);
+                res.body.should.have.property('token');
+                token = res.body.token;
+           });
+           done();
         });
 
-        it('kun administrantoj en la sistemo', function(done){
+        it('GET Admin/Agordita kun administrantoj en la sistemo', function(done){
          chai.request(server)
              .get('/admin/agordita')
              .end((err, res) => {
@@ -55,16 +65,52 @@ describe('Admin', function() {
          });
 
          it ('senrajte enmeti iun kun administrantoj en la sistemo', function(done){
-            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+            var uzanto = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
             chai.request(server)
               .post('/admin')
+              //.headers({'x-access-token': token})
               .send(uzanto)
               .end(function(err, res){
-                  res.should.have.status(403);
+                  res.should.have.status(400);
                done();
              });
            });
 
-    });
+          it('korekte ensaluti', function(done){
+            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(200);
+                  res.body.should.have.property('token');
+                  done();
+                });
+          });
 
+          it('ensaluti kun malkorekta pasvorto', function(done){
+            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "malkorekta"};
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(401);
+                  res.body.should.have.property('message', 'Malkorekta pasvorto');
+               done();
+             });
+          });
+
+          it('ensaluti kun malkorekta uzantnomo', function(done){
+            var uzanto = {"uzantnomo":"malkorekta", "pasvorto": "malkorekta"};
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(401);
+                  res.body.should.have.property('message', 'La uzantnomo ne ekzistas');
+               done();
+             });
+          });
+
+    });
 });

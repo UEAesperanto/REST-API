@@ -182,7 +182,7 @@ CREATE TABLE aneckotizo (
 CREATE TABLE administranto (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   idUzantoAuxAsocio int(11) NULL REFERENCES uzantoAuxAsocio(id), /*la admnistranto povas esti aǔ ne uzanto aǔ asocio*/
-  uzantnomo varchar(255),
+  uzantnomo varchar(255) UNIQUE,
   pasvortoHash text,
   pasvortoSalt text
 );

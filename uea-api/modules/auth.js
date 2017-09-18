@@ -18,7 +18,6 @@ var _authorizeID = function(req, res, next) {
         }
       }
     });
-
   } else {
     // Se ne estas ĵetono
     // redonas eraron
@@ -29,9 +28,8 @@ var _authorizeID = function(req, res, next) {
   }
 }
 
-var _authorizeAdminPost = function(req, res, next) {
+var _authorizeAdmin = function(req, res, next) {
   var token = req.headers['x-access-token'];
-
   if(token) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
@@ -48,10 +46,6 @@ var _authorizeAdminPost = function(req, res, next) {
       }
     });
   } else {
-    if(req.method == "GET") {
-      next();
-    }
-    else {
       // Se ne estas ĵetono
       // redonas eraron
       return res.status(400).send({
@@ -59,10 +53,9 @@ var _authorizeAdminPost = function(req, res, next) {
           message: 'Sen ĵetono (token).'
       });
     }
-  }
 }
 
 module.exports = {
   authorizeID: _authorizeID,
-  authorizeAdminPost: _authorizeAdminPost
+  authorizeAdmin: _authorizeAdmin,
 }

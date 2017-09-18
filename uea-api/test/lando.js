@@ -69,7 +69,8 @@ describe('Landoj', function() {
 
   describe('POST /landoj', function(){
    it('it NOT should POST a lando - Sen ĵetono (token)', function(done){
-     var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
+     var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo",
+                  finajxoEo: "finajxoEo", landKodo : "landKodo" };
      chai.request(server)
          .post('/landoj')
          .send(lando)

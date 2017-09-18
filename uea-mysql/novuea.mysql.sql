@@ -173,7 +173,7 @@ CREATE TABLE aneckotizo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   prezo int(11),
   priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
-  lando int(11) REFERENCES lando(id), /*al kiu lando tiu kotizo indas*/
+  idLando int(11) REFERENCES lando(id), /*al kiu lando tiu kotizo indas*/
   monero varchar(255) DEFAULT 'EUR', /*en kiu monero tiu valoro estas*/
   idGrupo int(11) REFERENCES grupo(id) /*la grupo al kiu oni anas*/
 );

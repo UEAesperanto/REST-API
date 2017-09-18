@@ -1,14 +1,23 @@
 const express = require('express');
-grupo = require('../controllers/routes/grupo');
 const app = express();
+
+//controllers
+var grupo = require('../controllers/routes/grupo');
+
+//Modules
+var auth = require('../modules/auth');
 
 var router = express.Router();
 
-// Asocio routes
+var routerAuth = express.Router();
+routerAuth.use(auth.authorizeAdmin);
+
 app.use('/', router);
 
 app.route('/')
-    .get(grupo.getGrupoj);
+    .get(grupo.getGrupoj)
+    .post(routerAuth, grupo.postGrupo);
+
 app.route('/:id(\\d+)')
     .get(grupo.getGrupo);
 
@@ -26,7 +35,8 @@ router.route('/membrecoj/:id(\\d+)')
 router.route('/membrecoj/aldonoj/')
     .get(grupo.getAldonaMembrecgrupoj);
 router.route('/membrecoj/aldonoj/:id(\\d+)')
-    .get(grupo.getAldonaMembrecgrupo);
+    .get(grupo.getAldonaMembrecgrupo)
+    .post(routerAuth, grupo.postRefAldonmembreco);
 
 router.route('/:id(\\d+)/anoj')
     .post(grupo.postAneco);

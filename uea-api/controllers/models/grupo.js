@@ -9,6 +9,13 @@ var _find = function(id){
   return db.mysqlExec(query);
 }
 
+var _insert = function(mallongigilo, nomo, priskribo) {
+  var query = util.format('INSERT into `grupo` (mallongigilo, nomo, priskrbo)\
+                           VALUES("%s", "%s", "%s");',
+                           mallongigilo, nomo, priskribo);
+  return db.mysqlExec(query);
+}
+
 var _findKategorio = function(kategorio){
   var query = util.format('SELECT A.id, A.mallongigilo, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
                            B ON (A.id = B.idGrupo) WHERE B.idGrupaKategorio=%s;', kategorio);
@@ -40,8 +47,16 @@ var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
   return db.mysqlExec(query);
 }
 
+var _insertRefKategorio = function(idGrupo, idKategorio) {
+  var query = util.format('INSERT INTO ref_grupo_grupa_kategorio ()\
+                            VALUES (%s, %s);', idGrupo, idKategorio);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
+  insert: _insert,
+  insertRefKategorio: _insertRefKategorio,
   findKategorio: _findKategorio,
   findAligxKotizoj: _findAligxKotizoj,
   findLaboranoj: _findLaboranoj,

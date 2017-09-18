@@ -18,7 +18,7 @@ describe('Admin', function() {
       })
     });
 
-    describe('GET /admin/agordita sen agordoj', function(){
+  describe('GET /admin/agordita sen agordoj', function(){
       it('sen administrantoj en la sistemo', function(done){
        chai.request(server)
            .get('/admin/agordita')
@@ -111,6 +111,7 @@ describe('Admin', function() {
                done();
              });
           });
+    });
 
     });
 });

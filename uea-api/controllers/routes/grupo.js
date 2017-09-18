@@ -155,7 +155,8 @@ var _postAneco = function(req, res) {
               insertAneco(req, res);
           }
           else {
-             res.status(403).send({message: 'Vi ne rajtas membrigi iun en tiu grupo'});
+             res.status(403).send({message: 'Vi ne rajtas membrigi\
+                                            iun en tiu grupo'});
           }
 
         });
@@ -164,9 +165,33 @@ var _postAneco = function(req, res) {
   }
 }
 
+var _postGrupo = function (req, res) {
+  Grupo.insert(req.body.mallongigilo, req.body.nomo, req.body.priskribo)
+  .then(function(sucess){
+    if(sucess){
+      res.status(201).send({message: 'Ok'});
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+var _postRefAldonmembreco = function (req, res) {
+  Grupo.insertRefKategorio(req.params.id, config.idAldonaMembrecgrupo)
+  .then(function(sucess){
+      if(sucess){
+        res.status(201).send({message:'ok'});
+      } else {
+        res.status(500).send({message: 'internal error'});
+      }
+    });
+}
+
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
+  postGrupo: _postGrupo,
+  postRefAldonmembreco: _postRefAldonmembreco,
   getMembrecgrupoj: _getMembrecgrupoj,
   getLaborgrupoj: _getLaborgrupoj,
   getAligxKotizoj: _getAligxKotizoj,

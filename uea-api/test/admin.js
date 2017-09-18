@@ -32,10 +32,8 @@ describe('Admin', function() {
 
     describe('Admin kun agordo', function() {
 
-      var token = 1;
-
       before (function(done){
-         var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+        var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
          chai.request(server)
            .post('/admin/ensaluti')
            .send(uzanto)
@@ -43,14 +41,6 @@ describe('Admin', function() {
                res.should.have.status(201);
                res.body.should.have.property('message');
           });
-          chai.request(server)
-            .post('/admin/ensaluti')
-            .send(uzanto)
-            .end(function(err, res){
-                res.should.have.status(200);
-                res.body.should.have.property('token');
-                token = res.body.token;
-           });
            done();
         });
 
@@ -64,20 +54,30 @@ describe('Admin', function() {
              });
          });
 
-         it ('senrajte enmeti iun kun administrantoj en la sistemo', function(done){
-            var uzanto = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
+         it ('Enmeti iun kun administrantoj en la sistemo', function(done){
+            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+            var uzanto2 = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
+
             chai.request(server)
-              .post('/admin')
-              //.headers({'x-access-token': token})
+              .post('/admin/ensaluti')
               .send(uzanto)
               .end(function(err, res){
-                  res.should.have.status(400);
-               done();
+                  res.should.have.status(200);
+                  res.body.should.have.property('token');
+                  chai.request(server)
+                    .post('/admin')
+                    .set('x-access-token',  res.body.token)
+                    .send(uzanto2)
+                    .end(function(err, res){
+                        res.should.have.status(201);
+                     done();
+                   });
              });
            });
 
           it('korekte ensaluti', function(done){
             var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+
             chai.request(server)
               .post('/admin/ensaluti')
               .send(uzanto)

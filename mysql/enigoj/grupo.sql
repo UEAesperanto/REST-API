@@ -49,9 +49,9 @@ INSERT INTO grupo ()
 INSERT INTO grupo ()
   VALUES (
        7, /*id int(11) PRIMARY KEY,*/
-      "mallongigilo varchar(255),",
-      "MJ", /*nomo varchar(255)*/
-      "Jarlibro"
+      "Reta membreco kiu donas rajton al reta partopreno en la organizo",
+      "Baza membreco", /*nomo varchar(255)*/
+      ""
   );
 
 INSERT INTO grupo ()

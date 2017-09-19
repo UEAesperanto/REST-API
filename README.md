@@ -16,11 +16,10 @@ Por faciligi la instaladon, oni uzas la teknologion [Docker](https://www.docker.
 
 Kiam vi certigus ke Docker estas boninstalita, aliru al la dosierujo per Terminal (en Vindozo, prompt) kie vi elŝutis tiun ĉi kodo kaj tajpu:
 
- ````
-    docker-compose -f docker/dev/docker-dev.yaml up --build -d
-
-    docker-compose -f docker/test/docker-test.yaml up --build -d
-  ````
+````
+docker-compose -f docker/dev/docker-dev.yaml up --build -d
+docker-compose -f docker/test/docker-test.yaml up --build -d
+````
 
  **Atentu** ke ĝi verŝajne ne bone funkcios se en la dosierujo kiun vi enmetis la kodon estus bezonata havi superuzantaj permesoj (sudo), vi devas ebligi ke tio estu uzita sen superuzantaj privilegioj.
 

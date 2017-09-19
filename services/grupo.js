@@ -3,6 +3,7 @@ const app = express();
 
 //controllers
 var grupo = require('../controllers/grupo');
+var aligxkotizo = require('../controllers/aligxkotizo');
 
 //Modules
 var auth = require('../modules/auth');
@@ -43,8 +44,8 @@ router.route('/membrecoj/aldonoj/:id(\\d+)')
 router.route('/:id(\\d+)/anoj')
     .post(grupo.postAneco);
 
-
 router.route('/:id(\\d+)/kotizoj')
-    .get(grupo.getAligxKotizoj);
+    .get(aligxkotizo.getAligxKotizoj)
+    .post(routerAuth, aligxkotizo.postAligxkotizo);
 
 module.exports = app;

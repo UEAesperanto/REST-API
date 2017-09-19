@@ -40,11 +40,6 @@ var _findLaboranoj = function(id) {
   return db.mysqlExec(query);
 }
 
-var _findAligxKotizoj = function(id){
-  var query = util.format(' SELECT * FROM aneckotizo WHERE idGrupo=%s;', id);
-  return db.mysqlExec(query);
-}
-
 var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
                                tasko, respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj, aprobita) {
   var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
@@ -71,7 +66,6 @@ module.exports = {
   update: _update,
   insertRefKategorio: _insertRefKategorio,
   findKategorio: _findKategorio,
-  findAligxKotizoj: _findAligxKotizoj,
   findLaboranoj: _findLaboranoj,
   insertMembreco: _insertMembreco
 }

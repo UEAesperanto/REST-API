@@ -13,7 +13,14 @@ var _findGrupo = function(idGrupo){
   return db.mysqlExec(query);
 }
 
+var _update = function(id, kampo, valoro) {
+  var query = util.format('UPDATE `aneckotizo` SET `%s` = "%s" WHERE `id` = %s;',
+                           kampo, valoro, id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   insert: _insert,
-  findGrupo: _findGrupo
+  findGrupo: _findGrupo,
+  update: _update
 }

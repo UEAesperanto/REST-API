@@ -46,6 +46,7 @@ router.route('/:id(\\d+)/anoj')
 
 router.route('/:id(\\d+)/kotizoj')
     .get(aligxkotizo.getAligxKotizoj)
-    .post(routerAuth, aligxkotizo.postAligxkotizo);
+    .post(routerAuth, aligxkotizo.postAligxkotizo)
+    .put(routerAuth, aligxkotizo.updateAligxkotizo);
 
 module.exports = app;

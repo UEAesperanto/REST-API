@@ -35,7 +35,26 @@ var _postAligxkotizo = function(req, res){
               });
 }
 
+/*
+  UPDATE /lando
+*/
+var _updateAligxkotizo = function(req, res){
+  if (req.body.kampo == 'id') {
+    res.status(403).send({message: "vi ne povas ŝanĝi la ID"})
+  }
+  Aligxkotizo.update(req.body.id, req.body.kampo, req.body.valoro).then(
+    function(sucess) {
+      if (sucess) {
+        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+      } else {
+        res.status(500).send({message: "Eraro en la servilo"});
+      }
+  });
+}
+
+
 module.exports = {
   getAligxKotizoj: _getAligxKotizoj,
-  postAligxkotizo: _postAligxkotizo
+  postAligxkotizo: _postAligxkotizo,
+  updateAligxkotizo:  _updateAligxkotizo
 }

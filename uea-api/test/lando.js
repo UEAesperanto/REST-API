@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Lando = require('../controllers/models/lando');
+var Lando = require('../models/lando');
 
 chai.use(chaiHttp);
 describe('Landoj', function() {
@@ -69,7 +69,8 @@ describe('Landoj', function() {
 
   describe('POST /landoj', function(){
    it('it NOT should POST a lando - Sen ĵetono (token)', function(done){
-     var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
+     var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo",
+                  finajxoEo: "finajxoEo", landKodo : "landKodo" };
      chai.request(server)
          .post('/landoj')
          .send(lando)

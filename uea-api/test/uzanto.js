@@ -5,7 +5,7 @@ var server = require('../server');
 var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
-var Uzanto = require('../controllers/models/uzanto');
+var Uzanto = require('../models/uzanto');
 
 chai.use(chaiHttp);
 describe('Uzantoj', function() {

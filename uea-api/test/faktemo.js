@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Faktemo = require('../controllers/models/faktemo');
+var Faktemo = require('../models/faktemo');
 
 
 chai.use(chaiHttp);

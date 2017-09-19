@@ -21,7 +21,8 @@ var _create = function(obj){
 
 var _insert = function(lando){
   var query = util.format(
-  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landkodo) VALUES ("%s", "%s", "%s", "%s");',
+  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landkodo)\
+   VALUES ("%s", "%s", "%s", "%s");',
   lando.nomoLoka, lando.radikoEo, lando.finajxoEo, lando.landkodo);
   return db.mysqlExec(query);
 }
@@ -42,7 +43,8 @@ var _find = function(id){
 }
 
 var _update = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `lando` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  var query = util.format('UPDATE `lando` SET `%s` = "%s" WHERE `id` = %s',
+                           kampo, valoro, id);
   return db.mysqlExec(query);
 }
 

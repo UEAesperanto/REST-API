@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Urbo = require('../controllers/models/urbo');
+var Urbo = require('../models/urbo');
 
 chai.use(chaiHttp);
 describe('Urboj', function() {

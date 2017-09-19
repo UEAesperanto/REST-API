@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Grupo = require('../controllers/models/grupo');
+var Grupo = require('../models/grupo');
 
 chai.use(chaiHttp);
 describe('Grupoj', function() {

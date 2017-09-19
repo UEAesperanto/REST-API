@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Admin = require('../controllers/models/admin');
+var Admin = require('../models/admin');
 
 
 chai.use(chaiHttp);
@@ -18,7 +18,7 @@ describe('Admin', function() {
       })
     });
 
-    /*describe('GET /admin/agordita sen agordoj', function(){
+  describe('GET /admin/agordita sen agordoj', function(){
       it('sen administrantoj en la sistemo', function(done){
        chai.request(server)
            .get('/admin/agordita')
@@ -30,21 +30,21 @@ describe('Admin', function() {
        });
      });
 
-    describe('GET /admin/agordita sen agordoj', function() {
+    describe('Admin kun agordo', function() {
 
       before (function(done){
-         var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+        var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
          chai.request(server)
-           .post('/admin')
+           .post('/admin/ensaluti')
            .send(uzanto)
            .end(function(err, res){
                res.should.have.status(201);
                res.body.should.have.property('message');
-            done();
           });
+           done();
         });
 
-        it('kun administrantoj en la sistemo', function(done){
+        it('GET Admin/Agordita kun administrantoj en la sistemo', function(done){
          chai.request(server)
              .get('/admin/agordita')
              .end((err, res) => {
@@ -54,17 +54,62 @@ describe('Admin', function() {
              });
          });
 
-         it ('senrajte enmeti iun kun administrantoj en la sistemo', function(done){
+         it ('Enmeti iun kun administrantoj en la sistemo', function(done){
             var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+            var uzanto2 = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
+
             chai.request(server)
-              .post('/admin')
+              .post('/admin/ensaluti')
               .send(uzanto)
               .end(function(err, res){
-                  res.should.have.status(403);
-               done();
+                  res.should.have.status(200);
+                  res.body.should.have.property('token');
+                  chai.request(server)
+                    .post('/admin')
+                    .set('x-access-token',  res.body.token)
+                    .send(uzanto2)
+                    .end(function(err, res){
+                        res.should.have.status(201);
+                     done();
+                   });
              });
            });
 
-    });*/
+          it('korekte ensaluti', function(done){
+            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
 
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(200);
+                  res.body.should.have.property('token');
+                  done();
+                });
+          });
+
+          it('ensaluti kun malkorekta pasvorto', function(done){
+            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "malkorekta"};
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(401);
+                  res.body.should.have.property('message', 'Malkorekta pasvorto');
+               done();
+             });
+          });
+
+          it('ensaluti kun malkorekta uzantnomo', function(done){
+            var uzanto = {"uzantnomo":"malkorekta", "pasvorto": "malkorekta"};
+            chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function(err, res){
+                  res.should.have.status(401);
+                  res.body.should.have.property('message', 'La uzantnomo ne ekzistas');
+               done();
+             });
+          });
+    });
 });

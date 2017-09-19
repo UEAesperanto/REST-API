@@ -1,5 +1,5 @@
 const express = require('express');
-faktemo = require('../controllers/routes/faktemo');
+faktemo = require('../controllers/faktemo');
 const app = express();
 
 app.route('/')

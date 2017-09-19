@@ -1,5 +1,5 @@
 const express = require('express');
-var admin = require('../controllers/routes/admin');
+var admin = require('../controllers/admin');
 
 //Modules
 var auth = require('../modules/auth');

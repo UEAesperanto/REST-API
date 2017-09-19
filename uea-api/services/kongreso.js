@@ -1,5 +1,5 @@
 const express = require('express');
-kongreso = require('../controllers/routes/kongreso');
+kongreso = require('../controllers/kongreso');
 const app = express();
 
 var router = express.Router();

@@ -1,6 +1,6 @@
 var util = require('util');
 var Kongreso = require('../models/kongreso');
-var query = require('../../modules/query');
+var query = require('../modules/query');
 
 /*
   GET /Kongresoj

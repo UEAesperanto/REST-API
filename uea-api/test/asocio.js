@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Asocio = require('../controllers/models/asocio');
+var Asocio = require('../models/asocio');
 
 chai.use(chaiHttp);
 describe('Asocioj', function() {

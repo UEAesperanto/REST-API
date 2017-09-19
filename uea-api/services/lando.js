@@ -2,7 +2,7 @@
 const express = require('express');
 
 //controllers
-var lando = require('../controllers/routes/lando');
+var lando = require('../controllers/lando');
 
 //Modules
 var auth = require('../modules/auth');

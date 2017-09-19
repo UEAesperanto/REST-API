@@ -6,7 +6,7 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
-var Admin = require('../controllers/models/admin');
+var Admin = require('../models/admin');
 
 
 chai.use(chaiHttp);

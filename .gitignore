@@ -6,3 +6,4 @@
 /uea-api/ssl/*.key
 /uea-api/ssl/*.srl
 /uea-api/ssl/*.p12
+.idea/*

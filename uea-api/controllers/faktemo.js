@@ -1,6 +1,6 @@
 var util = require('util');
 var Faktemo = require('../models/faktemo');
-var db = require('../../modules/db');
+var db = require('../modules/db');
 
 /*
   GET /Faktemo

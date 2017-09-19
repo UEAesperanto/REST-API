@@ -1,5 +1,5 @@
 var util = require('util');
-var db = require('../../modules/db');
+var db = require('../modules/db');
 
 var _insert = function(id, personanomo, familianomo, titolo,
                        bildo, adreso, posxtkodo, idNacialando,

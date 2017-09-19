@@ -1,6 +1,6 @@
 var util = require('util');
 var Asocio = require('../models/asocio');
-var query = require('../../modules/query');
+var query = require('../modules/query');
 
 /*
   GET /asocioj

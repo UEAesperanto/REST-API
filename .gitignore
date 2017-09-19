@@ -1,8 +1,3 @@
-/uea-api/node_modules/
-/uea-api/package-lock.json
-/uea-api/mysql
-/uea-api/ssl/*.crt
-/uea-api/ssl/*.csr
-/uea-api/ssl/*.key
-/uea-api/ssl/*.srl
-/uea-api/ssl/*.p12
+/node_modules/
+/package-lock.json
+.idea/*

@@ -1,11 +1,13 @@
 version: '3'
 services:
   api:
-    build: .
-    image: uea
-    container_name: uea-api
+    build: ../nodejs/
+    image: uea-nodejs
+    container_name: uea-api-dev
     ports:
       - "3000:3000"
+    volumes:
+      - ../../:/app
     environment:
       - DB_PASSWORD=u34p4ss
       - DB_HOST=mysql-server
@@ -17,8 +19,12 @@ services:
 
   mysql:
     image: mysql
-    container_name: uea-datumbazo
+    container_name: uea-datumbazo-dev
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
+    volumes:
+      - ../mysql/uea-custom.cnf:/etc/mysql/conf.d/custom.cnf
+    ports:
+      - "3306:3306"

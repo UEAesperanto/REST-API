@@ -1,5 +1,5 @@
 const express = require('express');
-peranto = require('../controllers/routes/peranto');
+peranto = require('../controllers/peranto');
 const app = express();
 
 // Asocio routes

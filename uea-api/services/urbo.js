@@ -1,5 +1,5 @@
 const express = require('express');
-urbo = require('../controllers/routes/urbo');
+urbo = require('../controllers/urbo');
 const app = express();
 
 // Asocio routes

@@ -1,7 +1,7 @@
 var util = require('util');
 var Peranto = require('../models/peranto');
-var db = require('../../modules/db');
-var query = require('../../modules/query');
+var db = require('../modules/db');
+var query = require('../modules/query');
 
 /*
   GET /lando

@@ -4,17 +4,17 @@ var jwt  = require('jsonwebtoken');
 var randomstring = require("randomstring");
 
 /*config*/
-var config = require('../../config.js');
+var config = require('../config.js');
 
 /*models*/
 var Uzanto = require('../models/uzanto');
 var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 
 /*modules*/
-var db = require('../../modules/db');
-var query = require('../../modules/query');
-var hash = require('../../modules/hash');
-var mail = require('../../modules/mail');
+var db = require('../modules/db');
+var query = require('../modules/query');
+var hash = require('../modules/hash');
+var mail = require('../modules/mail');
 
 /*
   POST - /uzantoj/ensaluti
@@ -50,6 +50,8 @@ var _ensaluti = function(req, res) {
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
+  console.log("ksks");
+  console.log(req.params.id);
   Uzanto.find(req.params.id).then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);

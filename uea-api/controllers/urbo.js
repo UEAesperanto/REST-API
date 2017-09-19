@@ -1,6 +1,6 @@
 var util = require('util');
 var Urbo = require('../models/urbo');
-var query = require('../../modules/query');
+var query = require('../modules/query');
 
 /*
   GET /urboj

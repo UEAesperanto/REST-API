@@ -1,5 +1,5 @@
 const express = require('express');
-grupo = require('../controllers/routes/grupo');
+grupo = require('../controllers/grupo');
 const app = express();
 
 var router = express.Router();

@@ -1,5 +1,5 @@
 const express = require('express');
-var admin = require('../controllers/routes/admin');
+var admin = require('../controllers/admin');
 const app = express();
 
 // Admin routes

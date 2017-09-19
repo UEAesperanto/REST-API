@@ -1,5 +1,5 @@
 const express = require('express');
-var uzanto = require('../controllers/routes/uzanto');
+var uzanto = require('../controllers/uzanto');
 var auth = require('../modules/auth');
 const app = express();
 
@@ -13,6 +13,7 @@ app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
 // Uzanto routes
 app.use('/', router);
 app.route('/')
+    .get(uzanto.getUzanto)
     .post(uzanto.postUzanto);
 app.route('/:id(\\d+)/')
     .get(uzanto.getUzanto)

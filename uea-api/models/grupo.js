@@ -1,5 +1,5 @@
 var util = require('util');
-var db = require('../../modules/db');
+var db = require('../modules/db');
 
 var _find = function(id){
   if(id)

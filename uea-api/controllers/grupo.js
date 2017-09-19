@@ -5,10 +5,10 @@ var util = require('util');
 var Grupo = require('../models/grupo');
 
 /*modules*/
-var query = require('../../modules/query');
+var query = require('../modules/query');
 
 /*Configuration*/
-var config = require('../../config');
+var config = require('../config');
 
 /*
   GET /grupoj

@@ -1,6 +1,6 @@
 var util = require('util');
-var db = require('../../modules/db');
-var hash = require('../../modules/hash');
+var db = require('../modules/db');
+var hash = require('../modules/hash');
 
 
 var _insert = function(uzantnomo, pasvorto) {

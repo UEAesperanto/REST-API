@@ -6,11 +6,11 @@ var jwt  = require('jsonwebtoken');
 var Admin = require('../models/admin');
 
 /*Config*/
-var config = require('../../config');
+var config = require('../config');
 
 /*Modules*/
-var query = require('../../modules/query');
-var hash = require('../../modules/hash');
+var query = require('../modules/query');
+var hash = require('../modules/hash');
 
 var _postAdmin = function (req, res) {
   var token = req.headers['x-access-token'];

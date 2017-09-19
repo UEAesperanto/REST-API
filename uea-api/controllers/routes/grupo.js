@@ -94,17 +94,6 @@ var _getAldonaMembrecgrupoj = function(req, res){
 }
 
 /*
-   GET /grupo/membrecoj/:id/kotizoj
-*/
-var _getAligxKotizoj = function(req, res){
-  Grupo.findAligxKotizoj(req.params.id).then(function(sucess){
-        var kotizoj = sucess;
-        kotizoj = kotizoj.filter(query.search(req.query));
-        res.status(200).send(kotizoj);
-  });
-}
-
-/*
    GET /grupo/laboroj/:id/anoj
 */
 var _getLaboranoj = function(req, res){
@@ -193,6 +182,9 @@ var _postAneco = function(req, res) {
   }
 }
 
+/*
+  POST - /grupoj
+*/
 var _postGrupo = function (req, res) {
   Grupo.insert(req.body.mallongigilo, req.body.nomo, req.body.priskribo)
   .then(function(sucess){
@@ -224,7 +216,6 @@ module.exports = {
   postRefAldonmembreco: _postRefAldonmembreco,
   getMembrecgrupoj: _getMembrecgrupoj,
   getLaborgrupoj: _getLaborgrupoj,
-  getAligxKotizoj: _getAligxKotizoj,
   getMembrecgrupo: _getMembrecgrupo,
   getAldonaMembrecgrupo: _getAldonaMembrecgrupo,
   postAneco: _postAneco,

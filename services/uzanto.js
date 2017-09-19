@@ -13,6 +13,7 @@ app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
 // Uzanto routes
 app.use('/', router);
 app.route('/')
+    .get(uzanto.getUzanto)
     .post(uzanto.postUzanto);
 app.route('/:id(\\d+)/')
     .get(uzanto.getUzanto)

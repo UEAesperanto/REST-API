@@ -50,6 +50,8 @@ var _ensaluti = function(req, res) {
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
+  console.log("ksks");
+  console.log(req.params.id);
   Uzanto.find(req.params.id).then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);

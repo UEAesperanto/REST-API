@@ -32,6 +32,34 @@ var _getGrupo = function(req, res){
   });
 }
 
+var _deleteGrupo = function(req, res){
+  Grupo.delete(req.params.id).then(function(sucess){
+    Grupo.find(req.params.id).then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(204).send({message: 'Ok'});
+      else
+        res.status(500).send({message: 'Internal Error'});
+    });
+  });
+}
+
+/*
+  UPDATE /grupo
+*/
+var _updateGrupo = function(req, res){
+  if (req.body.kampo == 'id') {
+    res.status(403).send({message: "vi ne povas ŝanĝi la ID"})
+  }
+  Grupo.update(req.params.id, req.body.kampo, req.body.valoro).then(
+    function(sucess) {
+      if (sucess) {
+        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+      } else {
+        res.status(500).send({message: "Eraro en la servilo"});
+      }
+  });
+}
+
 /*
    GET /grupoj/laboroj
 */
@@ -155,7 +183,8 @@ var _postAneco = function(req, res) {
               insertAneco(req, res);
           }
           else {
-             res.status(403).send({message: 'Vi ne rajtas membrigi iun en tiu grupo'});
+             res.status(403).send({message: 'Vi ne rajtas membrigi\
+                                            iun en tiu grupo'});
           }
 
         });
@@ -164,9 +193,35 @@ var _postAneco = function(req, res) {
   }
 }
 
+var _postGrupo = function (req, res) {
+  Grupo.insert(req.body.mallongigilo, req.body.nomo, req.body.priskribo)
+  .then(function(sucess){
+    if(sucess){
+      res.status(201).send(sucess);
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+var _postRefAldonmembreco = function (req, res) {
+  Grupo.insertRefKategorio(req.params.id, config.idAldonaMembrecgrupo)
+  .then(function(sucess){
+      if(sucess){
+        res.status(201).send({message:'ok'});
+      } else {
+        res.status(500).send({message: 'internal error'});
+      }
+    });
+}
+
 module.exports = {
   getGrupoj: _getGrupoj,
   getGrupo: _getGrupo,
+  postGrupo: _postGrupo,
+  deleteGrupo: _deleteGrupo,
+  updateGrupo: _updateGrupo,
+  postRefAldonmembreco: _postRefAldonmembreco,
   getMembrecgrupoj: _getMembrecgrupoj,
   getLaborgrupoj: _getLaborgrupoj,
   getAligxKotizoj: _getAligxKotizoj,

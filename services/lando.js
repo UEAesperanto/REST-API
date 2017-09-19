@@ -4,22 +4,21 @@ const express = require('express');
 //controllers
 var lando = require('../controllers/lando');
 
-//Modulers
+//Modules
 var auth = require('../modules/auth');
 
 const app = express();
 
 var routerAuth = express.Router();
-routerAuth.use(auth.authorizeAdminPost);
-app.use('/', routerAuth);
+routerAuth.use(auth.authorizeAdmin);
 
 // Lando routes
 app.route('/')
     .get(lando.getLandoj)
-    .post(lando.postLando);
+    .post(routerAuth, lando.postLando);
 app.route('/:id')
     .get(lando.getLando)
-    .delete(lando.deleteLando)
-    .put(lando.updateLando);
+    .delete(routerAuth, lando.deleteLando)
+    .put(routerAuth, lando.updateLando);
 
 module.exports = app;

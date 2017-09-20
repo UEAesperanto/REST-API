@@ -22,3 +22,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
+    volumes:
+      - uea-datavolume:/var/lib/mysql
+
+volumes:
+  uea-datavolume:

@@ -29,8 +29,7 @@ var _insert = function(lando){
 
 var _delete = function(id){
   var query = util.format(
-  'DELETE FROM `lando` \
-  WHERE `id` = %s ;', id);
+  'DELETE FROM `lando` WHERE `id` = %s ;', id);
   return db.mysqlExec(query);
 }
 

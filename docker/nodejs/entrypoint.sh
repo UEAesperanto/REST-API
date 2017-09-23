@@ -14,8 +14,8 @@ echo "app preta!"
 if [ -z "$TEST" ]; then
   bash /app/mysql/enigi.sh
   npm install --unsafe-perm --dev && nodemon
-elif [ "$TEST" == 'travis' ]; then
-  npm install --unsafe-perm --dev && cd docker && ls && npm test;
+elif [ "$TEST" == 'circleci' ]; then
+  npm install --unsafe-perm --dev && npm start
 else
   npm install --unsafe-perm --dev &&  nodemon --ext js --watch ./ --exec 'mocha ./test || true' --delay 1
 fi

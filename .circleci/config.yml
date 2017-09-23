@@ -32,7 +32,7 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
-            docker-compose -f docker/circle/ci.yaml up -d --build
+            docker-compose -f docker-ci.yaml up -d --build
 
       - run:
           name: Wait container is ready
@@ -44,7 +44,7 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
-            docker-compose run api npm test
+            docker-compose -f docker-ci.yaml run api npm test
 
       - store_artifacts:
           path: /tmp/test-results

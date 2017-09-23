@@ -9,6 +9,7 @@ done
 DATUMBAZO=$( mysqlshow -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea | grep -v Wildcard | grep -o uea )
 if [ ! "$DATUMBAZO" == "uea" ]; then
     #Create database
+    mysql -h$"$DB_HOST" -uroot -p"$DB_PASSWORD" -e "create database uea"; 
     mysql -h"$DB_HOST" -uroot -p"$DB_PASSWORD" uea < ./mysql/novuea.mysql.sql
 fi
 

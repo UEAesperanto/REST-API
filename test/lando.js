@@ -68,6 +68,21 @@ describe('Landoj', function() {
   });
 
   describe('POST /landoj', function(){
+      var token = '';
+
+      before(function (done) {
+          var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+          chai.request(server)
+              .post('/admin/ensaluti')
+              .send(uzanto)
+              .end(function (err, res) {
+                  token = res.body.token;
+
+              })
+
+          done();
+      });
+
    it('it NOT should POST a lando - Sen ĵetono (token)', function(done){
      var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo",
                   finajxoEo: "finajxoEo", landKodo : "landKodo" };
@@ -75,7 +90,13 @@ describe('Landoj', function() {
          .post('/landoj')
          .send(lando)
          .end(function(err, res){
+             var error = JSON.parse(err.response.error.text);
+
+             error.success.should.equal(false);
+             error.message.should.equal("Sen ĵetono (token).");
              res.should.have.status(400);
+             err.should.have.status(400);
+
              /*res.body.should.have.property('nomoLoka');
              res.body.should.have.property('nomoEo');
              res.body.should.have.property('landKodo');
@@ -83,6 +104,27 @@ describe('Landoj', function() {
            done();
          });
    });
+
+      it('it should POST a lando - with token', function (done) {
+          var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo",
+              finajxoEo: "finajxoEo", landKodo : "landKodo" };
+
+          chai.request(server)
+              .post('/landoj')
+              .set('x-access-token', token)
+              .send(lando)
+              .end(function (err, res) {
+                  res.should.have.status(201)
+                  res.body.should.have.property('nomoLoka')
+                  res.body.should.have.property('finajxoEo')
+                  res.body.nomoLoka.should.equal('nomoLoka')
+                  res.body.finajxoEo.should.equal('finajxoEo')
+                  done();
+              });
+
+      });
+
+
  });
 
 

@@ -46,6 +46,10 @@ jobs:
             set -x
             docker-compose -f docker-ci.yaml run api npm test
 
+      - add_ssh_keys:
+          fingerprints:
+            - "47:5e:66:71:28:59:4a:3e:f1:48:48:cd:d4:f5:a1:ce"
+
       - run:
           name: Deployment
           command: './deploy/production.sh'

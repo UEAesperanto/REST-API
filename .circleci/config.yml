@@ -46,15 +46,13 @@ jobs:
             set -x
             docker-compose -f docker-ci.yaml run api npm test
 
+      - run:
+          name: Deployment
+          command: './deploy/production.sh'
+
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output
 
       - store_test_results:
           path: /tmp/test-results
-
-  deployment:
-    production: # just a label; label names are completely up to you
-      branch: deployment
-      commands:
-        - ./deploy/production.sh

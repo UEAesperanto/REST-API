@@ -8,11 +8,10 @@ module.exports = {
   'idAdministranto': 1,
 
   /*Retadreso*/
-  'sisRetServer': 'smtp.ekzemplo.com',
-  'sisRetPorto': '25',
-  'sisRetadreso': 'ekzemplo@ekzemplo.com',
-  'sisRetPasvorto':  'pasvorto',
-
+ 'sisRetServer': 'smtp.gmail.com',
+ 'sisRetPorto': '25',
+ 'sisRetadreso': 'testauea@gmail.com',
+ 'sisRetPasvorto':  'esperanto123',
   /*Sekretoj*/
   'sekretoJWT': 'sekretoUzanto'
 };

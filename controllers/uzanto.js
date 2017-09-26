@@ -50,8 +50,6 @@ var _ensaluti = function(req, res) {
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
-  console.log("ksks");
-  console.log(req.params.id);
   Uzanto.find(req.params.id).then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);
@@ -68,6 +66,21 @@ var _postUzanto = function(req, res){
                       req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
                       req.body.teloficejo, req.body.telportebla,  req.body.tttpagxo).then(
               function(success) {
+                var html = util.format(
+                       'Estimata uzanto, <br><br>\
+                        Via aliĝo por UEA estis registrita. En kelkaj tagoj vi ricevos konfirmon\
+                        de via pago kaj povos ekuzi viajn membrservojn<br>\
+                        En kazo de duboj, kontaktu info@uea.org. \
+                        <br><br>Kore,<br><br>\
+                        La UEA-Teamo');
+                var mailOptions = {
+                    from: 'UEA',
+                    to: req.body.retposxto,
+                    subject: 'Nova aliĝo',
+                    html: html
+                  }
+                console.log(mailOptions);
+                mail.sendiRetmesagxo(mailOptions);
                 res.status(201).send({id: result.insertId});
               },
               function (fail) {
@@ -92,19 +105,18 @@ var _forgesisPasvorton = function(req, res) {
           UzantoAuxAsocio.find(sucess[0].id).then(
           function (sucess) {
               var html = util.format(
-                     'Saluton! <br><br>\
-                      Via uzantnomo por membrspaco ĉe UEA estas: %s <br>\
+                     'Estimata uzanto, <br><br>\
                       La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
                       Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
-                      <br><br>Kunlabore,<br><br>\
-                      La UEA-Teamo', sucess[0].uzantnomo, novaPasvorto);
+                      <br><br>Agrablan uzadon,<br><br>\
+                      La UEA-Teamo', novaPasvorto);
               var mailOptions = {
                   from: 'reto@uea.org',
                   to: req.body.retposxto,
-                  subject: 'Vi forgesis vian pasvorton por membro.uea.org',
+                  subject: 'Restarigo de la forgesita pasvorto por UEA',
                   html: html
                 }
-              mail.sendiRetmesagxo(mailOptions)
+              mail.sendiRetmesagxo(mailOptions);
               res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
         });
       }

@@ -58,7 +58,7 @@ var _getUzanto = function(req, res){
 
 var _postUzanto = function(req, res){
 
-   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto).then(
+   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto, req.body.ueakodo).then(
     function (result){
       if (result) {
         Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,

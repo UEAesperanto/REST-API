@@ -11,7 +11,6 @@ var Uzanto = require('../models/uzanto');
 var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 
 /*modules*/
-var db = require('../modules/db');
 var query = require('../modules/query');
 var hash = require('../modules/hash');
 var mail = require('../modules/mail');

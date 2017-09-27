@@ -7,11 +7,13 @@ module.exports = {
   /*ID de permesoj en  tabelo adminrajto*/
   'idAdministranto': 1,
 
-  /*Retadreso*/
- 'sisRetServer': 'smtp.gmail.com',
- 'sisRetPorto': '25',
- 'sisRetadreso': 'testauea@gmail.com',
- 'sisRetPasvorto':  'esperanto123',
+  /*Retadresoj*/
+  'financaretadreso':'io@io.com',
+  'sisRetServer': 'smtp.test.com',
+  'sisRetPorto': '465',
+  'sisRetadreso': 'testauea@test.com',
+  'sisRetPasvorto':  '',
+
   /*Sekretoj*/
   'sekretoJWT': 'sekretoUzanto'
 };

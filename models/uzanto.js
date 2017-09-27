@@ -6,11 +6,11 @@ var _insert = function(id, personanomo, familianomo, titolo,
                        naskigxtago, notoj, retposxto, telhejmo,
                        teloficejo, telportebla,  tttpagxo) {
     var query = util.format('INSERT INTO uzanto(id, personanomo, familianomo, titolo,\
-                            bildo, adreso, posxtkodo, idNacialando,\
+                            bildo, adreso, posxtkodo, idLando,\
                             naskigxtago, notoj, retposxto, telhejmo,\
-                            teloficejo, telportebla,  tttpagxo, validaKonto)\
+                            teloficejo, telportebla,  tttpagxo)\
                             VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", %s, "%s",\
-                            "%s", "%s", "%s", "%s", "%s", "%s", 0);', //Novaj kontoj ne estas validitaj
+                            "%s", "%s", "%s", "%s", "%s", "%s");',
                             id, personanomo, familianomo, titolo,
                             bildo, adreso, posxtkodo, idNacialando,
                             naskigxtago, notoj, retposxto, telhejmo,

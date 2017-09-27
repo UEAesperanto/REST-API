@@ -40,19 +40,6 @@ var _findLaboranoj = function(id) {
   return db.mysqlExec(query);
 }
 
-var _insertMembreco = function(idAno, idGrupo, komencdato, findato, dumviva,
-                               tasko, respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj, aprobita) {
-  var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
-                            dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, idAneckotizo, observoj, aprobita)\
-                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, %s, "%s", 0);',
-                            idAno, idGrupo, komencdato, findato, dumviva, tasko, respondeco, idAsocio,
-                             idUrbo, idFako, idAneckotizo, observoj);
-  query = query.replace(/undefined/g, 'NULL');
-  query = query.replace(/"NULL"/g, 'NULL');
-
-  return db.mysqlExec(query);
-}
-
 var _insertRefKategorio = function(idGrupo, idKategorio) {
   var query = util.format('INSERT INTO ref_grupo_grupa_kategorio ()\
                             VALUES (%s, %s);', idGrupo, idKategorio);
@@ -66,6 +53,5 @@ module.exports = {
   update: _update,
   insertRefKategorio: _insertRefKategorio,
   findKategorio: _findKategorio,
-  findLaboranoj: _findLaboranoj,
-  insertMembreco: _insertMembreco
+  findLaboranoj: _findLaboranoj
 }

@@ -21,6 +21,14 @@ CREATE TABLE sxangxhistorio (
   dato date /*kiam la ŝanĝo okazis*/
 );
 
+CREATE TABLE anonceto (
+    id int(11) PRIMARY KEY AUTO_INCREMENT,
+    titolo varchar(255),
+    priskribo varchar(1080),
+    ligilo varchar(255),
+    butono varchar(255)
+);
+
 CREATE TABLE gxirpropono (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   idGxiranto int(11) REFERENCES uzantoAuxAsocio(id),
@@ -79,8 +87,7 @@ CREATE TABLE uzanto (
   interfaco.*/
   adreso varchar(255),
   posxtkodo varchar(255),
-  idLogxurbo int(11) REFERENCES urbo(id),
-  idNacialando int(11) REFERENCES lando(id),
+  idLando int(11) REFERENCES lando(id),
   naskigxtago date,
   mortdatekscio date NULL,  /*dato al kiu uea ekscias pri mortdato.*/
   mortdato date NULL, /*vera mortdato*/
@@ -94,7 +101,6 @@ CREATE TABLE uzanto (
   kernivelo varchar(2) NULL, /*la nivelo laux eǔropa referenckadro, A2, B1, ktp. */
   kerdato date NULL, /*dato en kiu KER ekzameno estis farita*/
   tttpagxo varchar(255) NULL,
-  validaKonto boolean,
   abc varchar(255) /*estis abc */
 );
 
@@ -163,7 +169,6 @@ CREATE TABLE aneco (
   idAsocio int(11) NULL REFERENCES asocio(id), /*Ĉu la ano reprezentas iun asocion, kiel en kazoj de komitatanoj A*/
   idUrbo int(11) NULL REFERENCES urbo(id), /*Ĉu la ano reprezentas urbon en sia aneco, kiel en kazoj de delegitoj*/
   idFako int(11) NULL REFERENCES faktemo(id), /*Ĉu la ano reprezentas fakon en sia aneco, kiel en kazoj de delegitoj*/
-  idAneckotizo int(11) NULL REFERENCES aneckotizo(id), /*Kiun kotizon oni pagis?*/
   observoj varchar(255) NULL, /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
   aprobita boolean /*Ĉu iu admnistranto aprobis tiun membrecon?*/
 );
@@ -172,7 +177,7 @@ CREATE TABLE aneco (
 CREATE TABLE aneckotizo (
   id int(11) PRIMARY KEY AUTO_INCREMENT,
   prezo int(11),
-  priskribo varchar(255), /*ekzemple: "Aneco por junaj dumvivaj membroj el B landoj"*/
+  junaRabato int(11) DEFAULT 0, /*valoro de rabato por junuloj*/
   idLando int(11) REFERENCES lando(id), /*al kiu lando tiu kotizo indas*/
   monero varchar(255) DEFAULT 'EUR', /*en kiu monero tiu valoro estas*/
   idGrupo int(11) REFERENCES grupo(id) /*la grupo al kiu oni anas*/

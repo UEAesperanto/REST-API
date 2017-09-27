@@ -62,7 +62,7 @@ var _postUzanto = function(req, res){
     function (result){
       if (result) {
         Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
-                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idNacialando,
+                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
                       req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
                       req.body.teloficejo, req.body.telportebla,  req.body.tttpagxo).then(
               function(success) {
@@ -79,7 +79,6 @@ var _postUzanto = function(req, res){
                     subject: 'Nova aliĝo',
                     html: html
                   }
-                console.log(mailOptions);
                 mail.sendiRetmesagxo(mailOptions);
                 res.status(201).send({id: result.insertId});
               },

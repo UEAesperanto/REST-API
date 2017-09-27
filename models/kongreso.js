@@ -15,7 +15,9 @@ var _findKromaj = function(id){
 }
 
 var _findAligxintoj = function(id){
-  var query = util.format('SELECT A.personanomo,  A.familianomo,  A.titolo, A.idNacialando  FROM uzanto A INNER JOIN kongresa_aligxinto B on (A.id = B.idUzanto) WHERE B.idKongreso = %s;', id);
+  var query = util.format('SELECT A.personanomo,  A.familianomo,  A.titolo, A.idLando  \
+                            FROM uzanto A INNER JOIN kongresa_aligxinto B on \
+                            (A.id = B.idUzanto) WHERE B.idKongreso = %s;', id);
   return db.mysqlExec(query);
 }
 

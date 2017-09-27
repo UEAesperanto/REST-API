@@ -169,7 +169,7 @@ CREATE TABLE aneco (
   idAsocio int(11) NULL REFERENCES asocio(id), /*Ĉu la ano reprezentas iun asocion, kiel en kazoj de komitatanoj A*/
   idUrbo int(11) NULL REFERENCES urbo(id), /*Ĉu la ano reprezentas urbon en sia aneco, kiel en kazoj de delegitoj*/
   idFako int(11) NULL REFERENCES faktemo(id), /*Ĉu la ano reprezentas fakon en sia aneco, kiel en kazoj de delegitoj*/
-  observoj varchar(255) NULL, /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
+  observoj varchar(2550) NULL, /*Aldona kampo kaze observoj pri la aneco estos bezonataj*/
   aprobita boolean /*Ĉu iu admnistranto aprobis tiun membrecon?*/
 );
 

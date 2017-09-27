@@ -7,6 +7,9 @@ var _insertKotizo = function(idLando, prezo, monero, idGrupo, junaRabato) {
                            (idLando, prezo, monero, idGrupo, junaRabato)\
                            VALUES (%s, %s, "%s", %s, %s);',
                           idLando, prezo, monero, idGrupo, junaRabato);
+
+  query = query.replace(/undefined/g, 'NULL');
+  query = query.replace(/"NULL"/g, 'NULL');
   return db.mysqlExec(query);
 }
 

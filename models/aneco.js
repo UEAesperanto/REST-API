@@ -29,12 +29,12 @@ var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, idFako, observoj, aprobita) {
   var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
                             dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, observoj, aprobita)\
-                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, %s, "%s", 0);',
+                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s", 0);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko, respondeco, idAsocio,
                             idUrbo, idFako, observoj);
   query = query.replace(/undefined/g, 'NULL');
   query = query.replace(/"NULL"/g, 'NULL');
-
+  console.log(query);
   return db.mysqlExec(query);
 }
 

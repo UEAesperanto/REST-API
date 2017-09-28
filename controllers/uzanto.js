@@ -67,7 +67,7 @@ var _postUzanto = function(req, res){
               function(success) {
                 var html = util.format(
                        'Estimata uzanto, <br><br>\
-                        Via aliĝo por UEA estis registrita. En kelkaj tagoj vi ricevos konfirmon\
+                        Via aliĝo por UEA estis registrita. En kelkaj tagoj, vi ricevos konfirmon\
                         de via pago kaj povos ekuzi viajn membrservojn<br>\
                         En kazo de duboj, kontaktu info@uea.org. \
                         <br><br>Kore,<br><br>\
@@ -102,20 +102,22 @@ var _forgesisPasvorton = function(req, res) {
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoHash', pasvortajDatumoj.hash);
           UzantoAuxAsocio.find(sucess[0].id).then(
           function (sucess) {
-              var html = util.format(
-                     'Estimata uzanto, <br><br>\
-                      La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
-                      Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
-                      <br><br>Agrablan uzadon,<br><br>\
-                      La UEA-Teamo', novaPasvorto);
-              var mailOptions = {
-                  from: 'reto@uea.org',
-                  to: req.body.retposxto,
-                  subject: 'Restarigo de la forgesita pasvorto por UEA',
-                  html: html
-                }
-              mail.sendiRetmesagxo(mailOptions);
-              res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
+            if(req.body.retposxto) {
+                var html = util.format(
+                       'Estimata uzanto, <br><br>\
+                        La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
+                        Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
+                        <br><br>Agrablan uzadon,<br><br>\
+                        La UEA-Teamo', novaPasvorto);
+                var mailOptions = {
+                    from: 'reto@uea.org',
+                    to: req.body.retposxto,
+                    subject: 'Restarigo de la forgesita pasvorto por UEA',
+                    html: html
+                  }
+                mail.sendiRetmesagxo(mailOptions);
+              }
+            res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
         });
       }
         else {

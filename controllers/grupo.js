@@ -136,7 +136,7 @@ var _getAldonaMembrecgrupo = function(req, res){
 }
 
 var insertAneco = function(req, res) {
-  Aneco.insertMembreco(req.body.idAno, req.params.id, req.body.komencdato,
+  Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
                req.body.findato, req.body.dumviva, req.body.tasko,
                req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
                req.body.idFako, req.body.observoj, 0).then(

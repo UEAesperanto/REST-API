@@ -44,6 +44,11 @@ router.route('/membrecoj/aldonoj/:id(\\d+)')
 router.route('/:id(\\d+)/anoj')
     .post(grupo.postAneco);
 
+router.route('/anecoj')
+  .get(routerAuth, aneco.getAnecoj);
+router.route('/anecoj/:id/aprobi')
+  .post(routerAuth, aneco.aprobiAnecon);
+
 router.route('/:id(\\d+)/kotizoj')
     .get(aneco.getKotizoj)
     .post(routerAuth, aneco.postKotizo)

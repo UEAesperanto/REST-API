@@ -131,6 +131,15 @@ var _updateUzanto = function(req, res){
   if (req.body.kampo == 'id') {
     res.status(403).send({message: "vi ne povas ŝanĝi vian ID"})
   }
+
+  if (req.body.kampo == 'pasvorto') {
+    var novaPasvorto = req.body.valoro;
+    var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
+    UzantoAuxAsocio.update(req.params.id, 'pasvortoSalt', pasvortajDatumoj.salt);
+    UzantoAuxAsocio.update(req.params.id, 'pasvortoHash', pasvortajDatumoj.hash);
+    res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+  }
+
   Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
     function(sucess) {
       if (sucess) {

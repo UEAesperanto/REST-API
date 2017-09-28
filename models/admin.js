@@ -45,7 +45,7 @@ var _delete = function(id){
 }
 
 var _update = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `administranto` SET `%s` = "%s" WHERE `id` = %s',
+  var query = util.format('UPDATE `administranto` SET `%s` = "%s" WHERE `id` = %s;',
                            kampo, valoro, id);
   return db.mysqlExec(query);
 }

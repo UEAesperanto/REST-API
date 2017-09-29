@@ -18,13 +18,12 @@ services:
       - mysql
 
   mysql:
-    image: mysql
+    build: ../mysql
+    image: uea-mysql
     container_name: uea-datumbazo-dev
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
-    volumes:
-      - ../mysql/uea-custom.cnf:/etc/mysql/conf.d/custom.cnf
     ports:
       - "3306:3306"

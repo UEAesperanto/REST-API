@@ -16,7 +16,8 @@ services:
       - mysql
 
   mysql:
-    image: mysql
+    build: ./docker/mysql
+    image: uea-mysql
     container_name: uea-datumbazo
     restart: always
     environment:

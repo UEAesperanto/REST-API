@@ -46,6 +46,17 @@ jobs:
             set -x
             docker-compose -f docker-ci.yaml run api npm test
 
+      - add_ssh_keys:
+          fingerprints:
+            - "a5:94:99:bb:d9:3f:72:4c:52:f1:97:4c:0f:b0:28:b8"
+
+      - deploy:
+          name: Deployment
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./deploy/production.sh
+            fi
+
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output

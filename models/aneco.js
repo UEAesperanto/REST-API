@@ -13,7 +13,9 @@ var _insertKotizo = function(idLando, prezo, monero, idGrupo, junaRabato) {
 }
 
 var _findGrupo = function(idGrupo){
-  var query = util.format(' SELECT * FROM `aneckotizo` WHERE idGrupo=%s;', idGrupo);
+  var query = util.format('SELECT * FROM `aneckotizo` JOIN `grupo`\
+                           ON aneckotizo.idGrupo = grupo.id \
+                           WHERE idGrupo=%s;', idGrupo);
   return db.mysqlExec(query);
 }
 

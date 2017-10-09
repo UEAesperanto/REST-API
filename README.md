@@ -34,12 +34,12 @@ CREATED                       STATUS                  PORTS                     
 
 ````
 
-Tio estas ĉio, vi jam povos aliri API je `http://localhost:3000` kaj sekvi nian [dokumentadon](https://github.com/RibeiroAna/datumbazoUEA/wiki) por lerni kiel uzi ĝin.
+Tio estas ĉio, vi jam povos aliri API je `http://localhost:3000` kaj sekvi nian [dokumentadon](/datumbazoUEA/wiki) por lerni kiel uzi ĝin.
 
 
 ## Agordado
 
-Dependante je kiel via datumbazo estas agordita, povas esti ke la REST-API ne plene funkcios, do necesas agordi tion en la arĥivo `datumbazoUEA/uea-api/config.js`.
+Dependante je kiel via datumbazo estas agordita, povas esti ke la REST-API ne plene funkcios, do necesas agordi tion en la arĥivo `config.js`.
 
 ## Malinstalado
 

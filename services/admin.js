@@ -19,7 +19,11 @@ app.route('/:id(\\d+)')
     .put(routerAuth, admin.updateAdmin);
 
 app.route('/rajtoj')
-    .post(routerAuth, admin.postRajto);
+    .get(admin.getRajtoj);
+
+app.route('/:id(\\d+)/rajtoj')
+    .get(routerAuth, admin.getRajtojAdmin)
+    .post(routerAuth, admin.postRajtoAdmin);
 
 app.route('/ensaluti')
     .post(admin.ensaluti);

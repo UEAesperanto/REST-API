@@ -33,9 +33,14 @@ var _insertRajto = function (idAdmin, idRajto) {
   return db.mysqlExec(query);
 }
 
-var _getRajtoj = function (idAdmin) {
+var _getRajtojAdmin = function (idAdmin) {
   var query = util.format('SELECT * FROM `ref_administranto_adminrajto`\
                            WHERE `idAdministranto` = "%s";', idAdmin);
+  return db.mysqlExec(query);
+}
+
+var _findRajtoj = function() {
+  var query = util.format('SELECT * FROM `adminrajto`;');
   return db.mysqlExec(query);
 }
 
@@ -54,7 +59,8 @@ module.exports = {
   insert: _insert,
   insertRajto: _insertRajto,
   find:_find,
-  getRajtoj: _getRajtoj,
+  findRajtoj: _findRajtoj,
+  getRajtojAdmin: _getRajtojAdmin,
   update: _update,
   delete: _delete,
   findUzantnomo:_findUzantnomo

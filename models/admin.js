@@ -34,7 +34,8 @@ var _insertRajto = function (idAdmin, idRajto) {
 }
 
 var _getRajtojAdmin = function (idAdmin) {
-  var query = util.format('SELECT * FROM `ref_administranto_adminrajto`\
+  var query = util.format('SELECT * FROM `ref_administranto_adminrajto` r JOIN\
+                           `adminrajto` a ON r.idAdminrajto = a.id \
                            WHERE `idAdministranto` = "%s";', idAdmin);
   return db.mysqlExec(query);
 }

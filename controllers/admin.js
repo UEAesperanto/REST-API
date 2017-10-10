@@ -65,7 +65,7 @@ var _ensaluti = function (req, res) {
                   var token = jwt.sign(administranto, config.sekretoJWT,
                                        {expiresIn: 18000});
 
-                  res.status(200).send({token: token});
+                  res.status(200).send({token: token, administranto: administranto});
               });
             });
       }

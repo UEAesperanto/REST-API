@@ -11,7 +11,7 @@ var router = express.Router();
 // app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
 
 var routerAuth = express.Router();
-routerAuth.use(auth.authorizeAdmin);
+routerAuth.use(auth.authorizeAdminJuna);
 
 // Uzanto routes
 app.use('/', router);

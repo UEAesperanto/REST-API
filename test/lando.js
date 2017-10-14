@@ -85,7 +85,7 @@ describe('Landoj', function() {
       });
     });
 
-    it('it NOT should GET a landoj given id', function(done){
+    it('it should NOT GET a landoj given id', function(done){
      var lando = {id : 2, nomoLoka : "nomoLoka", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
      Lando.insert(lando).then(function(success){
        chai.request(server)
@@ -116,7 +116,7 @@ describe('Landoj', function() {
               })
       });
 
-   it('it NOT should POST a lando - Sen ĵetono (token)', function(done){
+   it('it should NOT POST a lando - Sen ĵetono (token)', function(done){
      var lando = {nomoLoka : "nomoLoka", nomoEo : "nomoEo",
                   finajxoEo: "finajxoEo", landKodo : "landKodo" };
      chai.request(server)

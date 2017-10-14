@@ -1,3 +1,5 @@
-/node_modules/
+/uea-api/node_modules/
+/uea-api/package-lock.json
 /package-lock.json
+/node_modules/*
 .idea/*

@@ -46,7 +46,7 @@ var _deleteLando = function(req, res){
   Lando.delete(req.params.id).then(function(sucess){
     Lando.find(req.params.id).then(function(sucess){
       if(sucess.length <= 0)
-        res.status(204).send({message: 'Ok'});
+        res.status(200).send({message: 'Ok'});
       else
         res.status(500).send({message: 'Internal Error'});
     });

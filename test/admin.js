@@ -12,10 +12,17 @@ var Admin = require('../models/admin');
 chai.use(chaiHttp);
 describe('Admin', function() {
     before(function(done) { //Antaux cxiuj testoj, oni purigas la datumbazon
+      var query1 = 'INSERT INTO adminrajto ()\
+                    VALUES (\
+                      1, /*id int(11) PRIMARY KEY AUTO_INCREMENT*/\
+                      "administranto",/*nomo varchar(255)*/\
+                      "Rajtos aliri al datumoj de membroj, aldoni novajn administrantojn, ktp"\
+                    );'
       var query = util.format('DELETE FROM `administranto`');
-      db.mysqlExec(query).then(function(result){
+      db.mysqlExec(query);
+      db.mysqlExec(query1).then(function(result){
         done();
-      })
+      });
     });
 
   describe('GET /admin/agordita sen agordoj', function(){

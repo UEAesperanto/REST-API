@@ -16,14 +16,8 @@ services:
       - mysql
 
   mysql:
-    build: ./docker/mysql
-    image: uea-mysql
+    image: mysql
     container_name: uea-datumbazo
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
-    volumes:
-      - uea-datavolume:/var/lib/mysql
-
-volumes:
-  uea-datavolume:

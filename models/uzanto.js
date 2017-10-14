@@ -2,17 +2,19 @@ var util = require('util');
 var db = require('../modules/db');
 
 var _insert = function(id, personanomo, familianomo, titolo,
-                       bildo, adreso, posxtkodo, idNacialando,
+                       bildo, adreso, posxtkodo, idLando,
                        naskigxtago, notoj, retposxto, telhejmo,
                        teloficejo, telportebla,  tttpagxo) {
     var query = util.format('INSERT INTO uzanto(id, personanomo, familianomo, titolo,\
-                            bildo, adreso, posxtkodo, idNacialando,\
+                            bildo, adreso, posxtkodo, idLando,\
                             naskigxtago, notoj, retposxto, telhejmo,\
-                            teloficejo, telportebla,  tttpagxo, validaKonto)\
-                            VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", %s, "%s",\
-                            "%s", "%s", "%s", "%s", "%s", "%s", 0);', //Novaj kontoj ne estas validitaj
+                            teloficejo, telportebla,  tttpagxo)\
+                            VALUES(%s, "%s", "%s", "%s",\
+                                   "%s", "%s", "%s", %s,\
+                                   "%s", "%s", "%s", "%s",\
+                                    "%s", "%s", "%s");',
                             id, personanomo, familianomo, titolo,
-                            bildo, adreso, posxtkodo, idNacialando,
+                            bildo, adreso, posxtkodo, idLando,
                             naskigxtago, notoj, retposxto, telhejmo,
                             teloficejo, telportebla,  tttpagxo);
 
@@ -23,9 +25,11 @@ var _insert = function(id, personanomo, familianomo, titolo,
 
 var _find = function(id){
   if(id)
-    var query = util.format('SELECT  * FROM `uzanto` WHERE `id` = %s;', id);
+    var query = util.format('SELECT * FROM `uzanto` JOIN `uzantoAuxAsocio` JOIN `lando` ON \
+                            uzanto.idLando = lando.id WHERE uzanto.id = %s;', id);
   else
-    var query = util.format('SELECT * FROM `uzanto`;');
+    var query = util.format('SELECT * FROM `uzanto` JOIN `uzantoAuxAsocio` JOIN `lando` ON \
+                            uzanto.idLando = lando.id;');
   return db.mysqlExec(query);
 }
 

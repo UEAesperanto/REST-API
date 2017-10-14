@@ -53,7 +53,7 @@ var _ensaluti = function (req, res) {
                 permesoj: []
               };
 
-              Admin.getRajtoj(sucess[0].id).then(
+              Admin.getRajtojAdmin(sucess[0].id).then(
                 function(sucess){
                   //res.status(200).send({message: sucess});
                   for (var i = 0; i < sucess.length; i++) {
@@ -65,7 +65,7 @@ var _ensaluti = function (req, res) {
                   var token = jwt.sign(administranto, config.sekretoJWT,
                                        {expiresIn: 18000});
 
-                  res.status(200).send({token: token});
+                  res.status(200).send({token: token, administranto: administranto});
               });
             });
       }
@@ -98,15 +98,37 @@ var _getAdmin = function(req, res){
   });
 }
 
-var _postRajto = function(req, res) {
-  Admin.insertRajto(req.body.idUzantoAuxAsocio,
+var _postRajtoAdmin = function(req, res) {
+  Admin.insertRajto(req.params.id,
                     req.body.idRajto).then(
-  function(sucess) {
+    function(sucess) {
       res.status(201).send({message: 'ok'});
     }).
     catch(function(response){
       res.status(500).send({message: 'Internal Error'});
     });
+}
+
+var _getRajtoj = function(req, res) {
+  Admin.findRajtoj().then(
+    function(sucess) {
+      if(sucess){
+        res.status(200).send(sucess);
+      } else {
+        res.status(500).send({message: 'Internal Error'});
+      }
+    });
+}
+
+var _getRajtojAdmin = function(req, res) {
+    Admin.getRajtojAdmin(req.params.id).then(
+      function(sucess) {
+        if(sucess){
+          res.status(200).send(sucess);
+        } else {
+          res.status(500).send({message: 'Internal Error'});
+        }
+      });
 }
 
 //Bezonas teston
@@ -127,7 +149,7 @@ var _deleteAdmin = function(req, res) {
 */
 var _updateAdmin = function(req, res){
   if (req.body.kampo == 'id') {
-    res.status(403).send({message: "vi ne povas ŝanĝi la ID"})
+    res.status(403).send({message: "vi ne povas ŝanĝi la ID"});
   }
 
   if (req.body.kampo == 'pasvorto') {
@@ -152,7 +174,10 @@ module.exports = {
    postAdmin: _postAdmin,
    ensaluti: _ensaluti,
    agordita: _agordita,
-   postRajto: _postRajto,
+   getRajtoj: _getRajtoj,
+   postRajtoAdmin: _postRajtoAdmin,
+   getRajtojAdmin:_getRajtojAdmin,
+   getRajtoj: _getRajtoj,
    getAdmin: _getAdmin,
    updateAdmin: _updateAdmin,
    deleteAdmin: _deleteAdmin

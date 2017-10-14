@@ -11,7 +11,6 @@ var Uzanto = require('../models/uzanto');
 var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 
 /*modules*/
-var db = require('../modules/db');
 var query = require('../modules/query');
 var hash = require('../modules/hash');
 var mail = require('../modules/mail');
@@ -50,8 +49,6 @@ var _ensaluti = function(req, res) {
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
-  console.log("ksks");
-  console.log(req.params.id);
   Uzanto.find(req.params.id).then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);
@@ -60,14 +57,28 @@ var _getUzanto = function(req, res){
 
 var _postUzanto = function(req, res){
 
-   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto).then(
+   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto, req.body.ueakodo).then(
     function (result){
       if (result) {
         Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
-                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idNacialando,
+                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
                       req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
                       req.body.teloficejo, req.body.telportebla,  req.body.tttpagxo).then(
               function(success) {
+                var html = util.format(
+                       'Estimata uzanto, <br><br>\
+                        Via aliĝo por UEA estis registrita. En kelkaj tagoj, vi ricevos konfirmon\
+                        de via pago kaj povos ekuzi viajn membrservojn<br>\
+                        En kazo de duboj, kontaktu info@uea.org. \
+                        <br><br>Kore,<br><br>\
+                        La UEA-Teamo');
+                var mailOptions = {
+                    from: 'UEA',
+                    to: req.body.retposxto,
+                    subject: 'Nova aliĝo',
+                    html: html
+                  }
+                mail.sendiRetmesagxo(mailOptions);
                 res.status(201).send({id: result.insertId});
               },
               function (fail) {
@@ -91,21 +102,22 @@ var _forgesisPasvorton = function(req, res) {
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoHash', pasvortajDatumoj.hash);
           UzantoAuxAsocio.find(sucess[0].id).then(
           function (sucess) {
-              var html = util.format(
-                     'Saluton! <br><br>\
-                      Via uzantnomo por membrspaco ĉe UEA estas: %s <br>\
-                      La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
-                      Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
-                      <br><br>Kunlabore,<br><br>\
-                      La UEA-Teamo', sucess[0].uzantnomo, novaPasvorto);
-              var mailOptions = {
-                  from: 'reto@uea.org',
-                  to: req.body.retposxto,
-                  subject: 'Vi forgesis vian pasvorton por membro.uea.org',
-                  html: html
-                }
-              mail.sendiRetmesagxo(mailOptions)
-              res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
+            if(req.body.retposxto) {
+                var html = util.format(
+                       'Estimata uzanto, <br><br>\
+                        La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
+                        Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
+                        <br><br>Agrablan uzadon,<br><br>\
+                        La UEA-Teamo', novaPasvorto);
+                var mailOptions = {
+                    from: 'reto@uea.org',
+                    to: req.body.retposxto,
+                    subject: 'Restarigo de la forgesita pasvorto por UEA',
+                    html: html
+                  }
+                mail.sendiRetmesagxo(mailOptions);
+              }
+            res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
         });
       }
         else {
@@ -119,6 +131,15 @@ var _updateUzanto = function(req, res){
   if (req.body.kampo == 'id') {
     res.status(403).send({message: "vi ne povas ŝanĝi vian ID"})
   }
+
+  if (req.body.kampo == 'pasvorto') {
+    var novaPasvorto = req.body.valoro;
+    var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
+    UzantoAuxAsocio.update(req.params.id, 'pasvortoSalt', pasvortajDatumoj.salt);
+    UzantoAuxAsocio.update(req.params.id, 'pasvortoHash', pasvortajDatumoj.hash);
+    res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+  }
+
   Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
     function(sucess) {
       if (sucess) {

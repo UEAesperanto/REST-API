@@ -8,7 +8,17 @@ ENIGOJ="/app/mysql/enigoj"
 SINSEKVO="/app/mysql/sinsekvo"
 DATUMBAZO="uea"
 UZANTO="root"
-for ENIGI in $(cat $SINSEKVO); do
-  echo "ENIGO" $ENIGI "EN DATUMBAZO";
-  mysql -h"$DB_HOST" -u"$UZANTO" -p"$DB_PASSWORD" $DATUMBAZO < $ENIGOJ/$ENIGI
+
+cat $SINSEKVO | while read ENIGI
+do
+  TIPO=$(echo $ENIGI  | cut -d' ' -f1)
+  TABLO=$(echo $ENIGI | cut -d' ' -f2)
+  
+  if [ ! -z $1 ]; then
+    mysql -h"$DB_HOST" -u"$UZANTO" -p"$DB_PASSWORD" $DATUMBAZO < $ENIGOJ/$TABLO
+    echo "ENIGO" $TABLO "EN DATUMBAZO";
+  elif [ $TIPO == "SISTEMO" ]; then
+    mysql -h"$DB_HOST" -u"$UZANTO" -p"$DB_PASSWORD" $DATUMBAZO < $ENIGOJ/$TABLO
+    echo "ENIGO" $TABLO "EN DATUMBAZO";
+  fi
 done

@@ -1,17 +1,17 @@
-lando.sql
-urbo.sql
-grupo.sql
-grupa-kategorio.sql
-faktemo.sql
-uzantoAuxAsocio.sql
-uzanto.sql
-asocio.sql
-aneco.sql
-kongreso.sql
-kongresa_aligxkotizo.sql
-kongresa_aligxinto.sql
-kongresa_programejo.sql
-kongresa_programo_kategorio.sql
-kongresa_programo.sql
-aneckotizo.sql
-peranto.sql
+SISTEMO lando.sql
+MOCK urbo.sql
+MOCK grupo.sql
+MOCK grupa-kategorio.sql
+MOCK faktemo.sql
+MOCK uzantoAuxAsocio.sql
+MOCK uzanto.sql
+MOCK asocio.sql
+MOCK aneco.sql
+MOCK kongreso.sql
+MOCK kongresa_aligxkotizo.sql
+MOCK kongresa_aligxinto.sql
+MOCK kongresa_programejo.sql
+MOCK kongresa_programo_kategorio.sql
+MOCK kongresa_programo.sql
+MOCK aneckotizo.sql
+MOCK peranto.sql

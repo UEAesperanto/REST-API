@@ -15,6 +15,16 @@ services:
     depends_on:
       - mysql
 
+  liquibase:
+    build: ./docker/liquibase
+    image: uea-liquibase
+    container_name: uea-liquibase
+    restart: always
+    links:
+      - mysql:mysql-server
+    depends_on:
+      - mysql
+    
   mysql:
     build: ./docker/mysql
     image: uea-mysql

@@ -1,5 +1,5 @@
-SISTEMO lando.sql
-MOCK urbo.sql
+MOCK lando.sql
+SISTEMO urbo.sql
 MOCK grupo.sql
 MOCK grupa-kategorio.sql
 MOCK faktemo.sql

@@ -20,11 +20,15 @@ services:
     image: uea-liquibase
     container_name: uea-liquibase
     restart: always
+    environment:
+      - DB_PASSWORD=u34p4ss
+      - DB_HOST=mysql-server
+      - DB_PORT=3306
     links:
       - mysql:mysql-server
     depends_on:
       - mysql
-    
+
   mysql:
     build: ./docker/mysql
     image: uea-mysql

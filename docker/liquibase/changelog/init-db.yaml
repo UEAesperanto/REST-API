@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: victor hugo
+      changes:
+        - createTable:
+            tableName: sxangxhistorio
+            - column:
+                name: id
+                type: int
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: tabelo
+                type: varchar(255)
+            - column:
+                name: kampo
+                type: varchar(255)
+            - column:
+                name: antauxa_valoro
+                type: char(255)
+            - column:
+                name: idUzanto
+                type: int(11)
+                references: uzantoAuxAsocio(id)
+            - column:
+                name: dato
+                type: date

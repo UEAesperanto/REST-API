@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - preConditions:
+    - runningAs:
+        username: root
+  - include:
+      file: /changelog/init-db.yaml
+- changeSet:
+    id: 1
+    author: victor hugo
+    changes:
+      - insert:
+          tableName: lando
+          columns:
+            - column:
+                name: nomoLoka
+                value: 'Brasil'
+            - column:
+                name: radikoEo
+                value: 'Brazilo'
+            - column:
+                name: finajxoEo
+                value: 'Brazilo'
+            - column:
+                name: landkodo
+                value: 'BR'

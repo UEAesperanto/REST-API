@@ -12,7 +12,7 @@ done
 liquibase --driver=com.mysql.jdbc.Driver \
      --classpath=$CONN:$SNAKEYAML \
      --changeLogFile=$CHANGELOG_FILE \
-     --url="jdbc:mysql://mysql/uea" \
+     --url="jdbc:mysql://mysql/liquibase" \
      --username=root \
      --password=$DB_PASSWORD \
      migrate

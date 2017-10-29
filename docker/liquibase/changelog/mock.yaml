@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: victor hugo
+      changes:
+        - insert:
+            tableName: lando
+            columns:
+              - column:
+                  name: nomoLoka
+                  type: varchar(255)
+                  value: 'Brasil'
+              - column:
+                  name: radikoEo
+                  type: varchar(255)
+                  value: 'Brazilo'
+              - column:
+                  name: finajxoEo
+                  type: varchar(255)
+                  value: 'Brazilo'
+              - column:
+                  name: landkodo
+                  type: varchar(255)
+                  value: 'BR'

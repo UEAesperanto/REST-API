@@ -889,3 +889,546 @@ databaseChangeLog:
                         constraints:
                           primaryKey: true
                           nullable: false
+        - createTable:
+                  tablename: kongresa_servo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: nomo
+                        type: varchar(255)
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+                    - column:
+                        name: prezo
+                        type: int(11)
+        - createTable:
+                  tablename: ref_kongresa_servo_aligxinto
+                  columns:
+                    - column:
+                        name: idAligxinto
+                        type: int(11)
+                        references: kongresa_aligxinto(id)
+                    - column:
+                        name: idServo
+                        type: int(11)
+                        references: servo(id)
+                    - column:
+                        name: pagita
+                        type: boolean
+        - createTable:
+                  tablename: kongresa_programejo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKongreso
+                        type: int(11)
+                        references: kongreso(id)
+                    - column:
+                        name: nomo
+                        type: varchar(255)
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+        - createTable:
+                  tablename: kongresa_programo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKongreso
+                        type: int(11)
+                        references: kongreso(id)
+                    - column:
+                        name: komenctempo
+                        type: date
+                    - column:
+                        name: fintempo
+                        type: date
+                    - column:
+                        name: evento
+                        type: varchar(255)
+                    - column:
+                        name: priskribo
+                        type: varchar(1600)
+                    - column:
+                        name: idKategorio
+                        type: int(11)
+                        references: kongresa_programo_kategorio(id)
+                    - column:
+                        name: idProgramejo
+                        type: int(11)
+                        references: kongresa_programejo(id)
+        - createTable:
+                  tablename: kongresa_programo_kategorio
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: titolo
+                        type: varchar(255)
+        - createTable:
+                  tablename: kongresa_aligxinto
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: kongresaNumero
+                        type: int(11)
+                    - column:
+                        name: idUzanto
+                        type: int(11)
+                        references: uzanto(id)
+                    - column:
+                        name: idAligxkotizo
+                        type: int(11)
+                        references: aligxkotizo(id)
+                    - column:
+                        name: idKongreso
+                        type: int(11)
+                        references: kongreso(id)
+        - createTable:
+                  tablename: kongresa_logxejo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: kongreso
+                        type: int(11)
+                        references: kongreso(id)
+                    - column:
+                        name: ordig
+                        type: int(11)
+                    - column:
+                        name: rango
+                        type: int(11)
+                    - column:
+                        name: adreso
+                        type: varchar(255)
+                    - column:
+                        name: foreco
+                        type: varchar(255)
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+                    - column:
+                        name: retejo
+                        type: varchar(255)
+                    - column:
+                        name: retadreso
+                        type: varchar(255)
+                    - column:
+                        name: telefono
+                        type: varchar(255)
+                    - column:
+                        name: fakso
+                        type: varchar(255)
+                    - column:
+                        name: notoj
+                        type: varchar(255)
+        - createTable:
+                  tablename: kongresa_dormcxambrsxablono
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: litKvanto
+                        type: int(11)
+                    - column:
+                        name: personKvanto
+                        type: int(11)
+                    - column:
+                        name: prezo
+                        type: int(11)
+                    - column:
+                        name: nomo
+                        type: varchar(255)
+        - createTable:
+                  tablename: kongresa_dormcxambro
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: nomo
+                        type: varchar(255)
+                        constraints:
+                          nullable: true
+                    - column:
+                        name: logxejo
+                        type: int(11)
+                        references: kongresa_logxejo(id)
+                    - column:
+                        name: idDormcxambrsxablono
+                        type: int(11)
+                        references: kongresa_dormcxambrsxablono(id)
+        - createTable:
+                  tablename: ref_aligxinto_logxejo
+                  columns:
+                    - column:
+                        name: idAligxinto
+                        type: int(11)
+                        references: kongresa_aligxinto(id)
+                        constraints:
+                          unique: true
+                    - column:
+                        name: idDormcxambro
+                        type: int(11)
+                        references: kongresa_dormcxambro(id)
+                        constraints:
+                          unique: true
+                          nullable: true
+                    - column:
+                        name: alvendato
+                        type: date
+                    - column:
+                        name: forirdato
+                        type: date
+                    - column:
+                        name: kvanto
+                        type: int(11)
+                    - column:
+                        name: kunkogxantoj
+                        type: varchar(255)
+        - createTable:
+                  tablename: kongresa_ekskurso
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKongreso
+                        type: int(11)
+                        references: kongreso(id)
+                    - column:
+                        name: titolo
+                        type: varchar(255)
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+                    - column:
+                        name: dato
+                        type: date
+                    - column:
+                        name: prezo
+                        type: int(11)
+                    - column:
+                        name: kvanto
+                        type: int(11)
+        - createTable:
+                  tablename: ref_kongresa_ekskurso_mendo
+                  columns:
+                    - column:
+                        name: idKAligxinto
+                        type: int(11)
+                        references: kongresa_aligxinto(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKEkskurso
+                        type: int(11)
+                        references: kongresa_ekskurso(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+        - createTable:
+                  tablename: teko
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: titolo
+                        type: varchar(255)
+                    - column:
+                        name: elnomo
+                        type: varchar(255)
+                    - column:
+                        name: kodnomo
+                        type: varchar(255)
+                    - column:
+                        name: jaro
+                        type: int(11)
+                    - column:
+                        name: absnum
+                        type: varchar(255)
+                    - column:
+                        name: vido
+                        type: boolean
+        - createTable:
+                  tablename: teka_kategorio
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: titolo
+                        type: varchar(255)
+        - createTable:
+                  tablename: ref_teko_kategorio
+                  columns:
+                    - column:
+                        name: idKategorio
+                        type: int(11)
+                        references: teka_kategorio(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idTeko
+                        type: int(11)
+                        references: teko(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+        - createTable:
+                  tablename: ref_teko_grupo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idTeko
+                        type: int(11)
+                        references: teko(id)
+                    - column:
+                        name: idGrupo
+                        type: int(11)
+                        references: grupo(id)
+                    - column:
+                        name: jaro
+                        type: int(11)
+        - createTable:
+                  tablename: kongresa_spezraporto
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: dato
+                        type: date
+                    - column:
+                        name: idPeranto
+                        type: int(11)
+                        references: peranto(id)
+                    - column:
+                        name: valuto
+                        type: varchar(255)
+                    - column:
+                        name: noto
+                        type: varchar(255)
+                    - column:
+                        name: validita
+                        type: boolean
+                    - column:
+                        name: printita
+                        type: boolean
+        - createTable:
+                  tablename: kongresa_spezraportero
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKongresaSpezraporto
+                        type: int(11)
+                        references: kongresa_spezraporto(id)
+                    - column:
+                        name: idUzanto
+                        type: int(11)
+                        references: uzantoAuxAsocio(id)
+                        constraints:
+                          nullable: true
+                    - column:
+                        name: nomoUzanto
+                        type: varchar(255)
+                        constraints:
+                          nullable: true
+                    - column:
+                        name: kongresaKotizo
+                        type: int(11)
+                    - column:
+                        name: kongresajMendoj
+                        type: int(11)
+        - createTable:
+                  tablename: ks_pag_kampo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+                    - column:
+                        name: defauxltaValuto
+                        type: int(11)
+                        constraints:
+                          defaultValue: 0
+        - createTable:
+                  tablename: ref_kongresa_spezraportero_ks_pag_kampo
+                  columns:
+                    - column:
+                        name: idKongresaSpezraportero
+                        type: int(11)
+                        references: kongresa_spezraportero(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idKsPagKampo
+                        type: int(11)
+                        references: ks_pag_kampo(id)
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: sumo
+                        type: int(11)
+        - createTable:
+                  tablename: gxen_spezraporto
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: dato
+                        type: date
+                    - column:
+                        name: idPeranto
+                        type: int(11)
+                        references: peranto(id)
+                    - column:
+                        name: valuto
+                        type: varchar(255)
+                    - column:
+                        name: noto
+                        type: varchar(255)
+                    - column:
+                        name: validita
+                        type: boolean
+                    - column:
+                        name: printita
+                        type: boolean
+        - createTable:
+                  tablename: gxen_spezraporto_kotizo
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idGxenSpezraporto
+                        type: int(11)
+                        references: gxen_spezraporto(id)
+                    - column:
+                        name: idUzanto
+                        type: int(11)
+                        references: uzantoAuxAsocio(id)
+                        constraints:
+                          nullable: true
+                    - column:
+                        name: nomoUzanto
+                        type: varchar(255)
+                        constraints:
+                          nullable: true
+                    - column:
+                        name: idAnoGrupo
+                        type: int(11)
+                        references: grupo(id)
+        - createTable:
+                  tablename: gxen_spezraportero
+                  columns:
+                    - column:
+                        name: id
+                        type: int(11)
+                        autoIncrement: true
+                        constraints:
+                          primaryKey: true
+                          nullable: false
+                    - column:
+                        name: idGxenSpezraporto
+                        type: int(11)
+                        references: gxen_spezraporto(id)
+                    - column:
+                        name: priskribo
+                        type: varchar(255)
+                    - column:
+                        name: sumo
+                        type: int(11)

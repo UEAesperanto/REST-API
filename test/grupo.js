@@ -24,8 +24,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(0);
-                 done();
                });
+               done();
          });
 
          it('it should GET all the grupoj with body', function(done){
@@ -35,8 +35,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(1);
-                 done();
                });
+               done();
          });
 
         it('it should GET a grupoj with a given id', function (done) {
@@ -52,9 +52,8 @@ describe('Grupoj', function() {
                         res.body[0].mallongigilo.should.equal('mallongigilo');
                         res.body[0].nomo.should.equal('nomo');
                         res.body[0].priskribo.should.equal('priskribo');
-
-                        done();
                     })
+                    done();
             });
         })
 
@@ -63,8 +62,8 @@ describe('Grupoj', function() {
                .get('/grupoj/laboroj')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/membrecoj with body', function(done){
@@ -72,8 +71,8 @@ describe('Grupoj', function() {
                .get('/grupoj/membrecoj')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/membrecoj with body', function(done){
@@ -81,8 +80,8 @@ describe('Grupoj', function() {
                .get('/grupoj/membrecoj/aldonoj')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/laboroj/:id/anoj with body', function(done){
@@ -90,8 +89,8 @@ describe('Grupoj', function() {
                .get('/grupoj/laboroj/1/anoj')
                .end((err, res) => {
                    res.should.have.status(400);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/:id/kotizoj with body', function(done){
@@ -115,9 +114,8 @@ describe('Grupoj', function() {
                .send(uzanto)
                .end(function (err, res) {
                    token = res.body.token;
-                   done();
                });
-
+               done();
        });
 
        it('it should NOT POST a grupo without token', function (done) {
@@ -134,8 +132,8 @@ describe('Grupoj', function() {
                     error.message.should.equal("Sen ĵetono (token).");
                     res.should.have.status(400);
                     err.should.have.status(400);
-                    done();
                 })
+                done();
        })
 
        it('it should POST a grupoj', function (done) {

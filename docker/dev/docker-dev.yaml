@@ -6,12 +6,24 @@ services:
     container_name: uea-api-dev
     ports:
       - "3000:3000"
+    environment:
+      - LIQUIBASE=uea-liquibase
     volumes:
       - ../../:/app
+    links:
+      - mysql:mysql-server
+    depends_on:
+      - mysql
+
+  liquibase:
+    build: ../liquibase
+    image: uea-liquibase
+    container_name: uea-liquibase
     environment:
       - DB_PASSWORD=u34p4ss
       - DB_HOST=mysql-server
       - DB_PORT=3306
+      - MEDIO=MOCK
     links:
       - mysql:mysql-server
     depends_on:

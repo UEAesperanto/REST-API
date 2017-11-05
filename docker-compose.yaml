@@ -19,7 +19,6 @@ services:
     build: ./docker/liquibase
     image: uea-liquibase
     container_name: uea-liquibase
-    restart: always
     environment:
       - DB_PASSWORD=u34p4ss
       - DB_HOST=mysql-server

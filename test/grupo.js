@@ -10,14 +10,13 @@ var Grupo = require('../models/grupo');
 
 chai.use(chaiHttp);
 describe('Grupoj', function() {
-    beforeEach( function(done) { //Before each test we empty the database
-      var query = util.format('DELETE FROM `grupo`');
-      db.mysqlExec(query).then(function(result){
-        done();
-      })
-    });
-
     describe('GET /grupoj sen grupoj en la sistemo', function(){
+      before( function(done) { //Before each test we empty the database
+        var query = util.format('DELETE FROM `grupo`');
+        db.mysqlExec(query).then(function(result){
+          done();
+        })
+      });
          it('it should GET all the grupoj', function(done){
            chai.request(server)
                .get('/grupoj')
@@ -60,7 +59,7 @@ describe('Grupoj', function() {
 
          it('it should GET all the grupoj/laboroj with body', function(done){
            chai.request(server)
-               .get('/grupoj/laboroj')
+               .get('/grupoj/kategorioj/1/sub')
                .end((err, res) => {
                    res.should.have.status(200);
                 done();
@@ -69,27 +68,18 @@ describe('Grupoj', function() {
 
          it('it should GET all the grupoj/membrecoj with body', function(done){
            chai.request(server)
-               .get('/grupoj/membrecoj')
+               .get('/grupoj/kategorioj/4/sub')
                .end((err, res) => {
                    res.should.have.status(200);
                 done();
                });
          });
 
-         it('it should GET all the grupoj/membrecoj with body', function(done){
+         it('it should GET all the aldonaj membrecoj with body', function(done){
            chai.request(server)
-               .get('/grupoj/membrecoj/aldonoj')
+               .get('/grupoj/kategorioj/5/sub')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
-               });
-         });
-
-         it('it should GET all the grupoj/laboroj/:id/anoj with body', function(done){
-           chai.request(server)
-               .get('/grupoj/laboroj/1/anoj')
-               .end((err, res) => {
-                   res.should.have.status(400);
                 done();
                });
          });
@@ -102,6 +92,129 @@ describe('Grupoj', function() {
                 done();
             });
           });
+   });
+
+   describe('GET grupoj/:id/anoj', function(){
+     var token = '';
+
+     before(function (done) {
+         var query = 'INSERT INTO grupo (id) VALUES (2);';
+         var query1 = 'INSERT INTO grupa_kategorio () VALUES(1, "laboro");';
+         var query2 = 'INSERT INTO ref_grupo_grupa_kategorio () VALUES (2, 1);';
+
+         db.mysqlExec(query);
+         db.mysqlExec(query1);
+         db.mysqlExec(query2);
+
+         var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+         chai.request(server)
+         .post('/admin/ensaluti')
+         .send(uzanto)
+         .end(function (err, res) {
+           token = res.body.token;
+         });
+         done();
+     });
+
+     it('it should NOT GET all the grupoj/:id/anoj', function(done){
+       chai.request(server)
+           .get('/grupoj/1/anoj')
+           .end((err, res) => {
+               res.should.have.status(403);
+            done();
+           });
+     })
+
+     it('it should GET all the grupoj/:id/anoj', function(done){
+       chai.request(server)
+           .get('/grupoj/2/anoj')
+           .end((err, res) => {
+               res.should.have.status(200);
+            done();
+           });
+     })
+
+     it('it should GET a grupoj anoj', function (done) {
+         chai.request(server)
+             .get('/grupoj/1/anoj')
+             .set('x-access-token', token)
+             .end((err, res) => {
+               res.should.have.status(200);
+               done();
+              })
+     })
+   });
+
+   describe('POST /grupoj/:id/anoj', function(){
+     var token = '';
+
+     before(function (done) {
+         var query = [];
+         query.push('INSERT INTO grupo (id) VALUES (10);');
+         query.push('INSERT INTO grupo (id) VALUES (11);');
+
+         query.push('INSERT INTO grupa_kategorio () VALUES(4, "membreco");');
+         query.push('INSERT INTO grupa_kategorio () VALUES(5, "krommembreco");');
+
+         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (10, 4);');
+         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (11, 5);');
+
+         query.push( 'INSERT INTO uzanto (id, personanomo) VALUES (4,"Ana");');
+
+         for(var i = 0; i < query.length; i++) {
+           db.mysqlExec(query[i]);
+         }
+
+         var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
+         chai.request(server)
+         .post('/admin/ensaluti')
+         .send(uzanto)
+         .end(function (err, res) {
+           token = res.body.token;
+         });
+         done();
+     });
+
+     it('it should POST all the grupoj/:id/anoj for membrecgrupo', function(done){
+       chai.request(server)
+           .post('/grupoj/10/anoj')
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(201);
+            done();
+           });
+     })
+
+     it('it should POST all the grupoj/:id/anoj for krommembrecgrupo', function(done){
+       chai.request(server)
+           .post('/grupoj/11/anoj')
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(201);
+            done();
+           });
+     })
+
+     it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
+       chai.request(server)
+           .post('/grupoj/1/anoj')
+           .set('x-access-token', token)
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(201);
+            done();
+           });
+     })
+
+     it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
+       chai.request(server)
+           .post('/grupoj/1/anoj')
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(403);
+            done();
+           });
+     })
    });
 
    describe('POST /grupoj', function(){

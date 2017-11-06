@@ -29,6 +29,18 @@ INSERT INTO grupa_kategorio ()
       "aldona membreckategorio" /*nomo varchar(255)*/
   );
 
+INSERT INTO grupa_kategorio ()
+  VALUES (
+      6,  /*id laborgrupo*/
+      "malnova membreckategorio" /*nomo varchar(255)*/
+  );
+
+INSERT INTO grupa_kategorio ()
+  VALUES (
+      7,  /*id laborgrupo*/
+      "junulara grupo" /*nomo varchar(255)*/
+  );
+
 INSERT INTO ref_grupo_grupa_kategorio ()
   VALUES (
    9, /*idGrupo int(11) REFERENCES grupo(id)*/

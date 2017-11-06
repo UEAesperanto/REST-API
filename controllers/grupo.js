@@ -22,6 +22,18 @@ var _getGrupoj = function(req, res){
   });
 }
 
+
+/*
+  GET /grupoj/kategorioj
+*/
+var _getKategorioj = function(req, res){
+  Grupo.findKategorio().then(function(sucess){
+        var kategorioj = sucess;
+        kategorioj = kategorioj.filter(query.search(req.query));
+        res.status(200).send(kategorioj);
+  });
+}
+
 /*
   GET /grupoj/:id
 */
@@ -64,35 +76,14 @@ var _updateGrupo = function(req, res){
 /*
    GET /grupoj/laboroj
 */
-var _getLaborgrupoj = function(req, res){
-  Grupo.findKategorio(config.idLaborgrupo).then(function(sucess){
+var _getGrupojKat = function(req, res){
+  Grupo.findKategorio(req.params.id).then(function(sucess){
         var grupoj = sucess;
         grupoj = grupoj.filter(query.search(req.query));
         res.status(200).send(grupoj);
   });
 }
 
-/*
-   GET /grupoj/membrecoj
-*/
-var _getMembrecgrupoj = function(req, res){
-  Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
-        var grupoj = sucess;
-        grupoj = grupoj.filter(query.search(req.query));
-        res.status(200).send(grupoj);
-  });
-}
-
-/*
-   GET /grupoj/membrecoj
-*/
-var _getAldonaMembrecgrupoj = function(req, res){
-  Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(sucess){
-        var grupoj = sucess;
-        grupoj = grupoj.filter(query.search(req.query));
-        res.status(200).send(grupoj);
-  });
-}
 
 /*
    GET /grupo/laboroj/:id/anoj
@@ -113,28 +104,6 @@ var _getLaboranoj = function(req, res){
   });
 }
 
-/*
-   GET - /grupo/membrecoj/:id
-*/
-var _getMembrecgrupo = function(req, res){
-  Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
-        var grupoj = sucess;
-        grupoj = grupoj.filter(query.search({id:req.params.id}));
-        res.status(200).send(grupoj);
-  });
-}
-
-/*
-   GET - /grupo/membrecoj/aldonoj/:id
-*/
-var _getAldonaMembrecgrupo = function(req, res){
-  Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(sucess){
-        var grupoj = sucess;
-        grupoj = grupoj.filter(query.search({id:req.params.id}));
-        res.status(200).send(grupoj);
-  });
-}
-
 var insertAneco = function(req, res) {
   Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
                req.body.findato, req.body.dumviva, req.body.tasko,
@@ -152,15 +121,15 @@ var insertAneco = function(req, res) {
 }
 
 /*
-  POST - /grupoj/membrecoj/:id
+  POST - /grupoj/:id/anoj
 */
 var _postAneco = function(req, res) {
-
-  var token = req.headers['x-access-token'];
-
-  if (token) {
-      res.status(100).send({message: 'Farota'});
+  if (req.decoded) {
+      if(req.decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+        insertAneco(req, res);
+      }
   } else {
+    //Ĉu la celata grupo estas en membrecgrupo?
     Grupo.findKategorio(config.idMembrecgrupo).then(function(result){
       var grupoj = result.filter(query.search({id:req.params.id}));
       if (grupoj.length == 1) {
@@ -197,8 +166,8 @@ var _postGrupo = function (req, res) {
   });
 }
 
-var _postRefAldonmembreco = function (req, res) {
-  Grupo.insertRefKategorio(req.params.id, config.idAldonaMembrecgrupo)
+var _postRefKatGrupo = function (req, res) {
+  Grupo.insertRefKategorio(req.params.idGrupo, req.params.idKat)
   .then(function(sucess){
       if(sucess){
         res.status(201).send({message:'ok'});
@@ -208,18 +177,62 @@ var _postRefAldonmembreco = function (req, res) {
     });
 }
 
+var findAnoj = function(req, res) {
+  Grupo.findAnoj(req.params.id)
+  .then(function(sucess) {
+    if(sucess){
+      var anoj = sucess;
+      anoj = anoj.filter(query.search(req.query));
+      res.status(200).send(anoj);
+    }
+    else {
+      res.status(500).send("Internal Error");
+    }
+  });
+}
+
+/*
+  GET - /grupoj/:id/anoj
+*/
+var _getAnoj = function(req, res) {
+  if (req.decoded) {
+      if(req.decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+        findAnoj(req, res);
+      } else if(req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
+          Grupo.findKategorio(config.idJunajGrupoj).then(function(result){
+            if (grupoj.length == 1) {
+              findAnoj(req, res);
+            } else {
+              var jaro = parseInt((new Date()).getFullYear());
+              var junaJaro = jaro - config.junaAgxo;
+              req.query.naskigxtago = new Date(junaJaro + '-01-01');
+              findAnoj(req, res);
+           }
+          });
+      }
+  } else {
+    //Ĉu la celata grupo estas en laborgrupo?
+    Grupo.findKategorio(config.idLaborgrupo).then(function(result){
+      var grupoj = result.filter(query.search({id:req.params.id}));
+      if (grupoj.length == 1) {
+        findAnoj(req, res);
+      } else {
+        res.status(403).send({message: 'Vi ne rajtas vidi la membrojn de tiu grupo'});
+     }
+    });
+  }
+}
+
 module.exports = {
   getGrupoj: _getGrupoj,
+  getKategorioj: _getKategorioj,
   getGrupo: _getGrupo,
   postGrupo: _postGrupo,
   deleteGrupo: _deleteGrupo,
   updateGrupo: _updateGrupo,
-  postRefAldonmembreco: _postRefAldonmembreco,
-  getMembrecgrupoj: _getMembrecgrupoj,
-  getLaborgrupoj: _getLaborgrupoj,
-  getMembrecgrupo: _getMembrecgrupo,
-  getAldonaMembrecgrupo: _getAldonaMembrecgrupo,
+  getGrupojKat: _getGrupojKat,
   postAneco: _postAneco,
   getLaboranoj: _getLaboranoj,
-  getAldonaMembrecgrupoj: _getAldonaMembrecgrupoj
+  getAnoj: _getAnoj,
+  postRefKatGrupo: _postRefKatGrupo
 }

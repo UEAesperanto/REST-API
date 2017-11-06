@@ -28,8 +28,11 @@ var _update = function(id, kampo, valoro) {
 }
 
 var _findKategorio = function(kategorio){
-  var query = util.format('SELECT A.id, A.mallongigilo, A.nomo, A.priskribo FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
+  if(kategorio)
+    var query = util.format('SELECT * FROM `grupo` A INNER JOIN `ref_grupo_grupa_kategorio`\
                            B ON (A.id = B.idGrupo) WHERE B.idGrupaKategorio=%s;', kategorio);
+  else
+    var query = 'SELECT * FROM grupa_kategorio;';
   return db.mysqlExec(query);
 }
 
@@ -46,8 +49,19 @@ var _insertRefKategorio = function(idGrupo, idKategorio) {
   return db.mysqlExec(query);
 }
 
+var _findAnoj = function(idGrupo) {
+  if(idGrupo)
+    var query = util.format("SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno\
+                             = uzanto.id WHERE aneco.idGrupo = %s;", idGrupo);
+  else
+    var query = "SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno = uzanto.id;";
+  return db.mysqlExec(query);
+}
+
+
 module.exports = {
   find:_find,
+  findAnoj: _findAnoj,
   insert: _insert,
   delete: _delete,
   update: _update,

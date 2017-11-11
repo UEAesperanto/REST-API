@@ -42,8 +42,8 @@ describe('Uzantoj', function() {
         .end(function(err, res){
           res.should.have.status(201);
           res.body.should.have.property('id');
-          done();
         });
+        done();
       });
 
       it('forgesis pasvorton sen uzanto', function(done) {
@@ -51,8 +51,8 @@ describe('Uzantoj', function() {
         .post('/uzantoj/forgesisPasvorton')
         .end(function(err, res){
           res.should.have.status(400);
-          done();
         });
+        done();
       });
 
     });

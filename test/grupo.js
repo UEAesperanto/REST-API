@@ -120,8 +120,8 @@ describe('Grupoj', function() {
            .get('/grupoj/1/anoj')
            .end((err, res) => {
                res.should.have.status(403);
-            done();
            });
+           done();
      })
 
      it('it should GET all the grupoj/:id/anoj', function(done){
@@ -129,8 +129,8 @@ describe('Grupoj', function() {
            .get('/grupoj/2/anoj')
            .end((err, res) => {
                res.should.have.status(200);
-            done();
            });
+           done();
      })
 
      it('it should GET a grupoj anoj', function (done) {
@@ -139,8 +139,8 @@ describe('Grupoj', function() {
              .set('x-access-token', token)
              .end((err, res) => {
                res.should.have.status(200);
-               done();
               })
+              done();
      })
    });
 
@@ -180,8 +180,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for krommembrecgrupo', function(done){
@@ -190,8 +190,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -201,8 +201,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -211,8 +211,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(403);
-            done();
            });
+           done();
      })
    });
 
@@ -260,8 +260,8 @@ describe('Grupoj', function() {
                     res.body.should.have.property('insertId');
                     res.body.should.have.property('affectedRows');
                     res.body.affectedRows.should.equal(1);
-                    done();
                 })
+                done();
        })
 
    });
@@ -277,8 +277,8 @@ describe('Grupoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -294,8 +294,8 @@ describe('Grupoj', function() {
                         res.should.have.status(200);
                         res.body.should.have.property('message');
                         res.body.message.should.equal('Ĝisdatigo sukcese farita');
-                        done();
                     })
+                    done();
             });
 
         })
@@ -313,8 +313,8 @@ describe('Grupoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                        done();
                     })
+                    done();
             });
 
         })
@@ -331,8 +331,8 @@ describe('Grupoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -343,8 +343,8 @@ describe('Grupoj', function() {
                     .set('x-access-token', token)
                     .end((err, res) => {
                         res.should.have.status(204);
-                        done();
                     })
+                    done();
             });
         })
 
@@ -359,8 +359,8 @@ describe('Grupoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                        done();
                     })
+                    done();
             });
         })
     })

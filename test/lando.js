@@ -45,8 +45,8 @@ describe('Landoj', function() {
            .end((err, res) => {
                res.should.have.status(200);
                res.body.length.should.equals(3);
-             done();
            });
+           done();
      });
 
 
@@ -57,8 +57,8 @@ describe('Landoj', function() {
            .end((err, res) => {
                res.should.have.status(200);
                res.body.length.should.equals(0)
-             done();
            });
+           done();
      });
    });
 
@@ -80,8 +80,8 @@ describe('Landoj', function() {
               res.body[0].landkodo.should.equal('landKodo');
             //expect(res.body).to.deep.equal({message: 'sucess'})
             //res.body.should.be.a('object');s
-            done();
           });
+          done();
       });
     });
 
@@ -96,8 +96,8 @@ describe('Landoj', function() {
              res.should.have.status(200);
              response.should.equal('{}');
              //expect(res.body).to.deep.equal({message: 'sucess'})
-           done();
          });
+         done();
      });
    });
   });
@@ -112,8 +112,8 @@ describe('Landoj', function() {
               .send(uzanto)
               .end(function (err, res) {
                   token = res.body.token;
-                  done();
               })
+              done();
       });
 
    it('it should NOT POST a lando - Sen ĵetono (token)', function(done){
@@ -130,8 +130,8 @@ describe('Landoj', function() {
              res.should.have.status(400);
              err.should.have.status(400);
 
-           done();
          });
+         done();
    });
 
       it('it should POST a lando - with token', function (done) {
@@ -148,8 +148,8 @@ describe('Landoj', function() {
                   res.body.should.have.property('finajxoEo');
                   res.body.nomoLoka.should.equal('nomoLoka');
                   res.body.finajxoEo.should.equal('finajxoEo');
-                  done();
               });
+              done();
 
       });
 
@@ -166,8 +166,8 @@ describe('Landoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -187,9 +187,9 @@ describe('Landoj', function() {
                      error.message.should.equal("Sen ĵetono (token).");
                      res.should.have.status(400);
                      err.should.have.status(400);
-                     done();
 
                  });
+                 done();
          })
      });
 
@@ -205,8 +205,8 @@ describe('Landoj', function() {
                         .end(function (err, res) {
                             res.should.have.status(200);
                             res.body.message.should.equal("Ok");
-                            done();
                         });
+                        done();
                 })
         });
 
@@ -223,8 +223,8 @@ describe('Landoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -243,9 +243,9 @@ describe('Landoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                        done();
 
                     });
+                    done();
             })
         });
 
@@ -262,8 +262,8 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
                     });
+                    done();
             })
         });
 
@@ -279,8 +279,8 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
                     });
+                    done();
             })
         });
 
@@ -296,8 +296,8 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
                     });
+                    done();
             })
         });
 
@@ -313,8 +313,8 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
                     });
+                    done();
             })
         });
     })

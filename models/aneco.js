@@ -38,11 +38,6 @@ var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
   return db.mysqlExec(query);
 }
 
-var _findAnecpetoj = function() {
-  var query = "SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno = uzanto.id;";
-  return db.mysqlExec(query);
-}
-
 var _updateAneco = function(id, kampo, valoro) {
   var query = util.format('UPDATE `aneco` SET `%s` = "%s" WHERE `id` = %s;',
                            kampo, valoro, id);
@@ -54,6 +49,5 @@ module.exports = {
   findGrupo: _findGrupo,
   updateKotizo: _updateKotizo,
   updateAneco: _updateAneco,
-  findAnecpetoj: _findAnecpetoj,
   insertAneco: _insertAneco
 }

@@ -5,10 +5,10 @@ const app = express();
 
 var router = express.Router();
 
-// var routerAuthID = express.Router();
-// routerAuthID.use(auth.authorizeID);
-// app.use('/:id(\\d+)/', routerAuthID);
-// app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
+var routerAuthID = express.Router();
+routerAuthID.use(auth.authorizeID);
+app.use('/:id(\\d+)/', routerAuthID);
+app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
 
 var routerAuth = express.Router();
 routerAuth.use(auth.authorizeAdminJuna);

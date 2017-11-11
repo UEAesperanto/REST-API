@@ -85,21 +85,7 @@ var _aprobiAnecon = function(req, res){
   });
 }
 
-var _getAnecoj = function(req, res){
-  Aneco.findAnecpetoj().then(
-    function(sucess) {
-      if(sucess) {
-        var anecoj = sucess;
-        anecoj = anecoj.filter(query.search(req.query));
-        res.status(200).send(anecoj);
-      } else {
-        res.status(500).send({message: "Eraro en la servilo"});
-      }
-    });
-}
-
 module.exports = {
-  getAnecoj: _getAnecoj,
   getKotizoj: _getKotizoj,
   aprobiAnecon: _aprobiAnecon,
   postKotizo: _postKotizo,

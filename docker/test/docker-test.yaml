@@ -2,29 +2,43 @@ version: '3'
 services:
   api:
     build: ../nodejs/
-    image: uea-test
+    image: uea-nodejs
     container_name: uea-api-test
     ports:
       - "3001:3000"
+    environment:
+      - LIQUIBASE=uea-liquibase-test
+      - DB_PASSWORD=u34p4ss
+      - DB_HOST=mysql-server
+      - DB_PORT=3307
+      - TEST=test
     volumes:
       - ../../:/app
-    environment:
-      - DB_PASSWORD=u34p4ss-t3st3
-      - DB_HOST=mysql-test
-      - DB_PORT=3307
-      - TEST=local
     links:
-      - mysql:mysql-test
+      - mysql:mysql-server
+    depends_on:
+      - mysql
+
+  liquibase:
+    build: ../liquibase
+    image: uea-liquibase
+    container_name: uea-liquibase-test
+    environment:
+      - DB_PASSWORD=u34p4ss
+      - DB_HOST=mysql-server
+      - DB_PORT=3307
+    links:
+      - mysql:mysql-server
     depends_on:
       - mysql
 
   mysql:
     build: ../mysql
     image: uea-mysql
-    restart: always
     container_name: uea-datumbazo-test
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=u34p4ss-t3st3
+      - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
     ports:
       - "3307:3306"

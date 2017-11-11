@@ -23,8 +23,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(0);
-                 done();
                });
+               done();
          });
 
          it('it should GET all the grupoj with body', function(done){
@@ -34,8 +34,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(1);
-                 done();
                });
+               done();
          });
 
         it('it should GET a grupoj with a given id', function (done) {
@@ -51,9 +51,8 @@ describe('Grupoj', function() {
                         res.body[0].mallongigilo.should.equal('mallongigilo');
                         res.body[0].nomo.should.equal('nomo');
                         res.body[0].priskribo.should.equal('priskribo');
-
-                        done();
                     })
+                    done();
             });
         })
 
@@ -62,8 +61,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/1/sub')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/membrecoj with body', function(done){
@@ -71,8 +70,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/4/sub')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the aldonaj membrecoj with body', function(done){
@@ -80,8 +79,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/5/sub')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
                });
+               done();
          });
 
          it('it should GET all the grupoj/:id/kotizoj with body', function(done){
@@ -121,8 +120,8 @@ describe('Grupoj', function() {
            .get('/grupoj/1/anoj')
            .end((err, res) => {
                res.should.have.status(403);
-            done();
            });
+           done();
      })
 
      it('it should GET all the grupoj/:id/anoj', function(done){
@@ -130,8 +129,8 @@ describe('Grupoj', function() {
            .get('/grupoj/2/anoj')
            .end((err, res) => {
                res.should.have.status(200);
-            done();
            });
+           done();
      })
 
      it('it should GET a grupoj anoj', function (done) {
@@ -140,8 +139,8 @@ describe('Grupoj', function() {
              .set('x-access-token', token)
              .end((err, res) => {
                res.should.have.status(200);
-               done();
               })
+              done();
      })
    });
 
@@ -181,8 +180,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for krommembrecgrupo', function(done){
@@ -191,8 +190,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -202,8 +201,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
-            done();
            });
+           done();
      })
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -212,8 +211,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(403);
-            done();
            });
+           done();
      })
    });
 
@@ -228,9 +227,8 @@ describe('Grupoj', function() {
                .send(uzanto)
                .end(function (err, res) {
                    token = res.body.token;
-                   done();
                });
-
+               done();
        });
 
        it('it should NOT POST a grupo without token', function (done) {
@@ -247,8 +245,8 @@ describe('Grupoj', function() {
                     error.message.should.equal("Sen ĵetono (token).");
                     res.should.have.status(400);
                     err.should.have.status(400);
-                    done();
                 })
+                done();
        })
 
        it('it should POST a grupoj', function (done) {
@@ -262,8 +260,8 @@ describe('Grupoj', function() {
                     res.body.should.have.property('insertId');
                     res.body.should.have.property('affectedRows');
                     res.body.affectedRows.should.equal(1);
-                    done();
                 })
+                done();
        })
 
    });
@@ -279,8 +277,8 @@ describe('Grupoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -296,8 +294,8 @@ describe('Grupoj', function() {
                         res.should.have.status(200);
                         res.body.should.have.property('message');
                         res.body.message.should.equal('Ĝisdatigo sukcese farita');
-                        done();
                     })
+                    done();
             });
 
         })
@@ -315,8 +313,8 @@ describe('Grupoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                        done();
                     })
+                    done();
             });
 
         })
@@ -333,8 +331,8 @@ describe('Grupoj', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                    done();
                 });
+                done();
 
         });
 
@@ -345,8 +343,8 @@ describe('Grupoj', function() {
                     .set('x-access-token', token)
                     .end((err, res) => {
                         res.should.have.status(204);
-                        done();
                     })
+                    done();
             });
         })
 
@@ -361,8 +359,8 @@ describe('Grupoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                        done();
                     })
+                    done();
             });
         })
     })

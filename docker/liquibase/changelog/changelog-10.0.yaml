@@ -1,10 +1,18 @@
-## Enmetita kelkaj gravaj datumoj por unua funkciado de la sistemo
 databaseChangeLog:
   - changeSet:
-      id: 5
+      id: 4
       author: Ana Ribeiro
       changes:
       ## Grupaj kategorioj##
+        - insert:
+            tableName: grupa_kategorio
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: nomo
+                  value: laborgrupoj
         - insert:
             tableName: grupa_kategorio
             columns:
@@ -51,13 +59,3 @@ databaseChangeLog:
               - column:
                   name: nomo
                   value: juna administranto
-        ## Baza retmembreco
-        - insert:
-            tableName: grupo
-            columns:
-              - column:
-                  name: id
-                  value: 1
-              - column:
-                  name: nomo
-                  value: Baza retmembreco

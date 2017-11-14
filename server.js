@@ -22,12 +22,11 @@ asocio = require('./services/asocio');
 faktemo = require('./services/faktemo');
 urbo = require('./services/urbo');
 grupo = require('./services/grupo');
-grupo = require('./services/grupo');
 financoj = require('./services/financoj');
 kongreso = require('./services/kongreso');
 admin = require('./services/admin');
 peranto = require('./services/peranto');
-
+config = require('./services/config');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -63,6 +62,7 @@ app.use('/financoj', financoj);
 app.use('/kongresoj', kongreso);
 app.use('/admin', admin);
 app.use('/perantoj', peranto);
+app.use('/config', config);
 
 // Start the server
 app.listen(PORT, () => {

@@ -17,8 +17,7 @@ Por faciligi la instaladon, oni uzas la teknologion [Docker](https://www.docker.
 Kiam vi certigus ke Docker estas boninstalita, aliru al la dosierujo per Terminal (en Vindozo, prompt) kie vi elŝutis tiun ĉi kodo kaj tajpu:
 
 ````
-docker-compose -f docker/dev/docker-dev.yaml up --build -d
-docker-compose -f docker/test/docker-test.yaml up --build -d
+docker-compose up --build -d
 ````
 
  **Atentu** ke ĝi verŝajne ne bone funkcios se en la dosierujo kiun vi enmetis la kodon estus bezonata havi superuzantaj permesoj (sudo), vi devas ebligi ke tio estu uzita sen superuzantaj privilegioj.
@@ -27,15 +26,21 @@ docker-compose -f docker/test/docker-test.yaml up --build -d
 
 ````
 CREATED                       STATUS                  PORTS                              NAMES
-10 minutes ago              Up 10 minutes       0.0.0.0:3000->3000/tcp   uea-api-dev
-10 minutes ago              Up 10 minutes       0.0.0.0:3001->3000/tcp   uea-api-test
-10 minutes ago              Up 10 minutes       0.0.0.0:3306->3306/tcp  uea-datumbazo-dev
-10 minutes ago              Up 10 minutes       0.0.0.0:3307->3306/tcp  uea-datumbazo-test
-
+10 minutes ago              Up 10 minutes       0.0.0.0:3000->3000/tcp   uea-api
+10 minutes ago              Up 10 minutes       0.0.0.0:3306->3306/tcp  uea-datumbazo
 ````
 
 Tio estas ĉio, vi jam povos aliri API je `http://localhost:3000` kaj sekvi nian [dokumentadon](/datumbazoUEA/wiki) por lerni kiel uzi ĝin.
 
+## Testoj
+
+Por ekzekuti la aŭtomatajn testojn, tajpu:
+
+`docker-compose -f docker/test/docker-test.yaml up --build -d`
+
+Por vidi la testojn, tajpu:
+
+`docker logs -f uea-api`
 
 ## Agordado
 
@@ -51,9 +56,8 @@ Kaj forviŝu la arĥivojn de la komputilo.
 
 ## Kromaj Docker komandoj kiuj povas esti utilaj
 
-* `docker logs -f uea-api-dev`: Montras la konzolo de la API;
-* `docker logs -f uea-api-test`: Montras la rezultojn de la testoj;
-* `docker exec -it uea-datumbazo-dev bash` sekvita de `mysql -uroot -p"$MYSQL_ROOT_PASSWORD" uea`: donas aliron al la shell de la datumbazo;
+* `docker logs -f uea-api`: Montras la konzolon de la API;
+* `docker exec -it uea-datumbazo bash` sekvita de `mysql -uroot -p"$MYSQL_ROOT_PASSWORD" uea`: donas aliron al la shell de la datumbazo;
 
 
 ## Aŭtoroj

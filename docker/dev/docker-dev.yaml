@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     environment:
       - LIQUIBASE=uea-liquibase
+      - DB_HOST=mysql-server
+      - DB_PASSWORD=u34p4ss
     volumes:
       - ../../:/app
     links:

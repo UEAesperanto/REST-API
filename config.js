@@ -4,6 +4,7 @@ module.exports = {
   'idMembrecgrupo': 2,
   'idAldonaMembrecgrupo': 3,
   'idJunajGrupoj': 4,
+  'idBazaMembreco': 1,
 
   /*ID de permesoj en  tabelo adminrajto*/
   'idAdministranto': 1,

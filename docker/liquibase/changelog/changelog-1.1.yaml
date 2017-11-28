@@ -1,0 +1,34 @@
+## Enmetita kelkajn tabelojn kiuj devus esti en 1.0 sed estos ĉi tie
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: Ana Ribeiro
+      changes:
+        - renameColumn:
+            columnDataType: int
+            newColumnName: idGrupo
+            oldColumnName: id
+            tableName: ref_grupo_grupa_kategorio
+        - renameColumn:
+            columnDataType: varchar(255)
+            newColumnName: valuto
+            oldColumnName: nomoLoka
+            tableName: lando
+        - insert:
+            tableName: ref_grupo_grupa_kategorio
+            columns:
+              - column:
+                  name: idGrupo
+                  value: 1
+              - column:
+                  name: idGrupaKategorio
+                  value: 2
+        - insert:
+            tableName: grupa_kategorio
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: nomo
+                  value: Laborgrupo

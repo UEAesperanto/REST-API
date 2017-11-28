@@ -7,16 +7,25 @@ var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
 var Peranto = require('../models/peranto');
+var jwt  = require('jsonwebtoken');
+var config = require('../config');
 
 chai.use(chaiHttp);
 describe('Peranto', function() {
+    var token = '';
+
     beforeEach( function(done) { //Before each test we empty the database
         var query = util.format('DELETE FROM `peranto`');
-        db.mysqlExec(query).then(function(result){
-            done();
-        })
-    });
+        db.mysqlExec(query);
 
+        var administranto = {
+          id: 1,
+          uzantnomo: 'nomo',
+          permesoj: [1]
+        };
+        token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+        done();
+    });
 
     describe('POST /perantoj', function () {
 

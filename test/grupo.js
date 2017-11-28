@@ -6,10 +6,24 @@ var db = require('../modules/db');
 var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
+var jwt  = require('jsonwebtoken');
+var config = require('../config');
 var Grupo = require('../models/grupo');
+
 
 chai.use(chaiHttp);
 describe('Grupoj', function() {
+    var token = '';
+
+    beforeEach(function(done){
+      var administranto = {
+        id: 1,
+        uzantnomo: 'nomo',
+        permesoj: [1]
+      };
+      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+      done();
+    });
     describe('GET /grupoj sen grupoj en la sistemo', function(){
       before( function(done) { //Before each test we empty the database
         var query = util.format('DELETE FROM `grupo`');
@@ -94,8 +108,6 @@ describe('Grupoj', function() {
    });
 
    describe('GET grupoj/:id/anoj', function(){
-     var token = '';
-
      before(function (done) {
          var query = 'INSERT INTO grupo (id) VALUES (2);';
          var query1 = 'INSERT INTO grupa_kategorio () VALUES(1, "laboro");';
@@ -105,13 +117,6 @@ describe('Grupoj', function() {
          db.mysqlExec(query1);
          db.mysqlExec(query2);
 
-         var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-         chai.request(server)
-         .post('/admin/ensaluti')
-         .send(uzanto)
-         .end(function (err, res) {
-           token = res.body.token;
-         });
          done();
      });
 
@@ -145,8 +150,6 @@ describe('Grupoj', function() {
    });
 
    describe('POST /grupoj/:id/anoj', function(){
-     var token = '';
-
      before(function (done) {
          var query = [];
          query.push('INSERT INTO grupo (id) VALUES (10);');
@@ -165,12 +168,6 @@ describe('Grupoj', function() {
          }
 
          var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-         chai.request(server)
-         .post('/admin/ensaluti')
-         .send(uzanto)
-         .end(function (err, res) {
-           token = res.body.token;
-         });
          done();
      });
 
@@ -218,19 +215,6 @@ describe('Grupoj', function() {
 
    describe('POST /grupoj', function(){
 
-       var token = '';
-
-       before(function (done) {
-           var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-           chai.request(server)
-               .post('/admin/ensaluti')
-               .send(uzanto)
-               .end(function (err, res) {
-                   token = res.body.token;
-               });
-               done();
-       });
-
        it('it should NOT POST a grupo without token', function (done) {
 
            var grupo = {mallongigilo: 'mallongigilo', nomo: 'nomo', priskribo: 'priskribo'}
@@ -268,20 +252,6 @@ describe('Grupoj', function() {
 
 
     describe('PUT /grupoj', function () {
-        var token = '';
-
-        before(function (done) {
-            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-            chai.request(server)
-                .post('/admin/ensaluti')
-                .send(uzanto)
-                .end(function (err, res) {
-                    token = res.body.token;
-                });
-                done();
-
-        });
-
 
         it('it should UPDATE a grupoj', function (done) {
 
@@ -322,19 +292,6 @@ describe('Grupoj', function() {
 
 
     describe('DELETE /grupoj', function () {
-        var token = '';
-
-        before(function (done) {
-            var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-            chai.request(server)
-                .post('/admin/ensaluti')
-                .send(uzanto)
-                .end(function (err, res) {
-                    token = res.body.token;
-                });
-                done();
-
-        });
 
         it('it should DELETE a grupoj', function (done) {
             Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {

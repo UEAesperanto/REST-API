@@ -3,7 +3,7 @@ var db = require('../modules/db');
 
 var _landoNull = function(){
   return {
-    nomoLoka : null,
+    valuto : null,
     radikoEo : null,
     finajxoEo: null,
     landkodo : null
@@ -21,9 +21,9 @@ var _create = function(obj){
 
 var _insert = function(lando){
   var query = util.format(
-  'INSERT INTO lando (nomoLoka, radikoEO, finajxoEO, landkodo)\
+  'INSERT INTO lando (valuto, radikoEO, finajxoEO, landkodo)\
    VALUES ("%s", "%s", "%s", "%s");',
-  lando.nomoLoka, lando.radikoEo, lando.finajxoEo, lando.landkodo);
+  lando.valuto, lando.radikoEo, lando.finajxoEo, lando.landkodo);
   return db.mysqlExec(query);
 }
 

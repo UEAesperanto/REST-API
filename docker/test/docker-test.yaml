@@ -27,6 +27,7 @@ services:
       - DB_PASSWORD=u34p4ss
       - DB_HOST=mysql-server
       - DB_PORT=3307
+      - MEDIO=MOCK
     links:
       - mysql:mysql-server
     depends_on:

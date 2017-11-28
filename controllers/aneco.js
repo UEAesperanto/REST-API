@@ -26,8 +26,7 @@ var _getKotizoj = function(req, res){
    POST /grupo/membrecoj/:id/kotizoj
 */
 var _postKotizo = function(req, res){
-  Aneco.insertKotizo(req.body.idLando, req.body.prezo, req.body.monero, req.params.id,
-                req.body.junaRabato)
+  Aneco.insertKotizo(req.body.idLando, req.body.prezo, req.params.id, req.body.junaRabato)
              .then(function(sucess) {
                     if(sucess) {
                       res.status(201).send(sucess);

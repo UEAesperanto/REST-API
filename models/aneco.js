@@ -1,11 +1,11 @@
 var util = require('util');
 var db = require('../modules/db');
 
-var _insertKotizo = function(idLando, prezo, monero, idGrupo, junaRabato) {
+var _insertKotizo = function(idLando, prezo, idGrupo, junaRabato) {
   var query = util.format('INSERT INTO `aneckotizo`\
-                           (idLando, prezo, monero, idGrupo, junaRabato)\
-                           VALUES (%s, %s, "%s", %s, %s);',
-                          idLando, prezo, monero, idGrupo, junaRabato);
+                           (idLando, prezo, idGrupo, junaRabato)\
+                           VALUES (%s, %s, %s, %s);',
+                          idLando, prezo, idGrupo, junaRabato);
 
   query = query.replace(/undefined/g, 'NULL');
   query = query.replace(/"NULL"/g, 'NULL');

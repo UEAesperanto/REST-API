@@ -22,7 +22,6 @@ var _getGrupoj = function(req, res){
   });
 }
 
-
 /*
   GET /grupoj/kategorioj
 */
@@ -84,7 +83,6 @@ var _getGrupojKat = function(req, res){
   });
 }
 
-
 /*
    GET /grupo/laboroj/:id/anoj
 */
@@ -145,7 +143,6 @@ var _postAneco = function(req, res) {
              res.status(403).send({message: 'Vi ne rajtas membrigi\
                                             iun en tiu grupo'});
           }
-
         });
       }
     });

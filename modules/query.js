@@ -6,8 +6,16 @@ function _search(query) {
           return false;
         }
       } else {
-        if(query[i] != element[i]) {
-          return false;
+        if(element[i] instanceof Buffer) {
+          console.log(i, query[i], element[i]);
+          var el = parseInt(element[i].toString('hex'));
+          if(query[i] != el) {
+            return false;
+          }
+        } else {
+          if(query[i] != element[i]) {
+            return false;
+          }
         }
       }
     }

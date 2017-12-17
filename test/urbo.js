@@ -23,8 +23,8 @@ describe('Urboj', function() {
            .get('/urboj')
            .end((err, res) => {
                res.should.have.status(200);
+               done();
            });
-           done();
      });
    });
 });

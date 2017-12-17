@@ -58,21 +58,20 @@ var _updateKotizo = function(req, res){
   UPDATE /grupo/anecoj/:id
 */
 var _aprobiAnecon = function(req, res){
-  console.log(req.body.retposxto);
   Aneco.updateAneco(req.params.id, 'aprobita', 1).then(
     function(sucess) {
       if (sucess) {
         if(req.body.retposxto){
           var html = util.format(
                  'Estimata uzanto, <br><br>\
-                  Via aneco por %s en UEA/TEJO estis konfirmita. \
+                  Via peto por %s en UEA/TEJO estis aprobita. \
                   En kazo de duboj, kontaktu info@uea.org. \
                   <br><br>Kore,<br><br>\
                   La UEA-Teamo', req.body.anecnomo);
           var mailOptions = {
               from: 'UEA',
               to: req.body.retposxto,
-              subject: 'Aneco konfirmita',
+              subject: 'Peto aprobita',
               html: html
             }
           mail.sendiRetmesagxo(mailOptions);

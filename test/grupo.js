@@ -10,8 +10,8 @@ var jwt  = require('jsonwebtoken');
 var config = require('../config');
 var Grupo = require('../models/grupo');
 
-
 chai.use(chaiHttp);
+
 describe('Grupoj', function() {
     var token = '';
 
@@ -24,6 +24,7 @@ describe('Grupoj', function() {
       token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
       done();
     });
+
     describe('GET /grupoj sen grupoj en la sistemo', function(){
       before( function(done) { //Before each test we empty the database
         var query = util.format('DELETE FROM `grupo`');
@@ -37,8 +38,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(0);
+                   done();
                });
-               done();
          });
 
          it('it should GET all the grupoj with body', function(done){
@@ -48,8 +49,8 @@ describe('Grupoj', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equal(1);
+                   done();
                });
-               done();
          });
 
         it('it should GET a grupoj with a given id', function (done) {
@@ -65,8 +66,8 @@ describe('Grupoj', function() {
                         res.body[0].mallongigilo.should.equal('mallongigilo');
                         res.body[0].nomo.should.equal('nomo');
                         res.body[0].priskribo.should.equal('priskribo');
+                        done();
                     })
-                    done();
             });
         })
 
@@ -75,8 +76,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/1/sub')
                .end((err, res) => {
                    res.should.have.status(200);
+                   done();
                });
-               done();
          });
 
          it('it should GET all the grupoj/membrecoj with body', function(done){
@@ -84,8 +85,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/4/sub')
                .end((err, res) => {
                    res.should.have.status(200);
+                   done();
                });
-               done();
          });
 
          it('it should GET all the aldonaj membrecoj with body', function(done){
@@ -93,8 +94,8 @@ describe('Grupoj', function() {
                .get('/grupoj/kategorioj/5/sub')
                .end((err, res) => {
                    res.should.have.status(200);
+                   done();
                });
-               done();
          });
 
          it('it should GET all the grupoj/:id/kotizoj with body', function(done){
@@ -102,7 +103,7 @@ describe('Grupoj', function() {
                .get('/grupoj/1/kotizoj')
                .end((err, res) => {
                    res.should.have.status(200);
-                done();
+                   done();
             });
           });
    });
@@ -179,7 +180,7 @@ describe('Grupoj', function() {
                res.should.have.status(201);
            });
            done();
-     })
+     });
 
      it('it should POST all the grupoj/:id/anoj for krommembrecgrupo', function(done){
        chai.request(server)
@@ -189,7 +190,7 @@ describe('Grupoj', function() {
                res.should.have.status(201);
            });
            done();
-     })
+     });
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
        chai.request(server)
@@ -200,7 +201,7 @@ describe('Grupoj', function() {
                res.should.have.status(201);
            });
            done();
-     })
+     });
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
        chai.request(server)
@@ -210,7 +211,7 @@ describe('Grupoj', function() {
                res.should.have.status(403);
            });
            done();
-     })
+     });
    });
 
    describe('POST /grupoj', function(){
@@ -224,7 +225,6 @@ describe('Grupoj', function() {
                .send(grupo)
                .end((err, res) => {
                     var error = JSON.parse(err.response.error.text);
-
                     error.success.should.equal(false);
                     error.message.should.equal("Sen ĵetono (token).");
                     res.should.have.status(400);
@@ -250,11 +250,8 @@ describe('Grupoj', function() {
 
    });
 
-
     describe('PUT /grupoj', function () {
-
         it('it should UPDATE a grupoj', function (done) {
-
             Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .put('/grupoj/' + success.insertId)
@@ -267,11 +264,9 @@ describe('Grupoj', function() {
                     })
                     done();
             });
-
-        })
+        });
 
         it('it should NOT UPDATE a grupoj', function (done) {
-
             Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .put('/grupoj/' + success.insertId)
@@ -286,13 +281,10 @@ describe('Grupoj', function() {
                     })
                     done();
             });
-
-        })
-    })
-
+        });
+    });
 
     describe('DELETE /grupoj', function () {
-
         it('it should DELETE a grupoj', function (done) {
             Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
@@ -311,7 +303,6 @@ describe('Grupoj', function() {
                     .delete('/grupoj/' + success.insertId)
                     .end((err, res) => {
                         var error = JSON.parse(err.response.error.text);
-
                         error.success.should.equal(false);
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
@@ -319,6 +310,6 @@ describe('Grupoj', function() {
                     })
                     done();
             });
-        })
-    })
+        });
+    });
 });

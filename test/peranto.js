@@ -38,8 +38,8 @@ describe('Peranto', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
+                    done();
                 })
-                done();
         });
 
         var peranto = {publikaNomo: 'publikaNomo', retadreso: 'retadreso', idLando: '43'};
@@ -50,14 +50,13 @@ describe('Peranto', function() {
                 .send(peranto)
                 .end((err, res) => {
                     var error = JSON.parse(err.response.error.text);
-
                     error.success.should.equal(false);
                     error.message.should.equal("Sen ĵetono (token).");
                     err.should.have.status(400);
                     res.should.have.status(400);
                     res.body.message.should.equal("Sen ĵetono (token).");
+                    done();
                 });
-                done();
         });
 
 
@@ -68,8 +67,8 @@ describe('Peranto', function() {
                 .send(peranto)
                 .end((err, res) => {
                     res.should.have.status(201);
+                    done();
                   });
-            done();
         })
     });
 
@@ -84,8 +83,8 @@ describe('Peranto', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.length.should.equals(0);
+                    done();
                 });
-                done();
         });
 
 
@@ -100,8 +99,8 @@ describe('Peranto', function() {
                .end((err, res) => {
                    res.should.have.status(200);
                    res.body.length.should.equals(2);
+                   done();
                });
-               done();
          });
 
    });
@@ -120,8 +119,8 @@ describe('Peranto', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                })
-                done();
+                    done();
+                });
         });
 
         it('it should UPDATE a peranto with token', function (done) {
@@ -133,10 +132,10 @@ describe('Peranto', function() {
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                    })
-                    done();
+                        done();
+                    });
             });
-        })
+        });
 
         it('it should NOT UPDATE a peranto without token', function (done) {
             Peranto.insert('publikaNomo', 'retadreso', '34').then(function (success) {
@@ -145,16 +144,15 @@ describe('Peranto', function() {
                     .send({kampo: 'publikaNomo', valoro: 'new publikaNomo'})
                     .end((err, res) => {
                         var error = JSON.parse(err.response.error.text);
-
                         error.success.should.equal(false);
                         error.message.should.equal("Sen ĵetono (token).");
                         err.should.have.status(400);
                         res.should.have.status(400);
                         res.body.message.should.equal("Sen ĵetono (token).");
-                    })
-                    done();
+                        done();
+                    });
             });
-        })
+        });
     });
 
     describe('DELETE /perantoj', function () {
@@ -169,8 +167,8 @@ describe('Peranto', function() {
                 .send(uzanto)
                 .end(function (err, res) {
                     token = res.body.token;
-                })
-                done();
+                    done();
+                });
         });
 
         it('it should NOT DELETE a peranto without token', function (done) {
@@ -179,15 +177,14 @@ describe('Peranto', function() {
                     .delete('/perantoj/' + success.insertId)
                     .end((err, res) => {
                         var error = JSON.parse(err.response.error.text);
-
                         error.success.should.equal(false);
                         error.message.should.equal("Sen ĵetono (token).");
                         err.should.have.status(400);
                         res.should.have.status(400);
                         res.body.message.should.equal("Sen ĵetono (token).");
-                    })
-                    done();
-            })
+                        done();
+                    });
+            });
         });
 
         it('it should DELETE a peranto', function (done) {
@@ -197,9 +194,9 @@ describe('Peranto', function() {
                     .set('x-access-token', token)
                     .end((err, res) => {
                         res.should.have.status(204);
-                    })
-                    done();
-            })
-        })
+                        done();
+                    });
+            });
+        });
     });
 });

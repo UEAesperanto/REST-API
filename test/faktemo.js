@@ -26,8 +26,8 @@ describe('Faktemoj', function() {
                res.should.have.status(200);
                res.body.should.be.a('array');
                res.body.length.should.be.eql(0);
+               done();
            });
-           done();
      });
 
      it('it should GET all the faktemoj with body', function(done){
@@ -41,8 +41,8 @@ describe('Faktemoj', function() {
                res.should.have.status(200);
                res.body.should.be.a('array');
                res.body.length.should.be.eql(0);
+               done();
            });
-           done();
      });
    });
 });

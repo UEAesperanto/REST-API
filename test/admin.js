@@ -32,8 +32,8 @@ describe('Admin', function() {
            .end((err, res) => {
                res.should.have.status(200);
                res.body.should.have.property('agordita', false);
+               done();
            });
-           done();
        });
      });
 
@@ -47,8 +47,8 @@ describe('Admin', function() {
            .end(function(err, res){
                res.should.have.status(201);
                res.body.should.have.property('message');
+               done();
           });
-           done();
         });
 
         it('GET Admin/Agordita kun administrantoj en la sistemo', function(done){
@@ -57,8 +57,8 @@ describe('Admin', function() {
              .end((err, res) => {
                  res.should.have.status(200);
                  res.body.should.have.property('agordita', true);
+                 done();
              });
-             done();
          });
 
          it ('Enmeti iun kun administrantoj en la sistemo', function(done){
@@ -77,8 +77,8 @@ describe('Admin', function() {
                     .send(uzanto2)
                     .end(function(err, res){
                         res.should.have.status(201);
+                        done();
                    });
-                   done();
              });
            });
 
@@ -91,8 +91,8 @@ describe('Admin', function() {
               .end(function(err, res){
                   res.should.have.status(200);
                   res.body.should.have.property('token');
+                  done();
                 });
-                done();
           });
 
           it('ensaluti kun malkorekta pasvorto', function(done){
@@ -103,8 +103,8 @@ describe('Admin', function() {
               .end(function(err, res){
                   res.should.have.status(401);
                   res.body.should.have.property('message', 'Malkorekta pasvorto');
+                  done();
              });
-             done();
           });
 
           it('ensaluti kun malkorekta uzantnomo', function(done){
@@ -115,8 +115,8 @@ describe('Admin', function() {
               .end(function(err, res){
                   res.should.have.status(401);
                   res.body.should.have.property('message', 'La uzantnomo ne ekzistas');
+                  done();
              });
-             done();
           });
     });
 });

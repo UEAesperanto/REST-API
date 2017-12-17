@@ -23,8 +23,8 @@ describe('Kongresoj', function() {
            .get('/kongresoj')
            .end((err, res) => {
                res.should.have.status(200);
+               done();
            });
-           done();
      });
 
       it('it should GET all the kromaj kongresoj', function(done){
@@ -32,8 +32,8 @@ describe('Kongresoj', function() {
             .get('/kongresoj/1/kromaj')
             .end((err, res) => {
                 res.should.have.status(200);
+                done();
             });
-            done();
        });
 
 /*       it('it should GET all the aligxintoj to kongresoj kkkk', function(done){
@@ -51,8 +51,8 @@ describe('Kongresoj', function() {
               .get('/kongresoj/1/aligxkotizoj')
               .end((err, res) => {
                   res.should.have.status(200);
+                  done();
               });
-              done();
          });
 
          it('it should GET all the programeroj to kongresoj', function(done){
@@ -60,8 +60,8 @@ describe('Kongresoj', function() {
                .get('/kongresoj/1/programeroj')
                .end((err, res) => {
                    res.should.have.status(200);
+                   done();
                });
-               done();
           });
 
           it('it should GET all the programejoj to kongresoj', function(done){
@@ -69,8 +69,8 @@ describe('Kongresoj', function() {
                 .get('/kongresoj/1/programejoj')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    done();
                 });
-                done();
            });
 
            it('it should GET all the programekategorioj', function(done){
@@ -78,8 +78,8 @@ describe('Kongresoj', function() {
                  .get('/kongresoj/programkategorioj')
                  .end((err, res) => {
                      res.should.have.status(200);
+                     done();
                  });
-                 done();
             });
     });
 });

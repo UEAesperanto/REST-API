@@ -23,7 +23,7 @@ describe('Asocioj', function() {
            .get('/asocioj')
            .end((err, res) => {
                res.should.have.status(200);
-             done();
+               done();
            });
      });
 
@@ -36,8 +36,8 @@ describe('Asocioj', function() {
            .send(user)
            .end((err, res) => {
                res.should.have.status(200);
+               done();
            });
-           done();
      });
    });
 });

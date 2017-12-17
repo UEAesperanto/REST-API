@@ -41,8 +41,8 @@ describe('Landoj', function() {
            .end((err, res) => {
                res.should.have.status(200);
                res.body.length.should.equals(3);
+               done();
            });
-           done();
      });
 
      it('it should GET all the landoj with body', function(done){
@@ -51,8 +51,8 @@ describe('Landoj', function() {
            .end((err, res) => {
                res.should.have.status(200);
                res.body.length.should.equals(0)
+               done();
            });
-           done();
      });
    });
 
@@ -72,8 +72,8 @@ describe('Landoj', function() {
               res.body[0].radikoEo.should.equal('radikoEo');
               res.body[0].should.have.property('landkodo');
               res.body[0].landkodo.should.equal('landKodo');
+              done();
           });
-          done();
       });
     });
 
@@ -87,8 +87,8 @@ describe('Landoj', function() {
              res.body.should.be.a('object');
              res.should.have.status(200);
              response.should.equal('{}');
+             done();
          });
-         done();
      });
    });
   });
@@ -103,14 +103,12 @@ describe('Landoj', function() {
          .send(lando)
          .end(function(err, res){
              var error = JSON.parse(err.response.error.text);
-
              error.success.should.equal(false);
              error.message.should.equal("Sen ĵetono (token).");
              res.should.have.status(400);
              err.should.have.status(400);
-
+             done();
          });
-         done();
    });
 
       it('it should POST a lando - with token', function (done) {
@@ -127,9 +125,8 @@ describe('Landoj', function() {
                   res.body.should.have.property('finajxoEo');
                   res.body.valuto.should.equal('valuto');
                   res.body.finajxoEo.should.equal('finajxoEo');
+                  done();
               });
-              done();
-
       });
  });
 
@@ -149,9 +146,8 @@ describe('Landoj', function() {
                      error.message.should.equal("Sen ĵetono (token).");
                      res.should.have.status(400);
                      err.should.have.status(400);
-
+                     done();
                  });
-                 done();
          })
      });
 
@@ -166,12 +162,10 @@ describe('Landoj', function() {
                         .end(function (err, res) {
                             res.should.have.status(200);
                             res.body.message.should.equal("Ok");
+                            done();
                         });
-                        done();
-                })
+                });
         });
-
-
     });
 
     describe('PUT /landoj/:id', function () {
@@ -190,10 +184,9 @@ describe('Landoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-
+                        done();
                     });
-                    done();
-            })
+            });
         });
 
 
@@ -209,9 +202,9 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                        done();
                     });
-                    done();
-            })
+            });
         });
 
         it('it should UPDATE a lando radikoEo - with token', function (done) {
@@ -226,9 +219,9 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                        done();
                     });
-                    done();
-            })
+            });
         });
 
         it('it should UPDATE a lando finajxoEo - with token', function (done) {
@@ -243,9 +236,9 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                        done();
                     });
-                    done();
-            })
+            });
         });
 
         it('it should UPDATE a lando landkodo - with token', function (done) {
@@ -260,10 +253,9 @@ describe('Landoj', function() {
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                        done();
                     });
-                    done();
-            })
+            });
         });
-    })
-
+    });
 });

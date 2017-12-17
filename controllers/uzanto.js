@@ -9,6 +9,7 @@ var config = require('../config.js');
 /*models*/
 var Uzanto = require('../models/uzanto');
 var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
+var Grupo = require('../models/grupo');
 
 /*modules*/
 var query = require('../modules/query');
@@ -21,7 +22,6 @@ var mail = require('../modules/mail');
 var _ensaluti = function(req, res) {
   UzantoAuxAsocio.findUzantnomo(req.body.uzantnomo).then(
     function(sucess) {
-
       if (sucess.length == 0) {
         res.status(401).send({message: 'La uzantnomo ne ekzistas'});
       }
@@ -49,21 +49,20 @@ var _ensaluti = function(req, res) {
   GET /uzantoj/:id
 */
 var _getUzanto = function(req, res){
-  Uzanto.find(req.params.id).then(function(sucess){
+  Uzanto.find('id', req.params.id).then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);
   });
 }
 
 var _postUzanto = function(req, res){
-
    UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto, req.body.ueakodo).then(
     function (result){
       if (result) {
         Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
                       req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
                       req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
-                      req.body.teloficejo, req.body.telportebla,  req.body.tttpagxo).then(
+                      req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
               function(success) {
                 var html = util.format(
                        'Estimata uzanto, <br><br>\
@@ -87,7 +86,9 @@ var _postUzanto = function(req, res){
             );
       }
       else {
-        res.status(400).send({message: "La uzantnomo jam ekzistas je nia sistemo"});
+        Uzanto.find('retposxto', req.body.uzantnomo).then(function(result) {
+          res.status(200).send({id: result.id});
+        });
       }
     });
 }
@@ -123,8 +124,7 @@ var _forgesisPasvorton = function(req, res) {
         else {
           res.status(400).send({message: "Ne ekzistas uzantoj kun la indikitaj datumoj je la sistemo"});
         }
-      }
-    );
+      });
 }
 
 var _updateUzanto = function(req, res){
@@ -150,10 +150,52 @@ var _updateUzanto = function(req, res){
   });
 }
 
+var _cxuMembro = function(req, res) {
+  if(!req.params.retposxto) {
+    res.status(200).send({membroID: false});
+  }
+
+  Uzanto.find('retposxto', req.params.retposxto).then(
+    function(sucess){
+      //console.log(sucess);
+      if(sucess && sucess.length >= 1) {
+        var id = sucess[0].id;
+        Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
+            var grupoj = sucess;
+            var promises = [];
+            for(var i = 0; i < grupoj.length; i++) {
+              promises.push(Grupo.findAnoj(grupoj[i].id));
+            }
+            Promise.all(promises).then(function(values){
+              for(var i = 0; i < values.length; i++) {
+                 var ano = values[i].filter(query.search({idAno:id}));
+                 if(ano.length >= 1) {
+                   var result = [{uzantoID: id,
+                                 membro: true,
+                                 idGrupo: ano[0].idGrupo,
+                                 komencdato: ano[0].komencdato,
+                                 dumviva: parseInt(ano[0].dumviva.toString('hex')),
+                                 aprobita: parseInt(ano[0].aprobita.toString('hex')),
+                                 findato: ano[0].findato}];
+                   result = result.filter(query.search(req.query));
+                   res.status(200).send(result);
+                   break;
+                  }
+              }
+              res.status(200).send({uzantoID: id, membro: false});
+            });
+        });
+      } else {
+        res.status(200).send({uzantoID: -1, membro: false});
+      }
+    });
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
   getUzanto: _getUzanto,
   postUzanto: _postUzanto,
   updateUzanto: _updateUzanto,
-  ensaluti: _ensaluti
+  ensaluti: _ensaluti,
+  cxuMembro: _cxuMembro
 }

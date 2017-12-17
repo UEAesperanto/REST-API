@@ -15,14 +15,20 @@ routerAuth.use(auth.authorizeAdminJuna);
 
 // Uzanto routes
 app.use('/', router);
+
 app.route('/')
     .post(uzanto.postUzanto);
+
 app.route('/:id(\\d+)/')
     .get(routerAuth, uzanto.getUzanto)
     .put(routerAuth, uzanto.updateUzanto);
 
+app.route('/cxuMembro/:retposxto')
+    .get(uzanto.cxuMembro);
+
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
+
 router.route('/forgesisPasvorton')
     .post(uzanto.forgesisPasvorton);
 

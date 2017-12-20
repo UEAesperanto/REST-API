@@ -7,7 +7,6 @@ function _search(query) {
         }
       } else {
         if(element[i] instanceof Buffer) {
-          console.log(i, query[i], element[i]);
           var el = parseInt(element[i].toString('hex'));
           if(query[i] != el) {
             return false;

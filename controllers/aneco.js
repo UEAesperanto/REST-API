@@ -58,7 +58,7 @@ var _updateKotizo = function(req, res){
   UPDATE /grupo/anecoj/:id
 */
 var _aprobiAnecon = function(req, res){
-  Aneco.updateAneco(req.params.id, 'aprobita', 1).then(
+  Aneco.updateAneco(req.params.id, 'aprobita', true).then(
     function(sucess) {
       if (sucess) {
         if(req.body.retposxto){

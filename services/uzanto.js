@@ -19,7 +19,7 @@ app.use('/', router);
 app.route('/')
     .post(uzanto.postUzanto);
 
-app.route('/:id(\\d+)/')
+app.route('/admin/:id(\\d+)/')
     .get(routerAuth, uzanto.getUzanto)
     .put(routerAuth, uzanto.updateUzanto);
 

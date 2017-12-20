@@ -39,7 +39,7 @@ var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
 }
 
 var _updateAneco = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `aneco` SET `%s` = "%s" WHERE `id` = %s;',
+  var query = util.format('UPDATE `aneco` SET `%s` = %s WHERE `id` = %s;',
                            kampo, valoro, id);
   return db.mysqlExec(query);
 }

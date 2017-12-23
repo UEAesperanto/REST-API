@@ -34,13 +34,17 @@ app.route('/:id(\\d+)')
     .put(routerAuth, grupo.updateGrupo);
 
 var routerAuthSen = express.Router();
+
 routerAuthSen.use(auth.authorizeSenKondicxo);
 router.route('/:id(\\d+)/anoj')
     .get(routerAuthSen, grupo.getAnoj)
     .post(routerAuthSen, grupo.postAneco);
 
 router.route('/anecoj/:id/aprobi')
-  .post(routerAuth, aneco.aprobiAnecon);
+    .put(routerAuth, aneco.aprobiAnecon);
+
+router.route('/anecoj/:id')
+    .delete(routerAuth, aneco.deleteAneco);
 
 router.route('/:id(\\d+)/kotizoj')
     .get(aneco.getKotizoj)

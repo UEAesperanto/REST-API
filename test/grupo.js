@@ -67,7 +67,7 @@ describe('Grupoj', function() {
                         res.body[0].nomo.should.equal('nomo');
                         res.body[0].priskribo.should.equal('priskribo');
                         done();
-                    })
+                    });
             });
         })
 
@@ -126,17 +126,17 @@ describe('Grupoj', function() {
            .get('/grupoj/1/anoj')
            .end((err, res) => {
                res.should.have.status(403);
+               done();
            });
-           done();
-     })
+     });
 
      it('it should GET all the grupoj/:id/anoj', function(done){
        chai.request(server)
            .get('/grupoj/2/anoj')
            .end((err, res) => {
                res.should.have.status(200);
+               done();
            });
-           done();
      })
 
      it('it should GET a grupoj anoj', function (done) {
@@ -145,9 +145,9 @@ describe('Grupoj', function() {
              .set('x-access-token', token)
              .end((err, res) => {
                res.should.have.status(200);
-              })
-              done();
-     })
+               done();
+             });
+     });
    });
 
    describe('POST /grupoj/:id/anoj', function(){
@@ -156,11 +156,11 @@ describe('Grupoj', function() {
          query.push('INSERT INTO grupo (id) VALUES (10);');
          query.push('INSERT INTO grupo (id) VALUES (11);');
 
-         query.push('INSERT INTO grupa_kategorio () VALUES(4, "membreco");');
-         query.push('INSERT INTO grupa_kategorio () VALUES(5, "krommembreco");');
+         query.push('INSERT INTO grupa_kategorio () VALUES(2, "membreco");');
+         query.push('INSERT INTO grupa_kategorio () VALUES(3, "krommembreco");');
 
-         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (10, 4);');
-         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (11, 5);');
+         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (10, 2);');
+         query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (11, 3);');
 
          query.push( 'INSERT INTO uzanto (id, personanomo) VALUES (4,"Ana");');
 
@@ -178,8 +178,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
+               done();
            });
-           done();
      });
 
      it('it should POST all the grupoj/:id/anoj for krommembrecgrupo', function(done){
@@ -188,8 +188,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
+               done();
            });
-           done();
      });
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -199,8 +199,8 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(201);
+               done();
            });
-           done();
      });
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
@@ -209,8 +209,44 @@ describe('Grupoj', function() {
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(403);
+               done();
            });
-           done();
+     });
+
+     it('it should aprobi anecojn', function(done){
+       chai.request(server)
+           .post('/grupoj/1/anoj')
+           .set('x-access-token', token)
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(201);
+                chai.request(server)
+                  .put('/grupoj/anecoj/' + res.body.id + '/aprobi')
+                  .set('x-access-token', token)
+                  .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('message');
+                    res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                    done();
+                  });
+          });
+     });
+
+     it('it should delete anecojn', function(done){
+       chai.request(server)
+           .post('/grupoj/1/anoj')
+           .set('x-access-token', token)
+           .send({"idAno":4})
+           .end((err, res) => {
+               res.should.have.status(201);
+                chai.request(server)
+                  .delete('/grupoj/anecoj/' + res.body.id)
+                  .set('x-access-token', token)
+                  .end((err, res) => {
+                    res.should.have.status(204);
+                    done();
+                  });
+          });
      });
    });
 
@@ -229,9 +265,9 @@ describe('Grupoj', function() {
                     error.message.should.equal("Sen ĵetono (token).");
                     res.should.have.status(400);
                     err.should.have.status(400);
-                })
-                done();
-       })
+                    done();
+                });
+       });
 
        it('it should POST a grupoj', function (done) {
            var grupo = {mallongigilo: 'mallongigilo', nomo: 'nomo', priskribo: 'priskribo'}
@@ -244,10 +280,9 @@ describe('Grupoj', function() {
                     res.body.should.have.property('insertId');
                     res.body.should.have.property('affectedRows');
                     res.body.affectedRows.should.equal(1);
-                })
-                done();
-       })
-
+                    done();
+                });
+       });
    });
 
     describe('PUT /grupoj', function () {
@@ -261,8 +296,8 @@ describe('Grupoj', function() {
                         res.should.have.status(200);
                         res.body.should.have.property('message');
                         res.body.message.should.equal('Ĝisdatigo sukcese farita');
-                    })
-                    done();
+                        done();
+                    });
             });
         });
 
@@ -273,13 +308,12 @@ describe('Grupoj', function() {
                     .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
                     .end((err, res) => {
                         var error = JSON.parse(err.response.error.text);
-
                         error.success.should.equal(false);
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
+                        done();
                     })
-                    done();
             });
         });
     });
@@ -292,8 +326,8 @@ describe('Grupoj', function() {
                     .set('x-access-token', token)
                     .end((err, res) => {
                         res.should.have.status(204);
-                    })
-                    done();
+                        done();
+                    });
             });
         })
 
@@ -307,8 +341,8 @@ describe('Grupoj', function() {
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
                         err.should.have.status(400);
-                    })
-                    done();
+                        done();
+                    });
             });
         });
     });

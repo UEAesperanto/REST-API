@@ -109,7 +109,7 @@ var insertAneco = function(req, res) {
                req.body.idFako, req.body.observoj, 0).then(
                  function(result) {
                    if (result) {
-                     res.status(201).send({message: 'aneco sukcese registrita'});
+                     res.status(201).send({message: 'aneco sukcese registrita', id: result.insertId});
                    }
                    else {
                      res.status(400).send({message: 'Kontrolu viajn parametrojn'});

@@ -63,7 +63,7 @@ var _aprobiAnecon = function(req, res){
       if (sucess) {
         if(req.body.retposxto){
           var html = util.format(
-                 'Estimata uzanto, <br><br>\
+                 'Estimata, <br><br>\
                   Via peto por %s en UEA/TEJO estis aprobita. \
                   En kazo de duboj, kontaktu info@uea.org. \
                   <br><br>Kore,<br><br>\
@@ -83,9 +83,37 @@ var _aprobiAnecon = function(req, res){
   });
 }
 
+var _deleteAneco = function(req, res) {
+  Aneco.deleteAneco(req.params.id).then(
+    function(sucess) {
+      if(sucess) {
+        if(req.body.retposxto){
+          var html = util.format(
+                 'Estimata, <br><br>\
+                  Via peto por %s en UEA/TEJO estis malaprobita. \
+                  En kazo de duboj, kontaktu info@uea.org. \
+                  <br><br>Kore,<br><br>\
+                  La UEA-Teamo', req.body.anecnomo);
+          var mailOptions = {
+              from: 'UEA',
+              to: req.body.retposxto,
+              subject: 'Peto malaprobita',
+              html: html
+            }
+          mail.sendiRetmesagxo(mailOptions);
+        }
+        res.status(204).send({message: 'Ok'});
+      } else {
+        res.status(500).send({message: "Eraro en la servilo"});
+      }
+    }
+  );
+}
+
 module.exports = {
   getKotizoj: _getKotizoj,
   aprobiAnecon: _aprobiAnecon,
   postKotizo: _postKotizo,
+  deleteAneco: _deleteAneco,
   updateKotizo:  _updateKotizo
 }

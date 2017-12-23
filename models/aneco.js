@@ -44,9 +44,15 @@ var _updateAneco = function(id, kampo, valoro) {
   return db.mysqlExec(query);
 }
 
+var _deleteAneco = function(id) {
+  var query = util.format('DELETE FROM `aneco` WHERE `id` = %s ;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   insertKotizo: _insertKotizo,
   findGrupo: _findGrupo,
+  deleteAneco: _deleteAneco,
   updateKotizo: _updateKotizo,
   updateAneco: _updateAneco,
   insertAneco: _insertAneco

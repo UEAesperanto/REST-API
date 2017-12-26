@@ -27,12 +27,16 @@ var _find = function(kampo, valoro){
   if(kampo)
     var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo, \
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
-                             FROM `uzanto` JOIN `uzantoAuxAsocio` JOIN `lando` ON \
+                             FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
+                             uzanto.id = uzantoAuxAsocio.id\
+                             JOIN `lando` ON \
                              uzanto.idLando = lando.id WHERE uzanto.%s = "%s";', kampo, valoro);
   else
     var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo,\
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
-                             FROM `uzanto` JOIN `uzantoAuxAsocio` JOIN `lando` ON \
+                             FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
+                             uzanto.id = uzantoAuxAsocio.id\
+                             JOIN `lando` ON \
                              uzanto.idLando = lando.id;');
   return db.mysqlExec(query);
 }

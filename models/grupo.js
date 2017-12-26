@@ -51,7 +51,9 @@ var _insertRefKategorio = function(idGrupo, idKategorio) {
 
 var _findAnoj = function(idGrupo) {
   if(idGrupo)
-    var query = util.format("SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno\
+    var query = util.format("SELECT * FROM `uzanto` JOIN `uzantoAuxAsocio`\
+                             ON uzanto.id = uzantoAuxAsocio.id \
+                             JOIN `aneco` ON aneco.idAno\
                              = uzanto.id WHERE aneco.idGrupo = %s;", idGrupo);
   else
     var query = "SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno = uzanto.id;";

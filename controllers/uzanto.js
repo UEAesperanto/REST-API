@@ -140,6 +140,17 @@ var _updateUzanto = function(req, res){
     res.status(200).send({message: "Ĝisdatigo sukcese farita"});
   }
 
+  if((req.body.kampo == 'ueakodo') || (req.body.kampo == 'uzantnomo')) {
+    UzantoAuxAsocio.update(req.params.id, req.body.kampo, req.body.valoro).then(
+      function(sucess){
+        if(sucess) {
+          res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+        } else {
+          res.status(500).send({message: "Eraro en la servilo"});
+        }
+      });
+  }
+
   Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
     function(sucess) {
       if (sucess) {

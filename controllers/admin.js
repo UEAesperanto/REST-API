@@ -63,7 +63,7 @@ var _ensaluti = function (req, res) {
                   // kaze uzanto estas trovita kaj pasvorto estas korekta
                   // oni kreas iun token
                   var token = jwt.sign(administranto, config.sekretoJWT,
-                                       {expiresIn: 18000});
+                                       {expiresIn: "8h"});
 
                   res.status(200).send({token: token, administranto: administranto});
               });

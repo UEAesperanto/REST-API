@@ -1,7 +1,10 @@
 /*Libraries*/
 var util = require('util');
 var jwt  = require('jsonwebtoken');
-var randomstring = require("randomstring");
+var randomstring = require('randomstring');
+var multer = require('multer');
+var bodyParser = require('body-parser');
+var fs = require('fs');
 
 /*config*/
 var config = require('../config.js');
@@ -168,7 +171,6 @@ var _cxuMembro = function(req, res) {
 
   Uzanto.find('retposxto', req.params.retposxto).then(
     function(sucess){
-      //console.log(sucess);
       if(sucess && sucess.length >= 1) {
         var id = sucess[0].id;
         Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
@@ -202,8 +204,69 @@ var _cxuMembro = function(req, res) {
     });
 }
 
+var _postBildo = function(req, res) {
+  var storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          const dir = '/uzantbildoj';
+          cb(null, dir);
+        },
+        filename: function (req, file, cb) {
+          const path = 'uzantbildo' + req.params.id;
+          cb(null, path);
+        }
+    });
+
+  var upload = multer({
+                    storage: storage
+              }).single('file');
+
+  var rezulto = function(err){
+     if(err){
+       res.status(500).send({message: "Eraro en la servilo", priskribo: err});
+       return;
+      } else {
+        res.status(201).send({message: "Foto sukcese alŝutita"});
+        return;
+      }
+   }
+
+ fs.exists('/uzantbildoj', function(exists) {
+   if(exists) {
+     fs.exists('/uzantbildoj/uzantbildo' + req.params.id, function(exists) {
+      if(exists){
+        fs.unlink('/uzantbildoj/uzantbildo' + req.params.id, function(error) {
+            if (error) {
+              res.status(500).send({message: "Eraro en la servilo", priskribo: error});
+              return;
+            }
+         upload(req, res, rezulto);
+       });
+     } else {
+          upload(req, res, rezulto);
+      }
+    });
+    } else {
+      fs.mkdir('/uzantbildoj', function(error) {
+        if(error) {
+          res.status(500).send({message: "Eraro en la servilo", priskribo: error});
+          return;
+        }
+        upload(req, res, rezulto);
+      });
+    }
+  });
+}
+
+var _getBildo = function(req, res) {
+  var adreso = '/uzantbildoj/uzantbildo' + req.params.id;
+  var bitmap = fs.readFileSync(adreso);
+  res.send("data:image/png;base64," + Buffer(bitmap).toString('base64'));
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
+  postBildo: _postBildo,
+  getBildo: _getBildo,
   getUzanto: _getUzanto,
   postUzanto: _postUzanto,
   updateUzanto: _updateUzanto,

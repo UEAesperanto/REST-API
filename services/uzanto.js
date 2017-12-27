@@ -20,8 +20,12 @@ app.route('/')
     .post(uzanto.postUzanto);
 
 app.route('/admin/:id(\\d+)/')
-    .get(uzanto.getUzanto)
+    .get(routerAuth, uzanto.getUzanto)
     .put(routerAuth, uzanto.updateUzanto);
+
+app.route('/admin/:id(\\d+)/bildo')
+    .post(routerAuth, uzanto.postBildo)
+    .get(routerAuth, uzanto.getBildo);
 
 app.route('/cxuMembro/:retposxto')
     .get(uzanto.cxuMembro);

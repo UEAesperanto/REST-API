@@ -1,5 +1,4 @@
 #!/bin/bash
-cd /app
 
 #Wait Liquibase is Down!
 while ping -q -c1 liquibase > /dev/null; do

@@ -102,11 +102,11 @@ var _getLaboranoj = function(req, res){
   });
 }
 
-var insertAneco = function(req, res) {
+var insertAneco = function(req, res, aprobita) {
   Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
-               req.body.findato, req.body.dumviva, req.body.tasko,
-               req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
-               req.body.idFako, req.body.observoj, 0).then(
+                    req.body.findato, req.body.dumviva, req.body.tasko,
+                    req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
+                    req.body.idFako, req.body.observoj, aprobita).then(
                  function(result) {
                    if (result) {
                      res.status(201).send({message: 'aneco sukcese registrita', id: result.insertId});
@@ -124,20 +124,20 @@ var insertAneco = function(req, res) {
 var _postAneco = function(req, res) {
   if (req.decoded) {
       if(req.decoded.permesoj.indexOf(config.idAdministranto) > -1) {
-        insertAneco(req, res);
+        insertAneco(req, res, 1);
       }
   } else {
     //Ĉu la celata grupo estas en membrecgrupo?
     Grupo.findKategorio(config.idMembrecgrupo).then(function(result){
       var grupoj = result.filter(query.search({id:req.params.id}));
       if (grupoj.length == 1) {
-        insertAneco(req, res);
+        insertAneco(req, res, 0);
       }
       else {
         Grupo.findKategorio(config.idAldonaMembrecgrupo).then(function(result){
           var grupoj = result.filter(query.search({id:req.params.id}));
           if (grupoj.length == 1) {
-              insertAneco(req, res);
+              insertAneco(req, res, 0);
           }
           else {
              res.status(403).send({message: 'Vi ne rajtas membrigi\

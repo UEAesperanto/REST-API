@@ -54,7 +54,6 @@ var _updateKotizo = function(req, res){
   });
 }
 
-
 /*
   UPDATE /grupo/anecoj/:id
 */
@@ -111,10 +110,22 @@ var _deleteAneco = function(req, res) {
   );
 }
 
+var _updateAneco = function(req, res) {
+  Aneco.updateAneco(req.params.id, req.body.kampo, req.body.valoro).then(
+    function(sucess) {
+      if (sucess) {
+        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+      } else {
+        res.status(500).send({message: "Eraro en la servilo"});
+      }
+  });
+}
+
 module.exports = {
   getKotizoj: _getKotizoj,
   aprobiAnecon: _aprobiAnecon,
   postKotizo: _postKotizo,
   deleteAneco: _deleteAneco,
+  updateAneco:  _updateAneco,
   updateKotizo:  _updateKotizo
 }

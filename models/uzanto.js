@@ -52,9 +52,18 @@ var _update = function(id, kampo, valoro) {
   return db.mysqlExec(query);
 }
 
+var _findGrupoj = function(id) {
+  var query = util.format('SELECT aneco.*, grupo.nomo  FROM `aneco` \
+                           JOIN `uzanto` ON uzanto.id = aneco.idAno \
+                           JOIN `grupo` ON grupo.id = aneco.idGrupo \
+                           WHERE uzanto.id = %s;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   insert: _insert,
   update: _update,
+  findGrupoj:_findGrupoj,
   findForgesis: _findForgesis
 }

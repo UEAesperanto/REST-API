@@ -263,8 +263,15 @@ var _getBildo = function(req, res) {
   res.send("data:image/png;base64," + Buffer(bitmap).toString('base64'));
 }
 
+var _getGrupoj = function(req,res) {
+  Uzanto.findGrupoj(req.params.id).then(function(sucess){
+    res.status(200).send(sucess);
+  });
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
+  getGrupoj:_getGrupoj,
   postBildo: _postBildo,
   getBildo: _getBildo,
   getUzanto: _getUzanto,

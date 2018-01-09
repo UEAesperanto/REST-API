@@ -23,6 +23,9 @@ app.route('/admin/:id(\\d+)/')
     .get(routerAuth, uzanto.getUzanto)
     .put(routerAuth, uzanto.updateUzanto);
 
+app.route('/admin/:id(\\d+)/grupoj')
+    .get(routerAuth, uzanto.getGrupoj);
+
 app.route('/admin/:id(\\d+)/bildo')
     .post(routerAuth, uzanto.postBildo)
     .get(routerAuth, uzanto.getBildo);
@@ -30,7 +33,7 @@ app.route('/admin/:id(\\d+)/bildo')
 app.route('/cxuMembro/:retposxto')
     .get(uzanto.cxuMembro);
 
-router.route('/ensaluti')
+  router.route('/ensaluti')
     .post(uzanto.ensaluti);
 
 router.route('/forgesisPasvorton')

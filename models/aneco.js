@@ -28,19 +28,24 @@ var _updateKotizo = function(id, kampo, valoro) {
 
 var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, idFako, observoj, aprobita) {
-  var query = util.format ('INSERT into aneco (idAno, idgrupo, komencdato, findato,\
+  var query = util.format ('INSERT into aneco (idAno, idGrupo, komencdato, findato,\
                             dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, observoj, aprobita)\
-                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s", 0);',
+                            VALUES(%s, %s, "%s", "%s", %s, "%s", "%s", %s, %s, %s, "%s", %s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko, respondeco, idAsocio,
-                            idUrbo, idFako, observoj);
+                            idUrbo, idFako, observoj, aprobita);
   query = query.replace(/undefined/g, 'NULL');
   query = query.replace(/"NULL"/g, 'NULL');
   return db.mysqlExec(query);
 }
 
 var _updateAneco = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `aneco` SET `%s` = %s WHERE `id` = %s;',
-                           kampo, valoro, id);
+  if(!isNaN(valoro)){
+    var query = util.format('UPDATE `aneco` SET `%s` = %s WHERE `id` = %s;',
+                             kampo, valoro, id);
+  } else {
+    var query = util.format('UPDATE `aneco` SET `%s` = "%s" WHERE `id` = %s;',
+                             kampo, valoro, id);
+  }
   return db.mysqlExec(query);
 }
 

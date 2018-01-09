@@ -40,11 +40,12 @@ router.route('/:id(\\d+)/anoj')
     .get(routerAuthSen, grupo.getAnoj)
     .post(routerAuthSen, grupo.postAneco);
 
-router.route('/anecoj/:id/aprobi')
+router.route('/anecoj/:id(\\d+)/aprobi')
     .put(routerAuth, aneco.aprobiAnecon);
 
-router.route('/anecoj/:id')
-    .delete(routerAuth, aneco.deleteAneco);
+router.route('/anecoj/:id(\\d+)')
+    .delete(routerAuth, aneco.deleteAneco)
+    .put(routerAuth, aneco.updateAneco);
 
 router.route('/:id(\\d+)/kotizoj')
     .get(aneco.getKotizoj)

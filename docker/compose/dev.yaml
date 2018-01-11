@@ -1,42 +1,43 @@
-version: '3.0'
+version: '3'
 services:
   api:
-    build: .
-    image: uea
-    container_name: uea-api
+    build: ../dockerfiles/node-dev/
+    image: uea-nodejs
+    container_name: uea-api-dev
     ports:
       - "3000:3000"
     environment:
-      - DB_PASSWORD=u34p4ss
+      - LIQUIBASE=uea-liquibase
       - DB_HOST=mysql-server
-      - DB_PORT=3306
+      - DB_PASSWORD=u34p4ss
+    volumes:
+      - ../../:/app
     links:
       - mysql:mysql-server
     depends_on:
       - mysql
 
   liquibase:
-    build: ./docker/liquibase
+    build: ../dockerfiles/liquibase
     image: uea-liquibase
     container_name: uea-liquibase
     environment:
       - DB_PASSWORD=u34p4ss
       - DB_HOST=mysql-server
       - DB_PORT=3306
+      - MEDIO=MOCK
     links:
       - mysql:mysql-server
     depends_on:
       - mysql
 
   mysql:
-    build: ./docker/mysql
+    build: ../dockerfiles/mysql
     image: uea-mysql
-    container_name: uea-datumbazo
+    container_name: uea-datumbazo-dev
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
-    volumes:
-      - uea-datavolume:/var/lib/mysql
-
-volumes:
-  uea-datavolume:
+      - MYSQL_DATABASE=uea
+    ports:
+      - "3306:3306"

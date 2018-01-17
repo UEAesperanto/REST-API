@@ -1,32 +1,40 @@
-/*Libraries*/
-var nodemailer = require('nodemailer');
-var smtpTransport = require("nodemailer-smtp-transport");
-
-/*Config*/
 var config = require('../config');
+var request = require('request');
 
-var transporter = nodemailer.createTransport(smtpTransport({
-    host : config.sisRetServer,
-    port: config.sisRetPorto,
-    secure: true,
-    auth : {
-        user : config.sisRetadreso,
-        pass : config.sisRetPasvorto
-    }
-}));
+var headers = {
+    'api-key': config.sendInBlueKey
+};
 
-/*var mailOptions = {
-  from: 'youremail@gmail.com',
-  to: 'myfriend@yahoo.com',
-  subject: 'Sending Email using Node.js',
-  html: 'That was easy!'
-};*/
-var _sendiRetmesagxo = function(mailOptions) {
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-    }
-  });
+var _sendiRetmesagxo = function(data) {
+  data.from = [config.fromDefault, "UEA - Universala Esperanto-Asocio"];
+  // var req = {
+  //     hostname: 'api.sendinblue.com',
+  //     path:'/v2.0/email',
+  //     method: 'POST',
+  //     headers: {'api-key': config.sendInBlueKey},
+  //     body: data
+  // };
+  // console.log(req);
+  //
+  // var request = https.request(req);
+  // request.on('error', function(err) {
+  //   console.log(err);
+  // });
+
+  var options = {
+      url: 'https://api.sendinblue.com/v2.0/email',
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(data)
+  };
+
+  function callback(error, response, body) {
+      if (error) {
+          console.log(error);
+      }
+  }
+
+  request(options, callback);
 }
 
 module.exports = {

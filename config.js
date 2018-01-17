@@ -11,11 +11,9 @@ module.exports = {
   'idJunaAdministranto': 2,
 
   /*Retadresoj*/
-  'financaretadreso':'ekzemplo@ekzemplo.com',
-  'sisRetServer': 'smtp.ekzemplo.com',
-  'sisRetPorto': '465',
-  'sisRetadreso': 'teste@ekzemplo.com',
-  'sisRetPasvorto': 'ekzemplo',
+  'financaretadreso':'financoj@test.com',
+  'sendInBlueKey': 'xxxxx',
+  'fromDefault': 'info@asocio.net',
 
   /*Negocmodeloj*/
   'junaAgxo': 35,

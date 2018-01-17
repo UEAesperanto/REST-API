@@ -68,9 +68,9 @@ var _aprobiAnecon = function(req, res){
                   En kazo de duboj, kontaktu info@uea.org. \
                   <br><br>Kore,<br><br>\
                   La UEA-Teamo', req.body.anecnomo);
+          var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
           var mailOptions = {
-              from: 'UEA',
-              to: req.body.retposxto,
+              to: JSON.parse(to),
               subject: 'Peto aprobita',
               html: html
             }
@@ -94,9 +94,9 @@ var _deleteAneco = function(req, res) {
                   En kazo de duboj, kontaktu info@uea.org. \
                   <br><br>Kore,<br><br>\
                   La UEA-Teamo', req.body.anecnomo);
+          var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
           var mailOptions = {
-              from: 'UEA',
-              to: req.body.retposxto,
+              to: JSON.parse(to),
               subject: 'Peto malaprobita',
               html: html
             }

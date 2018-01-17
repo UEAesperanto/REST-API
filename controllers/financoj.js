@@ -1,3 +1,5 @@
+var util = require('util');
+
 /*config*/
 var config = require('../config.js');
 
@@ -5,9 +7,11 @@ var config = require('../config.js');
 var mail = require('../modules/mail');
 
 var _mesagxi = function(req, res) {
+  var to = util.format('{"%s" : "UEA-financoj"}', config.financaretadreso);
+  console.log(to);
+  console.log(JSON.parse(to));
   var mailOptions = {
-      from: 'reto@uea.org',
-      to: config.financaretadreso,
+      to: JSON.parse(to),
       subject: req.body.temo,
       html: req.body.mesagxo
     }

@@ -74,12 +74,12 @@ var _postUzanto = function(req, res){
                         En kazo de duboj, kontaktu info@uea.org. \
                         <br><br>Kore,<br><br>\
                         La UEA-Teamo');
+                var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
                 var mailOptions = {
-                    from: 'UEA',
-                    to: req.body.retposxto,
+                    to: JSON.parse(to),
                     subject: 'Nova aliĝo',
                     html: html
-                  }
+                  };
                 mail.sendiRetmesagxo(mailOptions);
                 res.status(201).send({id: result.insertId});
               },
@@ -113,9 +113,9 @@ var _forgesisPasvorton = function(req, res) {
                         Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
                         <br><br>Agrablan uzadon,<br><br>\
                         La UEA-Teamo', novaPasvorto);
+                var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
                 var mailOptions = {
-                    from: 'reto@uea.org',
-                    to: req.body.retposxto,
+                    to: JSON.parse(to),
                     subject: 'Restarigo de la forgesita pasvorto por UEA',
                     html: html
                   }

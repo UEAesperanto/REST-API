@@ -6,7 +6,7 @@
 # Datumbazo kaj REST-API de la Universala Esperanto-Asocio (UEA)
 
 Ĉiuj kodoj kaj ĉiuj rajtoj ligitaj al ili ĉi tie apartenas al la Universala Esperanto-Asocio (UEA), 2017.
-Por pliaj detaloj pri kiel ĝi funkcias, vidu la [vikion](https://github.com/RibeiroAna/datumbazoUEA/wiki) de tiu ĉi ujo.
+Por pliaj detaloj pri kiel ĝi funkcias, vidu la [vikion](https://github.com/UEAesperanto/REST-API/wiki) de tiu ĉi ujo.
 
 ## Dependecoj
 
@@ -17,7 +17,7 @@ Por faciligi la instaladon, oni uzas la teknologion [Docker](https://www.docker.
 Kiam vi certigus ke Docker estas boninstalita, aliru al la dosierujo per Terminal (en Vindozo, prompt) kie vi elŝutis tiun ĉi kodo kaj tajpu:
 
 ````
-docker-compose up --build -d
+docker-compose -f docker/compose/production.yaml up --build -d
 ````
 
  **Atentu** ke ĝi verŝajne ne bone funkcios se en la dosierujo kiun vi enmetis la kodon estus bezonata havi superuzantaj permesoj (sudo), vi devas ebligi ke tio estu uzita sen superuzantaj privilegioj.
@@ -36,11 +36,11 @@ Tio estas ĉio, vi jam povos aliri API je `http://localhost:3000` kaj sekvi nian
 
 Por ekzekuti la aŭtomatajn testojn, tajpu:
 
-`docker-compose -f docker/test/docker-test.yaml up --build -d`
+`docker-compose -f docker/compose/test.yaml up --build -d`
 
 Por vidi la testojn, tajpu:
 
-`docker logs -f uea-api`
+`docker logs -f uea-api-test`
 
 ## Agordado
 

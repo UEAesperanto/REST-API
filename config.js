@@ -11,9 +11,9 @@ module.exports = {
   'idJunaAdministranto': 2,
 
   /*Retadresoj*/
-  'financaretadreso':'financoj@test.com',
+  'financaretadreso':'financoj@ekzemplo.com',
   'sendInBlueKey': 'xxxxx',
-  'fromDefault': 'info@asocio.net',
+  'fromDefault': 'ekzemplo@ekzemplo.com',
 
   /*Negocmodeloj*/
   'junaAgxo': 35,

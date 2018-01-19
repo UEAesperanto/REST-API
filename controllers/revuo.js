@@ -38,7 +38,7 @@ var _postVolumo = function(req, res) {
 /*
   GET /revuoj/:id/volumoj
 */
-var _getVolumoj = function(req, res) {
+var _getVolumo = function(req, res) {
 
 }
 
@@ -56,13 +56,18 @@ var _deleteVolumo = function(req, res) {
 
 }
 
+var _getVolumojInfo = function(req, res) {
+
+}
+
 module.exports = {
   getRevuoj: _getRevuoj,
   postRevuo: _postRevuo,
   updateRevuo: _updateRevuo,
   deleteRevuo: _deleteRevuo,
   postVolumo: _postVolumo,
-  getVolumoj: _getVolumoj,
+  getVolumojInfo: _getVolumojInfo,
+  getVolumo: _getVolumo,
   updateVolumo: _updateVolumo,
   deleteVolumo: _deleteVolumo
 }

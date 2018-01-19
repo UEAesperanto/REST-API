@@ -22,11 +22,12 @@ app.route('/:id(\\d+)')
     .delete(routerAuth, revuo.deleteRevuo)
 
 app.route('/:id(\\d+)/volumoj')
-    //autorizar membro
-    .get(revuo.getVolumoj)
+    .get(revuo.getVolumojInfo)
     .post(routerAuth, revuo.postVolumo);
 
 app.route('/volumoj/:id(\\d+)')
+    //autorizar membro
+    .get(revuo.getVolumo)
     .put(routerAuth, revuo.updateVolumo)
     .delete(routerAuth, revuo.deleteVolumo);
 

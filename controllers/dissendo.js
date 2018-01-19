@@ -3,6 +3,7 @@ var util = require('util');
 /*models*/
 var Dissendo = require('../models/dissendo');
 var Retlisto = require('../models/retlisto');
+var Abonanto = require('../models/abonanto');
 var query = require('../modules/query');
 
 /*
@@ -71,7 +72,15 @@ var _postRetlisto = function(req, res) {
 }
 
 var _postAbonanto = function(req, res) {
-  //fari
+  var novaAbonanto = Abonanto.create(req.body);
+  Abonanto.insert(novaAbonanto).then(
+    function(sucess){
+      res.status(201).send(novaAbonanto);
+    },
+    function(fail){
+      res.status(500).send({message: 'Internal Error'})
+    }
+  );
 }
 
 var _deleteAbonanto = function(req, res) {

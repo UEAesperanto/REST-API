@@ -98,5 +98,25 @@ describe('Dissendoj', function() {
                   });
             });
 
+
+
+            describe('POST /dissendoj/retlistoj/:id/abonantoj', function(){
+                it('it should POST a dissendo - with token', function (done) {
+                   var retlisto = { nomo: 'nomo', priskribo: 'priskribo'};
+                   Retlisto.insert(retlisto).then(function (success) {
+                     var abonanto = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true,
+                     retadreso:'email@email.com', idRetlisto: success.insertId };
+                     chai.request(server)
+                       .post('/dissendoj/retlistoj/' + success.insertId + '/abonantoj')
+                       .set('x-access-token', token)
+                       .send(abonanto)
+                       .end(function (err, res) {
+                           res.should.have.status(201);
+                           done();
+                         });
+                    });
+                });
+            });
+
    });
 });

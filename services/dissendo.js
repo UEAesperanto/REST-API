@@ -21,7 +21,8 @@ app.route('/retlistoj/:id(\\d+)')
 //Qualquer um pode acessar
 app.route('/retlistoj/:id/abonantoj')
     .post(dissendo.postAbonanto)
+    
+app.route('/retlistoj/:id(\\d+)/abonantoj/:id(\\d+)')
     .delete(dissendo.deleteAbonanto);
-
 
 module.exports = app;

@@ -7,6 +7,7 @@ var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
 var Lando = require('../models/dissendo');
+var Retlisto = require('../models/retlisto');
 var jwt  = require('jsonwebtoken');
 var config = require('../config');
 
@@ -15,8 +16,9 @@ describe('Dissendoj', function() {
     var token = '';
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `dissendo`');
-      db.mysqlExec(query).then(function(result){
-      })
+      db.mysqlExec(query).then(function(result){});
+      var query = util.format('DELETE FROM `retlisto`');
+      db.mysqlExec(query).then(function(result){});
       var administranto = {
         id: 1,
         uzantnomo: 'nomo',
@@ -67,17 +69,34 @@ describe('Dissendoj', function() {
 
         describe('POST /dissendoj/retlistoj', function(){
             it('it should POST a dissendo - with token', function (done) {
-               var dissendo = { nomo: 'nomo', priskribo: 'priskribo'}
+               var retlisto = { nomo: 'nomo', priskribo: 'priskribo'}
                 chai.request(server)
                     .post('/dissendoj/retlistoj')
                     .set('x-access-token', token)
-                    .send(dissendo)
+                    .send(retlisto)
                     .end(function (err, res) {
                         res.should.have.status(201)
                         done();
                     });
                });
          });
+
+         describe('DELETE /dissendoj/retlistoj', function(){
+             it('it should DELETE a retlisto - with token', function (done) {
+                 var retlisto = { nomo: 'nomo', priskribo: 'priskribo'}
+
+                     Retlisto.insert(retlisto).then(function (success) {
+                         chai.request(server)
+                             .delete('/dissendoj/retlistoj/' + success.insertId)
+                             .set('x-access-token', token)
+                             .end(function (err, res) {
+                                 res.should.have.status(200);
+                                 res.body.message.should.equal("Ok");
+                                 done();
+                             });
+                        });
+                  });
+            });
 
    });
 });

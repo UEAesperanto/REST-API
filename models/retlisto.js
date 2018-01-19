@@ -28,13 +28,20 @@ var _find = function(id){
 var _insert = function(retlisto){
   var query = util.format(
     'INSERT INTO retlisto (nomo, priskribo)\
-   VALUES ("%s", "%s", "%s", "%s");',
+   VALUES ("%s", "%s");',
   retlisto.nomo, retlisto.priskribo);
+  return db.mysqlExec(query);
+}
+
+var _delete = function(id){
+  var query = util.format(
+  'DELETE FROM `retlisto` WHERE `id` = %s ;', id);
   return db.mysqlExec(query);
 }
 
 module.exports = {
   find: _find,
   create: _create,
-  insert: _insert
+  insert: _insert,
+  delete: _delete
 }

@@ -13,8 +13,10 @@ app.route('/retlistoj')
      //Público
     .get(dissendo.getRetlistoj)
     //Apenas para administradores gerais ou de comunicação
-    .delete(dissendo.deleteRetlisto)
     .post(dissendo.postRetlisto);
+
+app.route('/retlistoj/:id(\\d+)')
+    .delete(dissendo.deleteRetlisto)
 
 //Qualquer um pode acessar
 app.route('/retlistoj/:id/abonantoj')

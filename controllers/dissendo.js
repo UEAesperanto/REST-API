@@ -48,7 +48,14 @@ var _getRetlistoj = function(req, res) {
 }
 
 var _deleteRetlisto = function(req, res) {
-  //fari
+  Retlisto.delete(req.params.id).then(function(sucess){
+    Retlisto.find(req.params.id).then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(200).send({message: 'Ok'});
+      else
+        res.status(500).send({message: 'Internal Error'});
+    });
+  });
 }
 
 var _postRetlisto = function(req, res) {

@@ -1,4 +1,5 @@
 var util = require('util');
+var Revuo = require('../models/revuo');
 
 /*
   GET /revuoj
@@ -11,7 +12,18 @@ var _getRevuoj = function(req, res) {
   POST /revuoj
 */
 var _postRevuo = function(req, res) {
-
+    Revuo.insertRevuo(req.body.titolo, req.body.fondjaro, req.body.ssn).then(
+      function(sucess){
+        if(sucess) {
+          res.status(201).send({insertId: sucess.insertId});
+        } else {
+          res.status(500).send({message: 'Internal Error'});
+        }
+      },
+      function(fail){
+        res.status(500).send({message: 'Internal Error'});
+      }
+    );
 }
 
 /*

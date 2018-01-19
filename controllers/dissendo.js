@@ -1,16 +1,19 @@
 var util = require('util');
-//var Dissendo = require('../models/dissendo');
+
+/*models*/
+var Dissendo = require('../models/dissendo');
+
 var query = require('../modules/query');
 
 /*
   GET /dissendoj
 */
 var _getDissendoj = function(req, res){
-  // Dissendo.find().then(function(sucess){
-  //       var dissendoj = sucess;
-  //       dissendoj = asocioj.filter(query.search(req.query));
-  //       res.status(200).send(dissendoj);
-  // });
+  Dissendo.find().then(function(sucess){
+         var dissendoj = sucess;
+         dissendoj = dissendoj.filter(query.search(req.query));
+         res.status(200).send(dissendoj);
+  });
 }
 
 /*

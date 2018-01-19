@@ -16,7 +16,7 @@ describe('Landoj', function() {
     beforeEach( function(done) { //Before each test we empty the database
       var query = util.format('DELETE FROM `lando`');
       db.mysqlExec(query).then(function(result){
-      })
+      });
       var administranto = {
         id: 1,
         uzantnomo: 'nomo',

@@ -1,18 +1,28 @@
+/*libraries*/
 var util = require('util');
+
+/*models*/
 var Revuo = require('../models/revuo');
+
+/*Modules*/
+var query = require('../modules/query');
 
 /*
   GET /revuoj
 */
 var _getRevuoj = function(req, res) {
-
+  Revuo.findRevuoj().then(function(sucess) {
+    var revuoj = sucess;
+    revuoj = revuoj.filter(query.search(req.query));
+    res.status(200).send(revuoj);
+  });
 }
 
 /*
   POST /revuoj
 */
 var _postRevuo = function(req, res) {
-    Revuo.insertRevuo(req.body.titolo, req.body.fondjaro, req.body.ssn).then(
+    Revuo.insertRevuo(req.body.titolo, req.body.fondjaro, req.body.issn).then(
       function(sucess){
         if(sucess) {
           res.status(201).send({insertId: sucess.insertId});

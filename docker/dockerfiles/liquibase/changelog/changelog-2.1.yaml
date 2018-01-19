@@ -20,7 +20,7 @@ databaseChangeLog:
                   name: fondjaro
                   type: int(4)
               - column:
-                  name: ssn
+                  name: issn
                   type: varchar(255)
         - createTable:
             tableName: volumo

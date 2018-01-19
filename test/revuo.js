@@ -16,6 +16,10 @@ describe('Revuoj', function() {
     var token = '';
 
     beforeEach(function(done){
+      var query = util.format('DELETE FROM `revuo`;');
+      db.mysqlExec(query).then(function(result){
+      });
+
       var administranto = {
         id: 1,
         uzantnomo: 'nomo',
@@ -45,5 +49,37 @@ describe('Revuoj', function() {
              done();
           });
       });
+
+      it('it should GET revuon - sen revuoj', function(done){
+        chai.request(server)
+            .get('/revuoj')
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.length.should.equals(0)
+              done();
+           });
+       });
+
+       it('it should GET revuon - kun revuoj', function(done){
+         var query = util.format('INSERT INTO `revuo`\
+                                  VALUES(1, "ESPERANTO", "1920", "333");');
+          db.mysqlExec(query).then(function(result){
+             chai.request(server)
+             .get('/revuoj')
+             .end((err, res) => {
+               res.should.have.status(200);
+               res.body.length.should.equals(1);
+               res.body[0].should.have.property('id');
+               res.body[0].id.should.equal(1);
+               res.body[0].should.have.property('titolo');
+               res.body[0].titolo.should.equal('ESPERANTO');
+               res.body[0].should.have.property('fondjaro');
+               res.body[0].fondjaro.should.equal(1920);
+               res.body[0].should.have.property('issn');
+               res.body[0].issn.should.equal('333');
+               done();
+             });
+           });
+        });
 
 });

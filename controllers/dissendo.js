@@ -26,6 +26,15 @@ var _getDissendoj = function(req, res){
   @text
 */
 var _postDissendo = function(req, res){
+  var novaDissendo = Dissendo.create(req.body);
+  Dissendo.insert(novaDissendo).then(
+    function(sucess){
+      res.status(201).send(novaDissendo);
+    },
+    function(fail){
+      res.status(500).send({message: 'Internal Error'})
+    }
+  );
   //fari
   // Deve enviar através do module mail.sendiRetmesagxo que já está configurado para o sendinblue
 }

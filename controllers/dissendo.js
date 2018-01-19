@@ -2,7 +2,7 @@ var util = require('util');
 
 /*models*/
 var Dissendo = require('../models/dissendo');
-
+var Retlisto = require('../models/retlisto');
 var query = require('../modules/query');
 
 /*
@@ -40,7 +40,11 @@ var _postDissendo = function(req, res){
 }
 
 var _getRetlistoj = function(req, res) {
-  //fari
+  Retlisto.find().then(function(sucess){
+         var retlistoj = sucess;
+         retlistoj = retlistoj.filter(query.search(req.query));
+         res.status(200).send(retlistoj);
+  });
 }
 
 var _deleteRetlisto = function(req, res) {
@@ -48,7 +52,15 @@ var _deleteRetlisto = function(req, res) {
 }
 
 var _postRetlisto = function(req, res) {
-  //fari
+  var novaRetlisto = Retlisto.create(req.body);
+  Retlisto.insert(novaRetlisto).then(
+    function(sucess){
+      res.status(201).send(novaRetlisto);
+    },
+    function(fail){
+      res.status(500).send({message: 'Internal Error'})
+    }
+  );
 }
 
 var _postAbonanto = function(req, res) {

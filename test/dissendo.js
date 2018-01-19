@@ -53,7 +53,31 @@ describe('Dissendoj', function() {
             });
       });
 
+      describe('GET /dissendoj/retlistoj', function(){
+       it('it should GET empty retlistoj', function(done){
+         chai.request(server)
+             .get('/dissendoj/retlistoj')
+             .end((err, res) => {
+                 res.should.have.status(200);
+                 res.body.length.should.equals(0);
+                 done();
+             });
+           });
+        });
+
+        describe('POST /dissendoj/retlistoj', function(){
+            it('it should POST a dissendo - with token', function (done) {
+               var dissendo = { nomo: 'nomo', priskribo: 'priskribo'}
+                chai.request(server)
+                    .post('/dissendoj/retlistoj')
+                    .set('x-access-token', token)
+                    .send(dissendo)
+                    .end(function (err, res) {
+                        res.should.have.status(201)
+                        done();
+                    });
+               });
+         });
 
    });
-
 });

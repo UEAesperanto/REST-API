@@ -29,7 +29,7 @@ describe('Revuoj', function() {
       done();
     });
 
-    it('it should post revuon', function(done){
+    it('it should POST revuon', function(done){
       chai.request(server)
           .post('/revuoj')
           .set('x-access-token', token)
@@ -40,7 +40,7 @@ describe('Revuoj', function() {
          });
      });
 
-     it('it should NOT post revuon - sen permeso', function(done){
+     it('it should NOT POST revuon - sen permeso', function(done){
        chai.request(server)
            .post('/revuoj')
            .send({"titolo":"Revuo Esperanto"})
@@ -80,6 +80,33 @@ describe('Revuoj', function() {
                done();
              });
            });
+      });
+
+      it('it should DELETE revuon', function(done) {
+        var query = util.format('INSERT INTO `revuo`\
+                                 VALUES(1, "ESPERANTO", "1920", "333");');
+         db.mysqlExec(query).then(function(result){
+            chai.request(server)
+            .delete('/revuoj/1')
+            .set('x-access-token', token)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
         });
+      });
+
+      it('it should NOT DELETE revuon - sen permeso', function(done) {
+        var query = util.format('INSERT INTO `revuo`\
+                                 VALUES(1, "ESPERANTO", "1920", "333");');
+         db.mysqlExec(query).then(function(result){
+            chai.request(server)
+            .delete('/revuoj/1')
+            .end((err, res) => {
+              res.should.have.status(400);
+              done();
+            });
+        });
+      });
 
 });

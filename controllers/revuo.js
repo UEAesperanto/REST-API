@@ -37,17 +37,17 @@ var _postRevuo = function(req, res) {
 }
 
 /*
-  PUT /revuoj
-*/
-var _updateRevuo = function(req, res) {
-
-}
-
-/*
-  DELETE /revuoj
+  DELETE /revuoj/:id
 */
 var _deleteRevuo = function(req, res) {
-
+  Revuo.deleteRevuo(req.params.id).then(function(sucess){
+    Revuo.findRevuoj(req.params.id).then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(204).send({message: 'Ok'});
+      else
+        res.status(500).send({message: 'Internal Error'});
+    });
+  });
 }
 
 /*
@@ -85,7 +85,6 @@ var _getVolumojInfo = function(req, res) {
 module.exports = {
   getRevuoj: _getRevuoj,
   postRevuo: _postRevuo,
-  updateRevuo: _updateRevuo,
   deleteRevuo: _deleteRevuo,
   postVolumo: _postVolumo,
   getVolumojInfo: _getVolumojInfo,

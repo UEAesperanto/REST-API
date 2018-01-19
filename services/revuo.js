@@ -18,10 +18,9 @@ app.route('/')
     .post(routerAuth, revuo.postRevuo);
 
 app.route('/:id(\\d+)')
-    .put(routerAuth, revuo.updateRevuo)
     .delete(routerAuth, revuo.deleteRevuo)
 
-app.route('/:id(\\d+)/volumoj')
+app.route('/volumoj')
     .get(revuo.getVolumojInfo)
     .post(routerAuth, revuo.postVolumo);
 

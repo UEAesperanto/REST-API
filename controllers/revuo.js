@@ -54,6 +54,18 @@ var _deleteRevuo = function(req, res) {
   POST revuoj/:id/volumoj
 */
 var _postVolumo = function(req, res) {
+  Revuo.insertVolumo(req.body.numeroJaro, req.body.numeroEntute, req.body.enhavlisto, req.params.id).then(
+    function(sucess){
+      if(sucess) {
+        res.status(201).send({insertId: sucess.insertId});
+      } else {
+        res.status(500).send({message: 'Internal Error'});
+      }
+    },
+    function(fail){
+      res.status(500).send({message: 'Internal Error'});
+    }
+  );
 
 }
 

@@ -7,7 +7,6 @@ var should = chai.should();
 var expect = chai.expect;
 var jwt  = require('jsonwebtoken');
 var config = require('../config');
-var Grupo = require('../models/grupo');
 
 chai.use(chaiHttp);
 
@@ -106,7 +105,16 @@ describe('Revuoj', function() {
               res.should.have.status(400);
               done();
             });
-        });
+          });
       });
 
+      it('it should POST volumon', function(done){
+         chai.request(server)
+         .post('/revuoj/1/volumoj')
+         .set('x-access-token', token)
+         .end((err, res) => {
+           res.should.have.status(201);
+           done();
+         });
+      });
 });

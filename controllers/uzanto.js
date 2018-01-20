@@ -205,7 +205,7 @@ var _cxuMembro = function(req, res) {
 }
 
 var _postBildo = function(req, res) {
-  var storage = multer.diskStorage({
+    var storage = multer.diskStorage({
         destination: function (req, file, cb) {
           const dir = '/uzantbildoj';
           cb(null, dir);

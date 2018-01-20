@@ -20,9 +20,12 @@ app.route('/')
 app.route('/:id(\\d+)')
     .delete(routerAuth, revuo.deleteRevuo)
 
-app.route('/volumoj')
+app.route('/:id(\\d+)/volumoj')
     .get(revuo.getVolumojInfo)
     .post(routerAuth, revuo.postVolumo);
+
+app.route('/volumoj')
+    .get(revuo.getVolumojInfo);
 
 app.route('/volumoj/:id(\\d+)')
     //autorizar membro

@@ -1,15 +1,17 @@
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var server = require('../server');
-var db = require('../modules/db');
+const {readFileSync} = require('fs');
 var util = require('util');
-var should = chai.should();
-var expect = chai.expect;
 var jwt  = require('jsonwebtoken');
+
+var server = require('../server');
 var config = require('../config');
+var db = require('../modules/db');
+
+var expect = chai.expect;
+var should = chai.should();
 
 chai.use(chaiHttp);
-
 
 describe('Revuoj', function() {
     var token = '';
@@ -116,5 +118,54 @@ describe('Revuoj', function() {
            res.should.have.status(201);
            done();
          });
+      });
+
+      it('it should POST volumon files - bildo', function(done){
+        chai.request(server)
+        .post('/revuoj/volumoj/1/bildo')
+        .set('x-access-token', token)
+        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .end((err, res) => {
+          res.should.have.status(201);
+          chai.request(server)
+          .get('/revuoj/volumoj/1/bildo')
+          .set('x-access-token', token)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.text.should.to.be.a('string');
+            res.text.substring(0,15).should.to.have.string('data:image/png');
+            done();
+          });
+        });
+      });
+
+      it('it should NOT POST volumon files - sen ĵetono', function(done){
+        chai.request(server)
+        .post('/revuoj/volumoj/1/bildo')
+        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .end((err, res) => {
+          res.should.have.status(400);
+          chai.request(server)
+          done();
+        });
+      });
+
+      it('it should POST volumon files - PDF', function(done){
+        chai.request(server)
+        .post('/revuoj/volumoj/1/kvalita')
+        .set('x-access-token', token)
+        .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+        .end((err, res) => {
+          res.should.have.status(201);
+          chai.request(server)
+          .get('/revuoj/volumoj/1/kvalita')
+          .set('x-access-token', token)
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.text.should.to.be.a('string');
+            res.text.substring(0,20).should.to.have.string('data:application/pdf');
+            done();
+          });
+        });
       });
 });

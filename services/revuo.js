@@ -21,16 +21,19 @@ app.route('/:id(\\d+)')
     .delete(routerAuth, revuo.deleteRevuo)
 
 app.route('/:id(\\d+)/volumoj')
-    .get(revuo.getVolumojInfo)
+    .get(revuo.getVolumoj)
     .post(routerAuth, revuo.postVolumo);
 
 app.route('/volumoj')
-    .get(revuo.getVolumojInfo);
+    .get(revuo.getVolumoj);
 
 app.route('/volumoj/:id(\\d+)')
-    //autorizar membro
-    .get(revuo.getVolumo)
     .put(routerAuth, revuo.updateVolumo)
     .delete(routerAuth, revuo.deleteVolumo);
+
+app.route('/volumoj/:id(\\d+)/:tipo')
+    .post(routerAuth, revuo.postVolumoFiles)
+    //Nur por membroj, aldoni tion baldaŭ
+    .get(revuo.getVolumoFiles)
 
 module.exports = app;

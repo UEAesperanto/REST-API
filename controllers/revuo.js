@@ -6,6 +6,8 @@ var Revuo = require('../models/revuo');
 
 /*Modules*/
 var query = require('../modules/query');
+var file = require('../modules/file');
+
 
 /*
   GET /revuoj
@@ -66,14 +68,24 @@ var _postVolumo = function(req, res) {
       res.status(500).send({message: 'Internal Error'});
     }
   );
-
 }
 
 /*
-  GET /revuoj/:id/volumoj
+  POST revuoj/volumoj/:id/:tipo
 */
-var _getVolumo = function(req, res) {
+var _postVolumoFiles = function(req, res) {
+  file.writeFile('/volumoj', req.params.tipo + req.params.id, 'file', req, res);
+}
 
+/*
+  GET /revuoj/volumoj/:id/:tipo
+*/
+var _getVolumoFiles = function(req, res) {
+  var tipo = 'application/pdf';
+  if(req.params.tipo == 'bildo') {
+    tipo = 'image/png';
+  }
+  file.readFile('/volumoj/'+ req.params.tipo + req.params.id, tipo, res);
 }
 
 /*
@@ -90,7 +102,7 @@ var _deleteVolumo = function(req, res) {
 
 }
 
-var _getVolumojInfo = function(req, res) {
+var _getVolumoj = function(req, res) {
 
 }
 
@@ -99,8 +111,9 @@ module.exports = {
   postRevuo: _postRevuo,
   deleteRevuo: _deleteRevuo,
   postVolumo: _postVolumo,
-  getVolumojInfo: _getVolumojInfo,
-  getVolumo: _getVolumo,
+  postVolumoFiles: _postVolumoFiles,
+  getVolumoj: _getVolumoj,
+  getVolumoFiles: _getVolumoFiles,
   updateVolumo: _updateVolumo,
   deleteVolumo: _deleteVolumo
 }

@@ -118,8 +118,20 @@ describe('Uzantoj', function() {
             .set('x-access-token', token)
             .end((err, res) => {
               res.should.have.status(200);
+              res.text.should.to.be.a('string');
+              res.text.substring(0,15).should.to.have.string('data:image/png');
               done();
             });
+          });
+        });
+
+        it('should NOT POST a bildo - sen ĵetono', function(done){
+          chai.request(server)
+          .post('/uzantoj/admin/1/bildo')
+          .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+          .end((err, res) => {
+            res.should.have.status(400);
+            done();
           });
         });
    });

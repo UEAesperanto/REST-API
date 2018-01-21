@@ -2,9 +2,7 @@
 var util = require('util');
 var jwt  = require('jsonwebtoken');
 var randomstring = require('randomstring');
-var multer = require('multer');
 var bodyParser = require('body-parser');
-var fs = require('fs');
 
 /*config*/
 var config = require('../config.js');
@@ -18,6 +16,8 @@ var Grupo = require('../models/grupo');
 var query = require('../modules/query');
 var hash = require('../modules/hash');
 var mail = require('../modules/mail');
+var file = require('../modules/file');
+
 
 /*
   POST - /uzantoj/ensaluti
@@ -205,62 +205,11 @@ var _cxuMembro = function(req, res) {
 }
 
 var _postBildo = function(req, res) {
-    var storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          const dir = '/uzantbildoj';
-          cb(null, dir);
-        },
-        filename: function (req, file, cb) {
-          const path = 'uzantbildo' + req.params.id;
-          cb(null, path);
-        }
-    });
-
-  var upload = multer({
-                    storage: storage
-              }).single('file');
-
-  var rezulto = function(err){
-     if(err){
-       res.status(500).send({message: "Eraro en la servilo", priskribo: err});
-       return;
-      } else {
-        res.status(201).send({message: "Foto sukcese alŝutita"});
-        return;
-      }
-   }
-
- fs.exists('/uzantbildoj', function(exists) {
-   if(exists) {
-     fs.exists('/uzantbildoj/uzantbildo' + req.params.id, function(exists) {
-      if(exists){
-        fs.unlink('/uzantbildoj/uzantbildo' + req.params.id, function(error) {
-            if (error) {
-              res.status(500).send({message: "Eraro en la servilo", priskribo: error});
-              return;
-            }
-         upload(req, res, rezulto);
-       });
-     } else {
-          upload(req, res, rezulto);
-      }
-    });
-    } else {
-      fs.mkdir('/uzantbildoj', function(error) {
-        if(error) {
-          res.status(500).send({message: "Eraro en la servilo", priskribo: error});
-          return;
-        }
-        upload(req, res, rezulto);
-      });
-    }
-  });
+  file.writeFile('/uzantbildoj', 'uzantbildo' + req.params.id, 'file', req, res);
 }
 
 var _getBildo = function(req, res) {
-  var adreso = '/uzantbildoj/uzantbildo' + req.params.id;
-  var bitmap = fs.readFileSync(adreso);
-  res.send("data:image/png;base64," + Buffer(bitmap).toString('base64'));
+  file.readFile('/uzantbildoj/uzantbildo' + req.params.id, 'image/png', res);
 }
 
 var _getGrupoj = function(req,res) {

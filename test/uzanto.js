@@ -106,33 +106,33 @@ describe('Uzantoj', function() {
           });
         });
 
-        it('should POST a bildo', function(done){
+      it('should POST a bildo', function(done){
+        chai.request(server)
+        .post('/uzantoj/admin/1/bildo')
+        .set('x-access-token', token)
+        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .end((err, res) => {
+          res.should.have.status(201);
           chai.request(server)
-          .post('/uzantoj/admin/1/bildo')
+          .get('/uzantoj/admin/1/bildo')
           .set('x-access-token', token)
-          .attach("file", readFileSync("test/files/logoo.png"), "file.test")
           .end((err, res) => {
-            res.should.have.status(201);
-            chai.request(server)
-            .get('/uzantoj/admin/1/bildo')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.text.should.to.be.a('string');
-              res.text.substring(0,15).should.to.have.string('data:image/png');
-              done();
-            });
-          });
-        });
-
-        it('should NOT POST a bildo - sen ĵetono', function(done){
-          chai.request(server)
-          .post('/uzantoj/admin/1/bildo')
-          .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-          .end((err, res) => {
-            res.should.have.status(400);
+            res.should.have.status(200);
+            res.text.should.to.be.a('string');
+            res.text.substring(0,15).should.to.have.string('data:image/png');
             done();
           });
         });
-   });
+      });
+
+      it('should NOT POST a bildo - sen ĵetono', function(done){
+        chai.request(server)
+        .post('/uzantoj/admin/1/bildo')
+        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+      });
+    });
 });

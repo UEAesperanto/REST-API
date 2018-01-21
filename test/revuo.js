@@ -203,16 +203,52 @@ describe('Revuoj', function() {
       });
 
       it('it should NOT UPDATE a volumo - Sen ĵetono', function (done) {
-        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
-                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
+        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
+                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
          db.mysqlExec(query).then(function(result){
               chai.request(server)
                   .put('/revuoj/volumoj/1')
-                  .send({kampo: 'enhavlisto', valoro: 'sei lá'})
+                  .send({kampo: 'enhavlisto', valoro: 'enhavlisto'})
                   .end(function (err, res) {
                       res.should.have.status(400);
                       done();
                   });
           });
+      });
+
+      it('it should GET all volumoj', function(done){
+        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
+                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
+        db.mysqlExec(query).then(function(result){
+          query = 'INSERT INTO `volumo` (id, numeroJaro, numeroEntute, enhavlisto,\
+                  idRevuo) VALUES(2, 2, 3, "enhavo", 1);';
+          db.mysqlExec(query).then(function(result){
+             chai.request(server)
+             .get('/revuoj/volumoj')
+             .end(function (err, res) {
+               res.body.length.should.be.equal(2);
+               res.should.have.status(200);
+               done();
+             });
+          });
+        });
+      });
+
+      it('it should GET all volumoj given revuo ID', function(done){
+        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
+                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
+        db.mysqlExec(query).then(function(result){
+          query = 'INSERT INTO `volumo` (id, numeroJaro, numeroEntute, enhavlisto,\
+                  idRevuo) VALUES(2, 2, 3, "enhavo", 1);';
+          db.mysqlExec(query).then(function(result){
+             chai.request(server)
+             .get('/revuoj/1/volumoj')
+             .end(function (err, res) {
+               res.body.length.should.be.equal(1);
+               res.should.have.status(200);
+               done();
+             });
+          });
+        });
       });
 });

@@ -114,7 +114,11 @@ var _deleteVolumo = function(req, res) {
 }
 
 var _getVolumoj = function(req, res) {
-
+  Revuo.findVolumoj(req.params.id).then(function(sucess) {
+    var volumoj = sucess;
+    volumoj = volumoj.filter(query.search(req.query));
+    res.status(200).send(volumoj);
+  });
 }
 
 module.exports = {

@@ -35,6 +35,16 @@ var _findRevuoj = function(id) {
   return db.mysqlExec(query);
 }
 
+var _findVolumoj = function(id) {
+  if(id) {
+    id = db.escape(id);
+    var query = util.format('SELECT * FROM `volumo` WHERE idRevuo = %s;', id);
+  } else {
+    var query = 'SELECT * FROM `volumo`;';
+  }
+  return db.mysqlExec(query);
+}
+
 var _deleteRevuo = function(id) {
   id = db.escape(id);
   var query = util.format('DELETE FROM `revuo` WHERE id = %s;', id);
@@ -57,6 +67,7 @@ module.exports = {
   insertRevuo: _insertRevuo,
   insertVolumo: _insertVolumo,
   findRevuoj: _findRevuoj,
+  findVolumoj: _findVolumoj,
   updateVolumo: _updateVolumo,
   deleteRevuo: _deleteRevuo
 }

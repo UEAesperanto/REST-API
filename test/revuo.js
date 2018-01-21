@@ -18,8 +18,10 @@ describe('Revuoj', function() {
 
     beforeEach(function(done){
       var query = util.format('DELETE FROM `revuo`;');
-      db.mysqlExec(query).then(function(result){
-      });
+      var query2 = util.format('DELETE FROM `volumo`;');
+
+      db.mysqlExec(query);
+      db.mysqlExec(query2);
 
       var administranto = {
         id: 1,
@@ -167,5 +169,50 @@ describe('Revuoj', function() {
             done();
           });
         });
+      });
+
+      it('it should UPDATE a volumo', function (done) {
+        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
+                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
+         db.mysqlExec(query).then(function(result){
+              chai.request(server)
+                  .put('/revuoj/volumoj/1')
+                  .set('x-access-token', token)
+                  .send({kampo: 'enhavlisto', valoro: 'new valuto'})
+                  .end(function (err, res) {
+                      res.should.have.status(200);
+                      res.body.message.should.equal("Ĝisdatigo sukcese farita");
+                      done();
+                  });
+          });
+      });
+
+      it('it should NOT UPDATE a volumo - ID', function (done) {
+        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
+                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
+         db.mysqlExec(query).then(function(result){
+              chai.request(server)
+                  .put('/revuoj/volumoj/1')
+                  .set('x-access-token', token)
+                  .send({kampo: 'id', valoro: 2})
+                  .end(function (err, res) {
+                      res.should.have.status(403);
+                      done();
+                  });
+          });
+      });
+
+      it('it should NOT UPDATE a volumo - Sen ĵetono', function (done) {
+        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
+                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
+         db.mysqlExec(query).then(function(result){
+              chai.request(server)
+                  .put('/revuoj/volumoj/1')
+                  .send({kampo: 'enhavlisto', valoro: 'sei lá'})
+                  .end(function (err, res) {
+                      res.should.have.status(400);
+                      done();
+                  });
+          });
       });
 });

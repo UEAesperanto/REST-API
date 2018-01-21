@@ -41,9 +41,22 @@ var _deleteRevuo = function(id) {
   return db.mysqlExec(query);
 }
 
+var _updateVolumo = function(id, kampo, valoro) {
+
+  id = db.escape(id);
+  kampo = db.escapeId(kampo);
+  valoro = db.escape(valoro);
+
+  var query = util.format('UPDATE `volumo` SET %s = %s WHERE `id` = %s;',
+                           kampo, valoro, id);
+
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   insertRevuo: _insertRevuo,
   insertVolumo: _insertVolumo,
   findRevuoj: _findRevuoj,
+  updateVolumo: _updateVolumo,
   deleteRevuo: _deleteRevuo
 }

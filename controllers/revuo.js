@@ -92,7 +92,18 @@ var _getVolumoFiles = function(req, res) {
   PUT revuoj/volumoj/:id
 */
 var _updateVolumo = function(req, res) {
-
+  if (req.body.kampo == 'id') {
+    res.status(403).send({message: "vi ne povas ŝanĝi la ID"});
+  } else {
+    Revuo.updateVolumo(req.params.id, req.body.kampo, req.body.valoro).then(
+      function(sucess) {
+        if (sucess) {
+          res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+        } else {
+          res.status(500).send({message: "Eraro en la servilo"});
+        }
+    });
+  }
 }
 
 /*

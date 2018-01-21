@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: Revua databazo
+      author: Ana Ribeiro
+      changes:
+        - createTable:
+            tableName: revuo
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: titolo
+                  type: varchar(255)
+              - column:
+                  name: fondjaro
+                  type: int(4)
+              - column:
+                  name: issn
+                  type: varchar(255)
+        - createTable:
+            tableName: volumo
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: numeroJaro
+                  type: varchar(255)
+              - column:
+                  name: numeroEntute
+                  type: varchar(255)
+              - column:
+                  name: eldondato
+                  type: date
+              - column:
+                  name: enhavlisto
+                  type: varchar(1080)
+              - column:
+                  name: idRevuo
+                  type: int(11)
+                  references: revuo(id)
+                  constraints:
+                    nullable: false

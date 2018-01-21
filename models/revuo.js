@@ -35,10 +35,10 @@ var _findRevuoj = function(id) {
   return db.mysqlExec(query);
 }
 
-var _findVolumoj = function(id) {
+var _findVolumoj = function(id, idKio) {
   if(id) {
     id = db.escape(id);
-    var query = util.format('SELECT * FROM `volumo` WHERE idRevuo = %s;', id);
+    var query = util.format('SELECT * FROM `volumo` WHERE %s = %s;', idKio, id);
   } else {
     var query = 'SELECT * FROM `volumo`;';
   }
@@ -48,6 +48,12 @@ var _findVolumoj = function(id) {
 var _deleteRevuo = function(id) {
   id = db.escape(id);
   var query = util.format('DELETE FROM `revuo` WHERE id = %s;', id);
+  return db.mysqlExec(query);
+}
+
+var _deleteVolumo = function(id) {
+  id = db.escape(id);
+  var query = util.format('DELETE FROM `volumo` WHERE id = %s;', id);
   return db.mysqlExec(query);
 }
 
@@ -65,6 +71,7 @@ var _updateVolumo = function(id, kampo, valoro) {
 
 module.exports = {
   insertRevuo: _insertRevuo,
+  deleteVolumo: _deleteVolumo,
   insertVolumo: _insertVolumo,
   findRevuoj: _findRevuoj,
   findVolumoj: _findVolumoj,

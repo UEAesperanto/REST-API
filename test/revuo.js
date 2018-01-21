@@ -112,6 +112,33 @@ describe('Revuoj', function() {
           });
       });
 
+      it('it should DELETE volumon', function(done) {
+        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
+                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
+         db.mysqlExec(query).then(function(result){
+            chai.request(server)
+            .delete('/revuoj/volumoj/1')
+            .set('x-access-token', token)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
+        });
+      });
+
+      it('it should NOT DELETE volumon - sen permeso', function(done) {
+        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
+                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
+         db.mysqlExec(query).then(function(result){
+            chai.request(server)
+            .delete('/revuoj/volumoj/1')
+            .end((err, res) => {
+              res.should.have.status(400);
+              done();
+            });
+        });
+      });
+
       it('it should POST volumon', function(done){
          chai.request(server)
          .post('/revuoj/1/volumoj')

@@ -110,11 +110,18 @@ var _updateVolumo = function(req, res) {
   DELETE revuoj/volumoj/:id
 */
 var _deleteVolumo = function(req, res) {
-
+  Revuo.deleteVolumo(req.params.id).then(function(sucess){
+    Revuo.findVolumoj(req.params.id, 'id').then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(204).send({message: 'Ok'});
+      else
+        res.status(500).send({message: 'Internal Error'});
+    });
+  });
 }
 
 var _getVolumoj = function(req, res) {
-  Revuo.findVolumoj(req.params.id).then(function(sucess) {
+  Revuo.findVolumoj(req.params.id, 'idRevuo').then(function(sucess) {
     var volumoj = sucess;
     volumoj = volumoj.filter(query.search(req.query));
     res.status(200).send(volumoj);

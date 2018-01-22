@@ -15,6 +15,12 @@ var _escapeId = function(uzantQuery) {
   return connection.escapeId(uzantQuery);
 }
 
+var _escapeArgs = function(args) {
+  for(var i = 0; i < args.length; i ++) {
+    args[i] = _escape(args[i]);
+  }
+}
+
 var _mysqlExec = function(query){
   return new Promise(function(resolve, reject){
     connection.query(query, function (err, results, fields) {
@@ -27,5 +33,6 @@ var _mysqlExec = function(query){
 module.exports = {
   mysqlExec:_mysqlExec,
   escape: _escape,
+  escapeArgs: _escapeArgs,
   escapeId: _escapeId
 }

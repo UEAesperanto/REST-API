@@ -2,10 +2,7 @@ var util = require('util');
 var db = require('../modules/db');
 
 var _insertRevuo = function(titolo, fondjaro, issn) {
-    titolo = db.escape(titolo);
-    fondjaro = db.escape(fondjaro);
-    issn = db.escape(issn);
-
+    db.escapeArgs(arguments);
     var query = util.format('INSERT INTO `revuo`(titolo, fondjaro, issn)\
                              VALUES(%s, %s, %s);', titolo, fondjaro, issn);
 
@@ -13,15 +10,10 @@ var _insertRevuo = function(titolo, fondjaro, issn) {
 }
 
 var _insertVolumo = function(numeroJaro, numeroEntute, enhavlisto, idRevuo) {
-    numeroJaro = db.escape(numeroJaro);
-    numeroEntute = db.escape(numeroEntute);
-    enhavlisto = db.escape(enhavlisto);
-    idRevuo = db.escape(idRevuo);
-
+    db.escapeArgs(arguments);
     var query = util.format('INSERT INTO `volumo`(numeroJaro, numeroEntute, \
                              enhavlisto, idRevuo) VALUES(%s, %s, %s, %s);',
                              numeroJaro, numeroEntute, enhavlisto, idRevuo);
-
     return db.mysqlExec(query);
 }
 
@@ -58,7 +50,6 @@ var _deleteVolumo = function(id) {
 }
 
 var _updateVolumo = function(id, kampo, valoro) {
-
   id = db.escape(id);
   kampo = db.escapeId(kampo);
   valoro = db.escape(valoro);

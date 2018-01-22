@@ -5,33 +5,32 @@ var _insert = function(id, personanomo, familianomo, titolo,
                        bildo, adreso, posxtkodo, idLando,
                        naskigxtago, notoj, retposxto, telhejmo,
                        teloficejo, telportebla,  tttpagxo) {
+    db.escapeArgs(arguments);
     var query = util.format('INSERT INTO uzanto(id, personanomo, familianomo, titolo,\
                             bildo, adreso, posxtkodo, idLando,\
                             naskigxtago, notoj, retposxto, telhejmo,\
                             teloficejo, telportebla,  tttpagxo)\
-                            VALUES(%s, "%s", "%s", "%s",\
-                                   "%s", "%s", "%s", %s,\
-                                   "%s", "%s", "%s", "%s",\
-                                    "%s", "%s", "%s");',
+                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s,\
+                                   %s, %s, %s, %s,%s, %s, %s);',
                             id, personanomo, familianomo, titolo,
                             bildo, adreso, posxtkodo, idLando,
                             naskigxtago, notoj, retposxto, telhejmo,
                             teloficejo, telportebla,  tttpagxo);
 
-    query = query.replace(/undefined/g, 'NULL');
-    query = query.replace(/"NULL"/g, 'NULL');
     return db.mysqlExec(query);
 }
 
 var _find = function(kampo, valoro){
-  if(kampo)
+  if(kampo) {
+    kampo = db.escapeId(kampo);
+    valoro = db.escape(valoro);
     var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo, \
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
                              FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
                              uzanto.id = uzantoAuxAsocio.id\
                              JOIN `lando` ON \
-                             uzanto.idLando = lando.id WHERE uzanto.%s = "%s";', kampo, valoro);
-  else
+                             uzanto.idLando = lando.id WHERE uzanto.%s = %s;', kampo, valoro);
+  } else
     var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo,\
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
                              FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
@@ -42,17 +41,22 @@ var _find = function(kampo, valoro){
 }
 
 var _findForgesis = function(retposxto, naskigxtago) {
-  var query = util.format('SELECT id FROM `uzanto` WHERE `retposxto` = "%s"\
-                           AND `naskigxtago` = "%s";', retposxto, naskigxtago);
+  db.escapeArgs(arguments);
+  var query = util.format('SELECT id FROM `uzanto` WHERE `retposxto` = %s\
+                           AND `naskigxtago` = %s;', retposxto, naskigxtago);
   return db.mysqlExec(query);
 }
 
 var _update = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `uzanto` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  id = db.escape(id);
+  kampo = db.escapeId(kampo);
+  valoro = db.escape(valoro);
+  var query = util.format('UPDATE `uzanto` SET `%s` = %s WHERE id = %s', kampo, valoro, id);
   return db.mysqlExec(query);
 }
 
 var _findGrupoj = function(id) {
+  id = db.escape(id);
   var query = util.format('SELECT aneco.*, grupo.nomo  FROM `aneco` \
                            JOIN `uzanto` ON uzanto.id = aneco.idAno \
                            JOIN `grupo` ON grupo.id = aneco.idGrupo \

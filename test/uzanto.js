@@ -13,19 +13,26 @@ var config = require('../config');
 
 var should = chai.should();
 
-
 chai.use(chaiHttp);
 describe('Uzantoj', function() {
     var uzanto = {"uzantnomo" : "retposxto@io.com",
-                  "pasvorto" : "nomoLoka",
-                  "personanomo": "personanomo",
-                  "titolo":"titolo",
-                  "bildo":"bildo",
-                  "adreso":"adreso",
-                  "posxtkodo":"idNacialando",
-                  "idLando": 1,
-                  "naskigxtago": "1996-05-05",
-                  "retposxto":"retposxto@io.com"};
+      "pasvorto" : "nomoLoka",
+      "personanomo": "personanomo",
+      "titolo":"titolo",
+      "bildo":"bildo",
+      "adreso":"adreso",
+      "posxtkodo":"idNacialando",
+      "idLando": 1,
+      "naskigxtago": "1996-05-05",
+      "retposxto":"retposxto@io.com"};
+
+    var uzantoSenUzantnomo = { "personanomo": "personanomo",
+      "titolo":"titolo",
+      "bildo":"bildo",
+      "adreso":"adreso",
+      "posxtkodo":"idNacialando",
+      "idLando": 1,
+      "naskigxtago": "1996-05-05"};
 
     describe('Testoj sen Uzantoj /uzantoj', function(){
       beforeEach(function(done) {
@@ -43,6 +50,17 @@ describe('Uzantoj', function() {
       });
 
       it('it should POST a uzanto', function(done){
+        chai.request(server)
+        .post('/uzantoj')
+        .send(uzantoSenUzantnomo)
+        .end(function(err, res){
+          res.should.have.status(201);
+          res.body.should.have.property('id');
+          done();
+        });
+      });
+
+      it('it should POST a uzanto sen uzantnomo', function(done){
         chai.request(server)
         .post('/uzantoj')
         .send(uzanto)

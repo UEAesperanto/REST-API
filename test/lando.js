@@ -27,14 +27,10 @@ describe('Landoj', function() {
     });
 
     describe('GET /landoj', function(){
-        var lando = {id : 1, valuto : "valuto", radikoEo : "radikoEo", finajxoEo: "finajxoEo", landkodo : "landKodo" };
-        var lando2 = {id : 2, valuto : "valuto2", radikoEo : "radikoEo2", finajxoEo: "finajxoEo2", landkodo : "landKodo2" };
-        var lando3 = {id : 3, valuto : "valuto3", radikoEo : "radikoEo3", finajxoEo: "finajxoEo3", landkodo : "landKodo3" };
-
      it('it should GET all the landoj', function(done){
-         Lando.insert(lando);
-         Lando.insert(lando2);
-         Lando.insert(lando3);
+         Lando.insert("eur", "radiko", "finajxo", "lk");
+         Lando.insert("eur", "radiko", "finajxo", "l2");
+         Lando.insert("eur", "radiko", "finajxo", "l1");
 
        chai.request(server)
            .get('/landoj')
@@ -58,35 +54,33 @@ describe('Landoj', function() {
 
    describe('GET /landoj/:id', function(){
      it('it should GET a lando given id', function(done){
-      var lando = {id : 1, valuto : "valuto", radikoEo : "radikoEo", finajxoEo: "finajxoEo", landkodo : "landKodo" };
-      Lando.insert(lando).then(function(success){
+      Lando.insert("eur", "radiko", "finajxo", "lk").then(function(success){
         chai.request(server)
           .get('/landoj/' + success.insertId)
           .end(function(err, res){
               res.should.have.status(200);
               res.body[0].should.have.property('finajxoEo');
-              res.body[0].finajxoEo.should.equal('finajxoEo');
+              res.body[0].finajxoEo.should.equal('finajxo');
               res.body[0].should.have.property('valuto');
-              res.body[0].valuto.should.equal('valuto');
+              res.body[0].valuto.should.equal('eur');
               res.body[0].should.have.property('radikoEo');
-              res.body[0].radikoEo.should.equal('radikoEo');
+              res.body[0].radikoEo.should.equal('radiko');
               res.body[0].should.have.property('landkodo');
-              res.body[0].landkodo.should.equal('landKodo');
+              res.body[0].landkodo.should.equal('lk');
               done();
           });
       });
     });
 
     it('it should NOT GET a landoj given id', function(done){
-     var lando = {id : 2, valuto : "valuto", nomoEo : "nomoEo", finajxoEo: "finajxoEo", landKodo : "landKodo" };
-     Lando.insert(lando).then(function(success){
+     Lando.insert("eur", "radiko", "finajxo", "lk").then(function(success){
        chai.request(server)
          .get('/landoj/' + success + 1)
          .end(function(err, res){
              var response = JSON.stringify(res.body);
-             res.body.should.be.a('object');
+             res.body.should.be.a('array');
              res.should.have.status(200);
-             response.should.equal('{}');
+             response.should.equal('[]');
              done();
          });
      });
@@ -96,8 +90,8 @@ describe('Landoj', function() {
   describe('POST /landoj', function(){
 
    it('it should NOT POST a lando - Sen ĵetono (token)', function(done){
-     var lando = {valuto : "valuto", nomoEo : "nomoEo",
-                  finajxoEo: "finajxoEo", landKodo : "landKodo" };
+     var lando = {valuto : "eur", nomoEo : "nomoEo",
+                  finajxoEo: "finajxoEo", landKodo : "lk" };
      chai.request(server)
          .post('/landoj')
          .send(lando)
@@ -112,19 +106,15 @@ describe('Landoj', function() {
    });
 
       it('it should POST a lando - with token', function (done) {
-          var lando = {valuto : "valuto", nomoEo : "nomoEo",
-              finajxoEo: "finajxoEo", landKodo : "landKodo" };
+          var lando = {valuto : "eur", nomoEo : "nomoEo",
+              finajxoEo: "finajxoEo", landKodo : "lk" };
 
           chai.request(server)
               .post('/landoj')
               .set('x-access-token', token)
               .send(lando)
               .end(function (err, res) {
-                  res.should.have.status(201)
-                  res.body.should.have.property('valuto');
-                  res.body.should.have.property('finajxoEo');
-                  res.body.valuto.should.equal('valuto');
-                  res.body.finajxoEo.should.equal('finajxoEo');
+                  res.should.have.status(201);
                   done();
               });
       });
@@ -132,16 +122,11 @@ describe('Landoj', function() {
 
     describe('DELETE /landoj', function(){
     it('it should NOT DELETE a lando - Sen ĵetono', function (done) {
-         var lando = {valuto : "valuto", radikoEo : "radikoEo",
-         finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-         Lando.insert(lando).then(function (success) {
+         Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
              chai.request(server)
                  .delete('/landoj/' + success.insertId)
-                 .send(lando)
                  .end(function (err, res) {
                      var error = JSON.parse(err.response.error.text);
-
                      error.success.should.equal(false);
                      error.message.should.equal("Sen ĵetono (token).");
                      res.should.have.status(400);
@@ -151,11 +136,8 @@ describe('Landoj', function() {
          })
      });
 
-        it('it should DELETE a lando - with token', function (done) {
-            var lando = {valuto : "valutogega", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-                Lando.insert(lando).then(function (success) {
+    it('it should DELETE a lando - with token', function (done) {
+                Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                     chai.request(server)
                         .delete('/landoj/' + success.insertId)
                         .set('x-access-token', token)
@@ -170,16 +152,12 @@ describe('Landoj', function() {
 
     describe('PUT /landoj/:id', function () {
         it('it should NOT UPDATE a lando - Sen ĵetono', function (done) {
-            var lando = {valuto : "valuto", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-            Lando.insert(lando).then(function (success) {
+            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                 chai.request(server)
                     .delete('/landoj/' + success.insertId)
                     .send({kampo: 'valuto', valoro: 'new valuto'})
                     .end(function (err, res) {
                         var error = JSON.parse(err.response.error.text);
-
                         error.success.should.equal(false);
                         error.message.should.equal("Sen ĵetono (token).");
                         res.should.have.status(400);
@@ -191,14 +169,11 @@ describe('Landoj', function() {
 
 
         it('it should UPDATE a lando valuto - with token', function (done) {
-            var lando = {valuto : "valutogega", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-            Lando.insert(lando).then(function (success) {
+            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                 chai.request(server)
                     .put('/landoj/' + success.insertId)
                     .set('x-access-token', token)
-                    .send({kampo: 'valuto', valoro: 'new valuto'})
+                    .send({kampo: 'valuto', valoro: 'gbp'})
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");
@@ -208,10 +183,7 @@ describe('Landoj', function() {
         });
 
         it('it should UPDATE a lando radikoEo - with token', function (done) {
-            var lando = {valuto : "valutogega", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-            Lando.insert(lando).then(function (success) {
+            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                 chai.request(server)
                     .put('/landoj/' + success.insertId)
                     .set('x-access-token', token)
@@ -225,10 +197,7 @@ describe('Landoj', function() {
         });
 
         it('it should UPDATE a lando finajxoEo - with token', function (done) {
-            var lando = {valuto : "valutogega", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-            Lando.insert(lando).then(function (success) {
+            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                 chai.request(server)
                     .put('/landoj/' + success.insertId)
                     .set('x-access-token', token)
@@ -242,14 +211,11 @@ describe('Landoj', function() {
         });
 
         it('it should UPDATE a lando landkodo - with token', function (done) {
-            var lando = {valuto : "valutogega", radikoEo : "radikoEo",
-                finajxoEo: "finajxoEo", landkodo : "landKodo" };
-
-            Lando.insert(lando).then(function (success) {
+            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
                 chai.request(server)
                     .put('/landoj/' + success.insertId)
                     .set('x-access-token', token)
-                    .send({kampo: 'landkodo', valoro: 'new landkodo'})
+                    .send({kampo: 'landkodo', valoro: 'lk'})
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.message.should.equal("Ĝisdatigo sukcese farita");

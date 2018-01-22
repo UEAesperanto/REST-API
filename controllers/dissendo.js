@@ -5,6 +5,7 @@ var Dissendo = require('../models/dissendo');
 var Retlisto = require('../models/retlisto');
 var Abonanto = require('../models/abonanto');
 var query = require('../modules/query');
+var mail = require('../modules/mail');
 
 /*
   GET /dissendoj
@@ -21,8 +22,9 @@ var _getDissendoj = function(req, res){
   POST /dissendoj
   body:
   @idRetlisto
+  @dissendanto
   @html
-  @subject
+  @temo
   @dato
   @text
 */
@@ -30,7 +32,16 @@ var _postDissendo = function(req, res){
   var novaDissendo = Dissendo.create(req.body);
   Dissendo.insert(novaDissendo).then(
     function(sucess){
-      res.status(201).send(novaDissendo);
+    /*  Retlisto.getEmails(novaDissendo.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
+        var data = { "subject" : novaDissendo.temo, "html" : novaDissendo.teksto }
+        var keys = Object.keys(list);
+        for(i=0; i < list.length; i++){
+          var retadreso = list[keys[i]];
+          data.to = { retadreso :" "}
+          mail.sendiRetmesagxo(data);
+        } */
+        res.status(201).send(novaDissendo);
+      //})
     },
     function(fail){
       res.status(500).send({message: 'Internal Error'})

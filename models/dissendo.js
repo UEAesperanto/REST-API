@@ -6,6 +6,7 @@ var db = require('../modules/db');
 var _dissendoNull = function(){
   return {
     dissendanto : null,
+    idRetlisto : null,
     dato : null,
     temo: null,
     teksto : null

@@ -25,6 +25,12 @@ var _find = function(id){
   return db.mysqlExec(query);
 }
 
+var _getEmails = function(id){
+  var query = util.format('SELECT retadreso FROM `retlisto_abono` WHERE `idRetlisto` = %s;', id);
+  return db.mysqlExec(query);
+}
+
+
 var _insert = function(retlisto){
   var query = util.format(
     'INSERT INTO retlisto (nomo, priskribo)\
@@ -43,5 +49,6 @@ module.exports = {
   find: _find,
   create: _create,
   insert: _insert,
-  delete: _delete
+  delete: _delete,
+  getEmails:_getEmails
 }

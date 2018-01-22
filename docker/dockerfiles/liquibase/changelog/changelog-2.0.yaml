@@ -29,3 +29,14 @@ databaseChangeLog:
               - column:
                   name: nomo
                   value: Komunikisto
+  - changeSet:
+      id: DissendoKajRetlisto
+      author: Victor Hugo
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: idRetlisto
+                  type: int(11)
+                  references: retlisto(id)
+            tableName: dissendo

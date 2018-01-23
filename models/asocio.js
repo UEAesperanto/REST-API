@@ -2,9 +2,10 @@ var util = require('util');
 var db = require('../modules/db');
 
 var _find = function(id){
-  if(id)
+  if(id) {
+    id = db.escape(id);
     var query = util.format('SELECT * FROM `asocio` WHERE `id` = %s;', id);
-  else
+  } else
     var query = util.format('SELECT * FROM `asocio`;');
   return db.mysqlExec(query);
 }

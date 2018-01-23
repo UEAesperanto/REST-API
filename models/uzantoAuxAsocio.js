@@ -4,24 +4,27 @@ var hash = require('../modules/hash');
 
 
 var _insert = function(uzantnomo, pasvorto, ueakodo) {
-    if(uzantnomo && pasvorto) {
+  ueakodo = db.escape(ueakodo);
+  if(uzantnomo && pasvorto) {
+      uzantnomo = db.escape(uzantnomo);
       var pasvortajDatumoj = hash.sha512(pasvorto, null);
+      pasvortajDatumoj.hash = db.escape(pasvortajDatumoj.hash);
+      pasvortajDatumoj.salt = db.escape(pasvortajDatumoj.salt);
       var query = util.format('INSERT INTO `uzantoAuxAsocio` \
                                (ueakodo, uzantnomo, pasvortoHash, pasvortoSalt) \
-                               VALUES ("%s", "%s", "%s", "%s");', ueakodo,
+                               VALUES (%s, %s, "%s", "%s");', ueakodo,
                                uzantnomo, pasvortajDatumoj.hash, pasvortajDatumoj.salt);
   } else {
-      var query = "INSERT INTO `uzantoAuxAsocio`(ueakodo) VALUES(NULL);"
+      var query = util.format("INSERT INTO `uzantoAuxAsocio`(ueakodo) VALUES(%s);", ueakodo);
   }
 
-  query = query.replace(/undefined/g, 'NULL');
-  query = query.replace(/"NULL"/g, 'NULL');
   return db.mysqlExec(query);
 }
 
 var _find = function(id) {
   if (id) {
-    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = "%s";', id);
+    id = db.escape(id);
+    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = %s;', id);
   } else {
     var query = util.format('SELECT * FROM `uzantoAuxAsocio`;');
   }
@@ -29,12 +32,16 @@ var _find = function(id) {
 }
 
 var _findUzantnomo = function(uzantnomo) {
-  var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `uzantnomo` = "%s";', uzantnomo);
+  uzantnomo = db.escape(uzantnomo);
+  var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `uzantnomo` = %s;', uzantnomo);
   return db.mysqlExec(query);
 }
 
 var _update = function(id, kampo, valoro) {
-  var query = util.format('UPDATE `uzantoAuxAsocio` SET `%s` = "%s" WHERE `id` = %s', kampo, valoro, id);
+  id = db.escape(id);
+  kampo = db.escapeId(kampo);
+  valoro = db.escape(valoro);
+  var query = util.format('UPDATE `uzantoAuxAsocio` SET %s = %s WHERE `id` = %s', kampo, valoro, id);
   return db.mysqlExec(query);
 }
 

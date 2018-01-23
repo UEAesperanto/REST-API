@@ -28,10 +28,9 @@ var _getLando = function(req, res){
   POST /lando
 */
 var _postLando = function(req, res){
-  var novaLando = Lando.create(req.body);
-  Lando.insert(novaLando).then(
+  Lando.insert(req.body.valuto, req.body.radikoEo, req.body.finajxoEo, req.body.landkodo).then(
     function(sucess){
-      res.status(201).send(novaLando);
+      res.status(201).send({insertId: sucess.insertId});
     },
     function(fail){
       res.status(500).send({message: 'Internal Error'})

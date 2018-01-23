@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: Dissendolistoj
+      author: Ana Ribeiro
+      changes:
+        - dropTable:
+            tableName: dissendo_demandero
+        - dropTable:
+            tableName: ref_dissendo_respondoj
+        - dropColumn:
+            columnName: idUzanto
+            tableName: retlist_abono
+        - dropColumn:
+            columnName: abono
+            tableName: retlist_abono
+        - addColumn:
+            columns:
+              - column:
+                  name: idRetlisto
+                  type: int(11)
+                  references: retlisto(id)
+            tableName: retlist_abono
+        - insert:
+            tableName: adminrajto
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: nomo
+                  value: Komunikisto
+  - changeSet:
+      id: DissendoKajRetlisto
+      author: Victor Hugo
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: idRetlisto
+                  type: int(11)
+                  references: retlisto(id)
+            tableName: dissendo

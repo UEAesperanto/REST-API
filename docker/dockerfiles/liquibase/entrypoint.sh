@@ -22,7 +22,7 @@ if [ ! "$DATUMBAZO" == "$DATUMBAZO_NOMO" ]; then
 fi
 
 # Populate!
-liquibase --driver=com.mysql.jdbc.Driver \
+liquibase --driver=com.mysql.jdbc.Driver --logLevel=info \
      --classpath=$CONN:$SNAKEYAML \
      --changeLogFile=$CHANGELOG_FILE \
      --url="jdbc:mysql://mysql/$DATUMBAZO_NOMO" \

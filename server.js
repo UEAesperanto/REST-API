@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 uzanto = require('./services/uzanto');
+dissendo = require('./services/dissendo');
 lando = require('./services/lando');
 asocio = require('./services/asocio');
 faktemo = require('./services/faktemo');
@@ -55,6 +56,7 @@ app.get('/', function (req, res) {
 // Mouting applications.
 app.use('/uzantoj', uzanto);
 app.use('/landoj', lando);
+app.use('/dissendoj', dissendo);
 app.use('/asocioj', asocio);
 app.use('/faktemoj', faktemo);
 app.use('/urboj', urbo);

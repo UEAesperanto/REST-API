@@ -32,16 +32,21 @@ var _postDissendo = function(req, res){
   var novaDissendo = Dissendo.create(req.body);
   Dissendo.insert(novaDissendo).then(
     function(sucess){
-    /*  Retlisto.getEmails(novaDissendo.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
-        var data = { "subject" : novaDissendo.temo, "html" : novaDissendo.teksto }
+      Retlisto.getEmails(novaDissendo.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
         var keys = Object.keys(list);
         for(i=0; i < list.length; i++){
-          var retadreso = list[keys[i]];
-          data.to = { retadreso :" "}
-          mail.sendiRetmesagxo(data);
-        } */
+          var retadreso = list[keys[i]].retadreso;
+          var to = util.format('{"%s" : "UEA-membro"}', retadreso);
+          var mailOptions = {
+              to: JSON.parse(to),
+              subject: novaDissendo.temo,
+              html: novaDissendo.teksto
+            }
+
+          mail.sendiRetmesagxo(mailOptions);
+        }
         res.status(201).send(novaDissendo);
-      //})
+      })
     },
     function(fail){
       res.status(500).send({message: 'Internal Error'})

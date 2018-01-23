@@ -42,8 +42,7 @@ describe('Dissendoj', function() {
 
      describe('POST /dissendoj', function(){
          it('it should POST a dissendo - with token', function (done) {
-            var dissendo = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto'}
-
+            var dissendo = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto', idRetlisto: 1};
              chai.request(server)
                  .post('/dissendoj')
                  .set('x-access-token', token)

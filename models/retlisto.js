@@ -26,7 +26,7 @@ var _find = function(id){
 }
 
 var _getEmails = function(id){
-  var query = util.format('SELECT retadreso FROM `retlisto_abono` WHERE `idRetlisto` = %s;', id);
+  var query = util.format('SELECT retadreso FROM `retlist_abono` WHERE `idRetlisto` = %s;', id);
   return db.mysqlExec(query);
 }
 

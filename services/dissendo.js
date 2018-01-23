@@ -22,7 +22,7 @@ app.route('/retlistoj/:id(\\d+)')
 app.route('/retlistoj/:id/abonantoj')
     .post(dissendo.postAbonanto)
 
-app.route('/retlistoj/:id(\\d+)/abonantoj/:id(\\d+)')
+app.route('/retlistoj/:id(\\d+)/abonantoj/:idAbonanto(\\d+)')
     .delete(dissendo.deleteAbonanto);
 
 module.exports = app;

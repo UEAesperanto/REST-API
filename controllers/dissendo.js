@@ -29,33 +29,34 @@ var _getDissendoj = function(req, res){
   @text
 */
 var _postDissendo = function(req, res){
-  var novaDissendo = Dissendo.create(req.body);
-  Dissendo.insert(novaDissendo).then(
-    function(sucess){
-      Retlisto.getEmails(novaDissendo.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
+  Dissendo.insert(req.body.idRetlisto, req.body.dissendanto,
+                  req.body.dato, req.body.temo, req.body.teksto).then(function(sucess){
+    if(sucess){
+      Retlisto.getEmails(req.body.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
         var keys = Object.keys(list);
         for(i=0; i < list.length; i++){
           var retadreso = list[keys[i]].retadreso;
           var to = util.format('{"%s" : "UEA-membro"}', retadreso);
           var mailOptions = {
               to: JSON.parse(to),
-              subject: novaDissendo.temo,
-              html: novaDissendo.teksto
+              subject: req.body.temo,
+              html: req.body.teksto
             }
 
           mail.sendiRetmesagxo(mailOptions);
         }
-        res.status(201).send(novaDissendo);
+        res.status(201).send(sucess);
       })
-    },
-    function(fail){
-      res.status(500).send({message: 'Internal Error'})
+    }else{
+      res.status(500).send({message: 'Internal Error'});
     }
-  );
-  //fari
-  // Deve enviar através do module mail.sendiRetmesagxo que já está configurado para o sendinblue
+  });
 }
 
+
+/*
+  GET /dissendo/retlistoj
+*/
 var _getRetlistoj = function(req, res) {
   Retlisto.find().then(function(sucess){
          var retlistoj = sucess;
@@ -64,6 +65,22 @@ var _getRetlistoj = function(req, res) {
   });
 }
 
+/*
+  POST /dissendo/retlistoj
+*/
+var _postRetlisto = function(req, res) {
+  Retlisto.insert(req.body.nomo, req.body.priskribo).then(function(sucess){
+    if(sucess){
+      res.status(201).send(sucess);
+    }else{
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+/*
+  DELETE /dissendo/retlistoj/:id
+*/
 var _deleteRetlisto = function(req, res) {
   Retlisto.delete(req.params.id).then(function(sucess){
     Retlisto.find(req.params.id).then(function(sucess){
@@ -75,30 +92,23 @@ var _deleteRetlisto = function(req, res) {
   });
 }
 
-var _postRetlisto = function(req, res) {
-  var novaRetlisto = Retlisto.create(req.body);
-  Retlisto.insert(novaRetlisto).then(
-    function(sucess){
-      res.status(201).send(novaRetlisto);
-    },
-    function(fail){
-      res.status(500).send({message: 'Internal Error'})
-    }
-  );
-}
-
+/*
+  POST /dissendo/retlistoj/:id/abonantoj
+*/
 var _postAbonanto = function(req, res) {
-  var novaAbonanto = Abonanto.create(req.body);
-  Abonanto.insert(novaAbonanto).then(
-    function(sucess){
-      res.status(201).send(novaAbonanto);
-    },
-    function(fail){
-      res.status(500).send({message: 'Internal Error'})
+  Retlisto.insert(req.body.ekde, req.body.formato_html,
+                  req.body.kodigxo_utf8, req.body.retadreso, req.params.id).then(function(sucess) {
+    if(sucess) {
+      res.status(201).send(sucess);
+    } else {
+      res.status(500).send({message: 'Internal Error'});
     }
-  );
+  });
 }
 
+/*
+  DELETE /dissendo/retlistoj/:id/abonantoj
+*/
 var _deleteAbonanto = function(req, res) {
  //fari
 }

@@ -84,7 +84,7 @@ describe('Dissendoj', function() {
              it('it should DELETE a retlisto - with token', function (done) {
                  var retlisto = { nomo: 'nomo', priskribo: 'priskribo'}
 
-                     Retlisto.insert(retlisto).then(function (success) {
+                     Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
                          chai.request(server)
                              .delete('/dissendoj/retlistoj/' + success.insertId)
                              .set('x-access-token', token)
@@ -102,9 +102,9 @@ describe('Dissendoj', function() {
             describe('POST /dissendoj/retlistoj/:id/abonantoj', function(){
                 it('it should POST a dissendo - with token', function (done) {
                    var retlisto = { nomo: 'nomo', priskribo: 'priskribo'};
-                   Retlisto.insert(retlisto).then(function (success) {
+                   Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
                      var abonanto = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true,
-                     retadreso:'email@email.com', idRetlisto: success.insertId };
+                     retadreso:'email@email.com'};
                      chai.request(server)
                        .post('/dissendoj/retlistoj/' + success.insertId + '/abonantoj')
                        .set('x-access-token', token)

@@ -17,6 +17,7 @@ var config = [{idLaborgrupo: 1},
               {idBazaMembreco: 1},
               {idAdministranto: 1},
               {idJunaAdministranto: 2},
+              {idKomunikisto: 3},
               {junaAgxo: 35}];
 
 async.each(config, function(item, callback) {

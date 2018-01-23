@@ -26,6 +26,9 @@ var _getConfig = function(req, res) {
     case 'idBazaMembreco':
         res.status(200).send({'idBazaMembreco': config.idBazaMembreco});
         break;
+    case 'idKomunikisto':
+        res.status(200).send({'idKomunikisto': config.idKomunikisto});
+        break;
     default:
        res.status(404).send({'message': 'Ne trovita'});
   }

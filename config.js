@@ -9,11 +9,12 @@ module.exports = {
   /*ID de permesoj en  tabelo adminrajto*/
   'idAdministranto': 1,
   'idJunaAdministranto': 2,
+  'idKomunikisto': 3,
 
   /*Retadresoj*/
-  'financaretadreso':'financoj@ekzemplo.com',
+  'financaretadreso':'aninhacostaribeiro@gmail.com',
   'sendInBlueKey': 'xxxxx',
-  'fromDefault': 'ekzemplo@ekzemplo.com',
+  'fromDefault': 'reto@uea.org',
 
   /*Negocmodeloj*/
   'junaAgxo': 35,

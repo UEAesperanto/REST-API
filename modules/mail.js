@@ -16,7 +16,6 @@ var _sendiRetmesagxo = function(data) {
   };
 
   function callback(error, response, body) {
-      console.log(body);
       if (error) {
           console.log(error);
       }

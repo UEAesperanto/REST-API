@@ -13,27 +13,16 @@ app.route('/retlistoj')
      //Público
     .get(dissendo.getRetlistoj)
     //Apenas para administradores gerais ou de comunicação
-<<<<<<< HEAD
     .post(dissendo.postRetlisto);
 
 app.route('/retlistoj/:id(\\d+)')
     .delete(dissendo.deleteRetlisto)
-=======
-    .delete(dissendo.deleteRetlisto)
-    .post(dissendo.postRetlisto);
->>>>>>> master
 
 //Qualquer um pode acessar
 app.route('/retlistoj/:id/abonantoj')
     .post(dissendo.postAbonanto)
-<<<<<<< HEAD
-    
+
 app.route('/retlistoj/:id(\\d+)/abonantoj/:id(\\d+)')
     .delete(dissendo.deleteAbonanto);
 
-=======
-    .delete(dissendo.deleteAbonanto);
-
-
->>>>>>> master
 module.exports = app;

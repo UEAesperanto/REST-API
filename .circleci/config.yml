@@ -44,7 +44,13 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
-            docker-compose -f docker/compose/production.yaml run api npm test
+            docker exec -it uea-api bash -c "nyc npm test"
+
+      - run:
+          name: Coverage and send data to codecov
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc report | codecov -t ${CODECOV_TOKEN}"
 
       - add_ssh_keys:
           fingerprints:

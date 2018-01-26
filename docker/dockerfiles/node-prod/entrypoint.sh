@@ -6,4 +6,4 @@ while ping -q -c1 liquibase > /dev/null; do
 done
 
 echo "App preta."
-npm install --unsafe-perm --dev && npm start
+npm install --unsafe-perm --dev && tail -f /dev/null

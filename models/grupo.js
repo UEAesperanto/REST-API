@@ -24,6 +24,14 @@ var _delete = function(id){
   return db.mysqlExec(query);
 }
 
+var _deleteGrupoKat = function(idGrupo, idKategorio){
+  db.escapeArgs(arguments);
+  var query = util.format('DELETE FROM `ref_grupo_grupa_kategorio` \
+                           WHERE idGrupo = %s AND idGrupaKategorio = %s', idGrupo,
+                           idKategorio);
+  return db.mysqlExec(query);
+}
+
 var _update = function(id, kampo, valoro) {
   id = db.escape(id);
   kampo = db.escapeId(kampo);
@@ -78,6 +86,7 @@ module.exports = {
   insert: _insert,
   delete: _delete,
   update: _update,
+  deleteGrupoKat: _deleteGrupoKat,
   insertRefKategorio: _insertRefKategorio,
   findKategorio: _findKategorio,
   findLaboranoj: _findLaboranoj

@@ -137,7 +137,7 @@ describe('Grupoj', function() {
                res.should.have.status(200);
                done();
            });
-     })
+     });
 
      it('it should GET a grupoj anoj', function (done) {
          chai.request(server)
@@ -150,8 +150,8 @@ describe('Grupoj', function() {
      });
    });
 
-   describe('POST /grupoj/:id/anoj', function(){
-     before(function (done) {
+   describe('Testoj kun grupoj en kategorioj', function(){
+     beforeEach(function (done) {
          var query = [];
          query.push('INSERT INTO grupo (id) VALUES (10);');
          query.push('INSERT INTO grupo (id) VALUES (11);');
@@ -170,6 +170,28 @@ describe('Grupoj', function() {
 
          var uzanto = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
          done();
+     });
+
+     it('it should delete ref_grupo_grupa_kategorio', function(done) {
+       chai.request(server)
+           .get('/grupoj/kategorioj/2/sub')
+           .end((err, res) => {
+               res.body.length.should.be.equal(1);
+               res.should.have.status(200);
+               chai.request(server)
+                   .delete('/grupoj/kategorioj/2/sub/10')
+                   .set('x-access-token', token)
+                   .end((err, res) => {
+                     res.should.have.status(204);
+                     chai.request(server)
+                         .get('/grupoj/kategorioj/2/sub')
+                         .end((err, res) => {
+                           res.body.length.should.be.equal(0);
+                           res.should.have.status(200);
+                           done();
+                         });
+                    });
+           });
      });
 
      it('it should POST all the grupoj/:id/anoj for membrecgrupo', function(done){

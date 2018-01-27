@@ -26,6 +26,7 @@ app.route('/kategorioj/:id/sub')
     .get(grupo.getGrupojKat);
 
 app.route('/kategorioj/:idKat/sub/:idGrupo')
+    .delete(routerAuth, grupo.deleteGrupoKat)
     .post(routerAuth, grupo.postRefKatGrupo);
 
 app.route('/:id(\\d+)')

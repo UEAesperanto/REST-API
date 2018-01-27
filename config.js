@@ -12,13 +12,13 @@ module.exports = {
   'idKomunikisto': 3,
 
   /*Retadresoj*/
-  'financaretadreso':'aninhacostaribeiro@gmail.com',
+  'financaretadreso':'financoj@ekzemplo.com',
   'sendInBlueKey': 'xxxxx',
-  'fromDefault': 'reto@uea.org',
-
+  'fromDefault': 'ekzemplo@ekzemplo.com',
+  
   /*Negocmodeloj*/
   'junaAgxo': 35,
 
   /*Sekretoj*/
-  'sekretoJWT': 'sekretoUzanto'
+  'sekretoJWT': '2UjXXkEYQKBdWi4KdfQNtT39XxqCQBAd'
 };

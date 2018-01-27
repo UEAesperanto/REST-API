@@ -220,8 +220,21 @@ var _getAnoj = function(req, res) {
   }
 }
 
+/**/
+var _deleteGrupoKat = function(req, res) {
+  Grupo.deleteGrupoKat(req.params.idGrupo, req.params.idKat)
+  .then(function(sucess){
+      if(sucess){
+        res.status(204).send({message:'ok'});
+      } else {
+        res.status(500).send({message: 'internal error'});
+      }
+    });
+}
+
 module.exports = {
   getGrupoj: _getGrupoj,
+  deleteGrupoKat: _deleteGrupoKat,
   getKategorioj: _getKategorioj,
   getGrupo: _getGrupo,
   postGrupo: _postGrupo,

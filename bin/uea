@@ -1,0 +1,67 @@
+#!/bin/bash
+#title           :uea
+#description     :This script runs the uea application in develop and test environment.
+#author		       :Victor Hugo
+#date            :20182701
+#version         :0.1
+#usage		       :./bin/uea ENVIRONMENT
+#==============================================================================
+
+function display_usage {
+        echo "Usage: ./bin/uea ENVIRONMENT"
+        echo -e "\nEnvironments:\ndev\tDevelop environment container up\ntest\tTests environment container up"
+}
+
+function get_sha {
+  docker inspect \
+    --type=image \
+    --format "{{lower .Id}}" \
+    uea-$1 | cut -d':' -f2
+}
+
+function check_new_sha {
+  NEW_SHA=$(get_sha $1);
+  if [ $2 != $NEW_SHA ];then
+    docker rmi $2
+  fi
+}
+
+if [[ ! $(ls | grep "package.json") ]]; then
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}You must execute this script in project root directory${NC}";
+  display_usage;
+  exit 1;
+fi
+
+if [[ -z $1 ]]; then
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}You must especify what environment you want${NC}";
+  display_usage;
+  exit 1;
+fi
+
+if [[ $1 != "dev" && $1 != "test" ]]; then
+  RED='\033[0;31m'
+  NC='\033[0m'
+  echo -e "${RED}Environment invalid!${NC}";
+  display_usage;
+  exit 1;
+fi
+
+LIQUIBASE_SHA=$(get_sha liquibase)
+NODE_SHA=$(get_sha nodejs)
+MYSQL_SHA=$(get_sha mysql)
+
+docker-compose -f docker/compose/$1.yaml -p uea-$1 down
+docker-compose -f docker/compose/$1.yaml -p uea-$1 build
+
+check_new_sha liquibase $LIQUIBASE_SHA
+check_new_sha nodejs $NODE_SHA
+check_new_sha mysql $MYSQL_SHA
+
+docker-compose \
+  -f docker/compose/$1.yaml \
+  -p uea-$1 \
+  up

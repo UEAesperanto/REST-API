@@ -1,7 +1,7 @@
 [![Esperanto](https://img.shields.io/badge/Esperanto-jes-green.svg)](https://eo.wikipedia.org/wiki/Esperanto)
 [![HTTPS](https://img.shields.io/badge/HTTPS-jes-green.svg)](https://letsencrypt.org/)
 [![CircleCI](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg)](https://circleci.com/gh/UEAesperanto/REST-API)
-[![codecov.io](https://codecov.io/gh/UEAesperanto/REST-API/tree/master)]
+[![codecov](https://codecov.io/gh/UEAesperanto/REST-API/branch/master/graph/badge.svg)](https://codecov.io/gh/UEAesperanto/REST-API)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](/LICENSE)
 
 # Datumbazo kaj REST-API de la Universala Esperanto-Asocio (UEA)
@@ -55,10 +55,10 @@ Por malinstali, simple tajpu:
 
 Kaj forviŝu la arĥivojn de la komputilo.
 
-## Kromaj Docker komandoj kiuj povas esti utilaj
+## Kromaj Docker komandoj, kiuj povas esti utilaj
 
-* `docker logs -f uea-api`: Montras la konzolon de la API;
-* `docker exec -it uea-datumbazo bash` sekvita de `mysql -uroot -p"$MYSQL_ROOT_PASSWORD" uea`: donas aliron al la shell de la datumbazo;
+* `docker logs -f uea-api-[dev/test]`: Montras la konzolon de la API;
+* `docker exec -it uea-datumbazo-[dev/test] bash` sekvita de `mysql -uroot -p"$MYSQL_ROOT_PASSWORD" uea`: donas aliron al la shell de la datumbazo;
 
 
 ## Aŭtoroj

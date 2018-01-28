@@ -1,6 +1,7 @@
 [![Esperanto](https://img.shields.io/badge/Esperanto-jes-green.svg)](https://eo.wikipedia.org/wiki/Esperanto)
 [![HTTPS](https://img.shields.io/badge/HTTPS-jes-green.svg)](https://letsencrypt.org/)
 [![CircleCI](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg)](https://circleci.com/gh/UEAesperanto/REST-API)
+[![codecov.io](https://codecov.io/gh/UEAesperanto/REST-API/tree/master)]
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](/LICENSE)
 
 # Datumbazo kaj REST-API de la Universala Esperanto-Asocio (UEA)

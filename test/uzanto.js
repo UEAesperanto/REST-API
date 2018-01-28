@@ -4,6 +4,7 @@ var chaiHttp = require('chai-http');
 const {readFileSync} = require('fs');
 var util = require('util');
 var jwt  = require('jsonwebtoken');
+var async = require('async');
 
 var server = require('../server');
 var db = require('../modules/db');
@@ -19,7 +20,6 @@ describe('Uzantoj', function() {
       "pasvorto" : "nomoLoka",
       "personanomo": "personanomo",
       "titolo":"titolo",
-      "bildo":"bildo",
       "adreso":"adreso",
       "posxtkodo":"idNacialando",
       "idLando": 1,
@@ -28,7 +28,6 @@ describe('Uzantoj', function() {
 
     var uzantoSenUzantnomo = { "personanomo": "personanomo",
       "titolo":"titolo",
-      "bildo":"bildo",
       "adreso":"adreso",
       "posxtkodo":"idNacialando",
       "idLando": 1,
@@ -107,19 +106,10 @@ describe('Uzantoj', function() {
                 uzantnomo: 'nomo',
                 permesoj: [1]
               };
-              token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+              token = jwt.sign(administranto,
+                               config.sekretoJWT, {expiresIn: 18000});
               done();
             });
-      });
-
-      it('forgesis pasvorton kun uzanto', function(done){
-        chai.request(server)
-          .post('/uzantoj/forgesisPasvorton')
-          .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
-          .end(function(err, res) {
-            res.should.have.status(200);
-            done();
-          });
       });
 
       it('it should delete uzanton', function(done){
@@ -132,7 +122,7 @@ describe('Uzantoj', function() {
           });
       });
 
-      it('it should delete uzanton - Sen ĵetono', function(done){
+      it('it should NOT delete uzanton - Sen ĵetono', function(done){
         chai.request(server)
           .delete('/uzantoj/admin/' + idUzanto)
           .end((err, res) =>  {
@@ -141,15 +131,46 @@ describe('Uzantoj', function() {
           });
       });
 
-      it('should get true email', function(done){
+      it('forgesis pasvorton kun uzanto', function(done){
         chai.request(server)
-          .get('/uzantoj/cxuMembro/retposxto@io.com')
+          .post('/uzantoj/forgesisPasvorton')
+          .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
           .end(function(err, res) {
             res.should.have.status(200);
-            res.body.should.have.property('uzantoID');
-            res.body.uzantoID.should.be.equal(idUzanto);
             done();
           });
+      });
+
+      var uzantoUpdate = [
+        {"uzantnomo" : "retposxto@io.com"},
+        {"pasvorto" : "nmoLoka"},
+        {"personanomo": "prsonanomo"},
+        {"titolo":"titol"},
+        {"adreso":"adreo"},
+        {"posxtkodo":"iNacialando"},
+        {"idLando": 2},
+        {"naskigxtago": "1995-05-05"},
+        {"retposxto":"retposxto@io.com"}];
+
+      async.each(uzantoUpdate, function(item, callback) {
+        describe('PUT /config # ' + Object.keys(item)[0], function () {
+          it('it should update uzanto', function (done) {
+            var key = Object.keys(item)[0];
+            var value = Object.values(item)[0];
+            var request = '/uzantoj/admin/' + idUzanto;
+            var body = {kampo: key, valoro: value};
+            chai.request(server)
+            .put(request)
+            .set('x-access-token', token)
+            .send(body)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.message.should.equal("Ĝisdatigo sukcese farita");
+              done();
+            });
+          });
+        });
+        callback();
       });
 
       it('should POST a bildo', function(done){
@@ -179,6 +200,18 @@ describe('Uzantoj', function() {
           res.should.have.status(400);
           done();
         });
+      });
+
+      it('it should NOT update uzanton - ID', function(done){
+        chai.request(server)
+          .put('/uzantoj/admin/' + idUzanto)
+          .set('x-access-token', token)
+          .send({kampo: "id", valoro: 1})
+          .end((err, res) =>  {
+            res.should.have.status(403);
+            res.body.message.should.equal("vi ne povas ŝanĝi vian ID");
+            done();
+          });
       });
     });
 });

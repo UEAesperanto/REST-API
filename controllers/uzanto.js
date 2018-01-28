@@ -18,7 +18,6 @@ var hash = require('../modules/hash');
 var mail = require('../modules/mail');
 var file = require('../modules/file');
 
-
 /*
   POST - /uzantoj/ensaluti
 */
@@ -132,7 +131,8 @@ var _forgesisPasvorton = function(req, res) {
 
 var _updateUzanto = function(req, res){
   if (req.body.kampo == 'id') {
-    res.status(403).send({message: "vi ne povas ŝanĝi vian ID"})
+    res.status(403).send({message: "vi ne povas ŝanĝi vian ID"});
+    return;
   }
 
   if (req.body.kampo == 'pasvorto') {
@@ -141,6 +141,7 @@ var _updateUzanto = function(req, res){
     UzantoAuxAsocio.update(req.params.id, 'pasvortoSalt', pasvortajDatumoj.salt);
     UzantoAuxAsocio.update(req.params.id, 'pasvortoHash', pasvortajDatumoj.hash);
     res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+    return;
   }
 
   if((req.body.kampo == 'ueakodo') || (req.body.kampo == 'uzantnomo')) {
@@ -152,6 +153,7 @@ var _updateUzanto = function(req, res){
           res.status(500).send({message: "Eraro en la servilo"});
         }
       });
+      return;
   }
 
   Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
@@ -183,16 +185,16 @@ var _cxuMembro = function(req, res) {
               for(var i = 0; i < values.length; i++) {
                  var ano = values[i].filter(query.search({idAno:id}));
                  if(ano.length >= 1) {
-                   var result = [{uzantoID: id,
+                   var result = {uzantoID: id,
                                  membro: true,
                                  idGrupo: ano[0].idGrupo,
                                  komencdato: ano[0].komencdato,
                                  dumviva: parseInt(ano[0].dumviva.toString('hex')),
                                  aprobita: parseInt(ano[0].aprobita.toString('hex')),
-                                 findato: ano[0].findato}];
+                                 findato: ano[0].findato};
                    result = result.filter(query.search(req.query));
                    res.status(200).send(result);
-                   break;
+                   return;
                   }
               }
               res.status(200).send({uzantoID: id, membro: false});

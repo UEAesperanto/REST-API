@@ -6,7 +6,8 @@ var _insert = function(id, personanomo, familianomo, titolo,
                        naskigxtago, notoj, retposxto, telhejmo,
                        teloficejo, telportebla,  tttpagxo) {
     db.escapeArgs(arguments);
-    var query = util.format('INSERT INTO uzanto(id, personanomo, familianomo, titolo,\
+    var query = util.format('INSERT INTO uzanto(id, personanomo, \
+                            familianomo, titolo,\
                             bildo, adreso, posxtkodo, idLando,\
                             naskigxtago, notoj, retposxto, telhejmo,\
                             teloficejo, telportebla,  tttpagxo)\
@@ -30,7 +31,8 @@ var _find = function(kampo, valoro){
                              uzanto.id = uzantoAuxAsocio.id\
                              WHERE uzanto.%s = %s;', kampo, valoro);
   } else
-    var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo,\
+    var query = util.format('SELECT uzanto.*, lando.landkodo, \
+                             lando.radikoEo, lando.finajxoEo,\
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
                              FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
                              uzanto.id = uzantoAuxAsocio.id\
@@ -50,7 +52,7 @@ var _update = function(id, kampo, valoro) {
   id = db.escape(id);
   kampo = db.escapeId(kampo);
   valoro = db.escape(valoro);
-  var query = util.format('UPDATE `uzanto` SET `%s` = %s WHERE id = %s', kampo, valoro, id);
+  var query = util.format('UPDATE `uzanto` SET %s = %s WHERE id = %s;', kampo, valoro, id);
   return db.mysqlExec(query);
 }
 

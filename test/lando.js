@@ -108,7 +108,6 @@ describe('Landoj', function() {
       it('it should POST a lando - with token', function (done) {
           var lando = {valuto : "eur", nomoEo : "nomoEo",
               finajxoEo: "finajxoEo", landKodo : "lk" };
-
           chai.request(server)
               .post('/landoj')
               .set('x-access-token', token)
@@ -166,7 +165,6 @@ describe('Landoj', function() {
                     });
             });
         });
-
 
         it('it should UPDATE a lando valuto - with token', function (done) {
             Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {

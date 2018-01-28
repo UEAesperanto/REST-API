@@ -24,12 +24,11 @@ var _find = function(kampo, valoro){
   if(kampo) {
     kampo = db.escapeId(kampo);
     valoro = db.escape(valoro);
-    var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo, \
+    var query = util.format('SELECT uzanto.*, \
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
                              FROM `uzanto` JOIN `uzantoAuxAsocio` ON \
                              uzanto.id = uzantoAuxAsocio.id\
-                             JOIN `lando` ON \
-                             uzanto.idLando = lando.id WHERE uzanto.%s = %s;', kampo, valoro);
+                             WHERE uzanto.%s = %s;', kampo, valoro);
   } else
     var query = util.format('SELECT uzanto.*, lando.landkodo, lando.radikoEo, lando.finajxoEo,\
                              uzantoAuxAsocio.uzantnomo, uzantoAuxAsocio.ueakodo\
@@ -64,10 +63,17 @@ var _findGrupoj = function(id) {
   return db.mysqlExec(query);
 }
 
+var _delete = function(id) {
+  id = db.escape(id);
+  var query = util.format('DELETE FROM `uzanto` WHERE id = %s;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find:_find,
   insert: _insert,
   update: _update,
+  delete: _delete,
   findGrupoj:_findGrupoj,
   findForgesis: _findForgesis
 }

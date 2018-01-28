@@ -94,35 +94,63 @@ describe('Uzantoj', function() {
     });
 
     describe('Testoj kun uzantoj en la sistemo', function(){
+      var idUzanto;
+
+      beforeEach(function(done) {
+        chai.request(server)
+            .post('/uzantoj')
+            .send(uzanto)
+            .end(function(err, res) {
+              idUzanto = res.body.id;
+              var administranto = {
+                id: 1,
+                uzantnomo: 'nomo',
+                permesoj: [1]
+              };
+              token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+              done();
+            });
+      });
+
       it('forgesis pasvorton kun uzanto', function(done){
         chai.request(server)
-        .post('/uzantoj')
-        .send(uzanto).then(function(result){
-          chai.request(server)
           .post('/uzantoj/forgesisPasvorton')
           .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
-          .end(function(err, res){
+          .end(function(err, res) {
             res.should.have.status(200);
             done();
           });
-        });
+      });
+
+      it('it should delete uzanton', function(done){
+        chai.request(server)
+          .delete('/uzantoj/admin/' + idUzanto)
+          .set('x-access-token', token)
+          .end((err, res) =>  {
+            res.should.have.status(204);
+            done();
+          });
+      });
+
+      it('it should delete uzanton - Sen ĵetono', function(done){
+        chai.request(server)
+          .delete('/uzantoj/admin/' + idUzanto)
+          .end((err, res) =>  {
+            res.should.have.status(400);
+            done();
+          });
       });
 
       it('should get true email', function(done){
         chai.request(server)
-        .post('/uzantoj')
-        .send(uzanto).then(function(result){
-          var id = result.body.id;
-          chai.request(server)
-            .get('/uzantoj/cxuMembro/retposxto@io.com')
-            .end(function(err, res) {
-              res.should.have.status(200);
-              res.body.should.have.property('uzantoID');
-              //res.body.uzantoID.should.equal(id); - korekti
-              done();
-            });
+          .get('/uzantoj/cxuMembro/retposxto@io.com')
+          .end(function(err, res) {
+            res.should.have.status(200);
+            res.body.should.have.property('uzantoID');
+            res.body.uzantoID.should.be.equal(idUzanto);
+            done();
           });
-        });
+      });
 
       it('should POST a bildo', function(done){
         chai.request(server)

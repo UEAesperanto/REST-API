@@ -90,7 +90,7 @@ var _postUzanto = function(req, res){
       }
       else {
         Uzanto.find('retposxto', req.body.uzantnomo).then(function(result) {
-          res.status(200).send({id: result.id});
+          res.status(200).send({id: result[0].id});
         });
       }
     });
@@ -124,10 +124,10 @@ var _forgesisPasvorton = function(req, res) {
             res.status(200).send({message: 'Nova pasvorto estis sendita al via retpoŝto'});
         });
       }
-        else {
+      else {
           res.status(400).send({message: "Ne ekzistas uzantoj kun la indikitaj datumoj je la sistemo"});
-        }
-      });
+      }
+  });
 }
 
 var _updateUzanto = function(req, res){
@@ -218,6 +218,25 @@ var _getGrupoj = function(req,res) {
   });
 }
 
+var _delete = function(req, res) {
+  UzantoAuxAsocio.delete(req.params.id).then(function(sucess){
+    UzantoAuxAsocio.find(req.params.id).then(function(sucess){
+      if(sucess.length <= 0){
+        Uzanto.delete(req.params.id).then(function(sucess){
+          Uzanto.find('id', req.params.id).then(function(sucess){
+            if(sucess.length <= 0)
+              res.status(204).send({message: 'Ok'});
+            else
+              res.status(500).send({message: 'Internal Error'});
+          });
+        });
+      } else {
+        res.status(500).send({message: 'Internal Error'});
+      }
+    });
+  });
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
   getGrupoj:_getGrupoj,
@@ -227,5 +246,6 @@ module.exports = {
   postUzanto: _postUzanto,
   updateUzanto: _updateUzanto,
   ensaluti: _ensaluti,
-  cxuMembro: _cxuMembro
+  cxuMembro: _cxuMembro,
+  delete: _delete
 }

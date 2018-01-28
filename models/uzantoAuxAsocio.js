@@ -45,9 +45,16 @@ var _update = function(id, kampo, valoro) {
   return db.mysqlExec(query);
 }
 
+var _delete = function(id) {
+  id = db.escape(id);
+  var query = util.format('DELETE FROM `uzantoAuxAsocio` WHERE `id` = %s;', id);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
-  insert:_insert,
+  insert: _insert,
   findUzantnomo: _findUzantnomo,
+  delete: _delete,
   update: _update,
   find: _find
 }

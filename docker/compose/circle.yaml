@@ -1,0 +1,42 @@
+version: '3.0'
+services:
+  api:
+    build: ../dockerfiles/node-circle/
+    image: uea
+    container_name: uea-api
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_PASSWORD=u34p4ss
+      - DB_HOST=mysql-server
+      - DB_PORT=3306
+    links:
+      - mysql:mysql-server
+    depends_on:
+      - mysql
+
+  liquibase:
+    build: ../dockerfiles/liquibase
+    image: uea-liquibase
+    container_name: uea-liquibase
+    environment:
+      - DB_PASSWORD=u34p4ss
+      - DB_HOST=mysql-server
+      - DB_PORT=3306
+    links:
+      - mysql:mysql-server
+    depends_on:
+      - mysql
+
+  mysql:
+    build: ../dockerfiles/mysql
+    image: uea-mysql
+    container_name: uea-datumbazo
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=u34p4ss
+    volumes:
+      - uea-datavolume:/var/lib/mysql
+
+volumes:
+  uea-datavolume:

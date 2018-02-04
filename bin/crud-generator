@@ -1,0 +1,167 @@
+#!/bin/bash
+#title           :crud generator
+#description     :This script create simple crud for uea app
+#author		       :Victor Hugo
+#date            :20182701
+#version         :0.1
+#usage		       :./crud-generator table
+#==============================================================================
+
+TEMP_FOLDER="bin/tmp"
+COLUMNS="$TEMP_FOLDER/columns.tmp"
+COLUMNS_NAME="$TEMP_FOLDER/columns_name.tmp"
+ESCAPE_STR="$TEMP_FOLDER/escape_str.tmp"
+SQL_OUTPUT="$TEMP_FOLDER/sql.tmp"
+JSON_OBJECT="$TEMP_FOLDER/json.tmp"
+INSERT_SQL="$TEMP_FOLDER/insert_sql.tmp"
+RES_BODY="$TEMP_FOLDER/res_body.tmp"
+REQ_BODY="$TEMP_FOLDER/req_body.tmp"
+TABLE_UPPERCASE="$(tr '[:lower:]' '[:upper:]' <<< ${1:0:1})${1:1}"
+mkdir $TEMP_FOLDER
+
+function sql_query {
+  DOCKER_EXEC=$(echo "\
+      docker exec -it uea-datumbazo-test bash -c \
+      'mysql -uroot -p\$MYSQL_ROOT_PASSWORD uea \
+      --execute=\"$1\"'")
+  eval $DOCKER_EXEC
+}
+
+function filter_query {
+  while IFS='' read -r line || [[ -n "$line" ]]; do
+      NAME=$(echo "$line" | cut -d'|' -f2 | sed 's/ //g')
+      TYPE=$(echo "$line" | cut -d'|' -f3 | sed 's/ //g' | cut -d'(' -f1)
+      echo $NAME $TYPE >> $COLUMNS
+  done < $1
+}
+
+
+
+function generate_cmds {
+  JSON="{"
+  SQL=$( echo "'INSERT INTO \`$1\` VALUES(" )
+  REQ=""
+  ONLY_NAMES=""
+  STR=""
+  while IFS='' read -r line || [[ -n "$line" ]]; do
+    NAME=$(echo "$line" | cut -d' ' -f1)
+    TYPE=$(echo "$line" | cut -d' ' -f2)
+
+    case "$TYPE" in
+      int)
+        VALUE="1"
+        ;;
+      varchar)
+        VALUE=$(echo \"$NAME\")
+        ;;
+      bit)
+        VALUE="true"
+        ;;
+      date)
+        VALUE=$(echo \"1996-05-05\")
+        ;;
+      *)
+        VALUE=$(echo \"$NAME\")
+        ;;
+    esac
+
+    SQL=$SQL$VALUE,
+    JSON=$JSON\"$NAME\":$VALUE,
+    if [[ $NAME != "id" ]]; then
+          REQ=$REQ"req.body.$NAME, "
+          ONLY_NAMES=$ONLY_NAMES$NAME", "
+    fi
+
+    echo -e "\t\t\t\t\t\t\t\tres.body[0].should.have.property('$NAME');" >> $RES_BODY
+    if [[ $TYPE == "date" ]]; then
+      echo -e "\t\t\t\t\t\t\t\tres.body[0].$NAME.should.equal($VALUE + \"T00:00:00.000Z\");" >> $RES_BODY
+    else
+      echo -e "\t\t\t\t\t\t\t\tres.body[0].$NAME.should.equal($VALUE);" >> $RES_BODY
+    fi
+
+    done < $COLUMNS
+
+  for i in $(seq $(($(cat $COLUMNS | wc -l) - 1))); do
+    STR=$STR"%s, "
+  done
+
+  JSON=${JSON::-1} #Delete last char ','
+  SQL=${SQL::-1} #Delete last char ','
+  REQ=${REQ::-2} #Delete last char ','
+  ONLY_NAMES=${ONLY_NAMES::-2} #Delete last char ','
+  STR=${STR::-2} #Delete last char ','
+
+  JSON=$JSON"}"
+  SQL=$SQL");'"
+
+  echo $JSON >> $JSON_OBJECT
+  echo $SQL >> $INSERT_SQL
+  echo $REQ >> $REQ_BODY
+  echo $ONLY_NAMES >> $COLUMNS_NAME
+  echo $STR >> $ESCAPE_STR
+}
+
+sql_query "show columns from $1" | tail -n +5 | head -n-1 > $SQL_OUTPUT
+filter_query $SQL_OUTPUT
+generate_cmds $1
+
+JSON=$(cat $JSON_OBJECT)
+SQL=$(cat $INSERT_SQL)
+REQ=$(cat $REQ_BODY)
+ONLY_NAMES=$(cat $COLUMNS_NAME)
+STR=$(cat $ESCAPE_STR)
+
+######### TEST ##############
+cat bin/dev/crud-generator/skeleton-test/head.js >> bin/test.js
+while IFS='' read -r line || [[ -n "$line" ]]; do
+  if [[ "$line" = *"RES_BODY"* ]]; then
+    cat $RES_BODY >> bin/test.js
+  fi
+  echo "$line" >> bin/test.js
+done < bin/dev/crud-generator/skeleton-test/body.js
+
+sed -i "s/TABLE/$1/g" bin/test.js
+sed -i "s/OBJECT_JSON/$JSON/g" bin/test.js
+sed -i "s/INSERT_SQL/$SQL/g" bin/test.js
+sed -i "s/RES_BODY//g"  bin/test.js
+
+######### SERVICE ###########
+cat bin/dev/crud-generator/skeleton-service/head.js >> bin/service.js && echo " " >> bin/service.js
+cat bin/dev/crud-generator/skeleton-service/body.js >> bin/service.js
+sed -i "s/table/$1/g" bin/service.js
+sed -i "s/getTable/get$TABLE_UPPERCASE/g" bin/service.js
+sed -i "s/postTable/post$TABLE_UPPERCASE/g" bin/service.js
+sed -i "s/deleteTable/delete$TABLE_UPPERCASE/g" bin/service.js
+sed -i "s/putTable/put$TABLE_UPPERCASE/g" bin/service.js
+
+
+######## CONTROLLER ##########
+cat bin/dev/crud-generator/skeleton-controller/head.js >> bin/controller.js && echo " " >> bin/controller.js
+cat bin/dev/crud-generator/skeleton-controller/body.js >> bin/controller.js
+sed -i "s/table/$1/g" bin/controller.js
+sed -i "s/Table/$TABLE_UPPERCASE/g" bin/controller.js
+sed -i "s/getTable/get$TABLE_UPPERCASE/g" bin/controller.js
+sed -i "s/postTable/post$TABLE_UPPERCASE/g" bin/controller.js
+sed -i "s/deleteTable/delete$TABLE_UPPERCASE/g" bin/controller.js
+sed -i "s/putTable/put$TABLE_UPPERCASE/g" bin/controller.js
+sed -i "s/REQ_BODY/$REQ/g" bin/controller.js
+
+
+########## MODEL ###############
+cat bin/dev/crud-generator/skeleton-model/head.js >> bin/model.js && echo " " >> bin/model.js
+cat bin/dev/crud-generator/skeleton-model/body.js >> bin/model.js
+sed -i "s/table/$1/g" bin/model.js
+sed -i "s/Table/$TABLE_UPPERCASE/g" bin/model.js
+sed -i "s/getTable/get$TABLE_UPPERCASE/g" bin/model.js
+sed -i "s/postTable/post$TABLE_UPPERCASE/g" bin/model.js
+sed -i "s/deleteTable/delete$TABLE_UPPERCASE/g" bin/model.js
+sed -i "s/putTable/put$TABLE_UPPERCASE/g" bin/model.js
+sed -i "s/CONLUMS_NAME/$ONLY_NAMES/g" bin/model.js
+sed -i "s/ESCAPE_STR/$STR/g" bin/model.js
+
+mv bin/model.js models/$1.js
+mv bin/controller.js controllers/$1.js
+mv bin/service.js services/$1.js
+mv bin/test.js test/$1.js
+
+rm -rf $TEMP_FOLDER

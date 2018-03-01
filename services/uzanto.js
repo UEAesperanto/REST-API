@@ -5,10 +5,19 @@ const app = express();
 
 var router = express.Router();
 
-// var routerAuthID = express.Router();
-// routerAuthID.use(auth.authorizeID);
-// app.use('/:id(\\d+)/', routerAuthID);
-// app.use('/:id(\\d+)/gxisdatigi/', routerAuthID);
+var routerAuthID = express.Router();
+routerAuthID.use(auth.authorizeID);
+
+app.route('/:id(\\d+)/')
+   .put(routerAuthID, uzanto.updateUzanto)
+   .get(routerAuthID, uzanto.getUzanto);
+
+app.route('/:id(\\d+)/bildo')
+   .post(routerAuthID, uzanto.postBildo)
+   .get(routerAuthID, uzanto.getBildo);
+
+app.route('/:id(\\d+)/grupoj')
+   .get(routerAuthID, uzanto.getGrupoj);
 
 var routerAuth = express.Router();
 routerAuth.use(auth.authorizeAdminJuna);

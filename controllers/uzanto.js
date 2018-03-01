@@ -43,7 +43,7 @@ var _ensaluti = function(req, res) {
       // oni kreas iun token
       var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
 
-      res.status(200).send({token: token});
+      res.status(200).send({token: token, uzanto: sucess[0]});
     });
 }
 

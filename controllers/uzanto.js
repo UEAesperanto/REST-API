@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 /*config*/
 var config = require('../config.js');
+var configMail = require('../configMail.js');
 
 /*models*/
 var Uzanto = require('../models/uzanto');
@@ -66,14 +67,8 @@ var _postUzanto = function(req, res){
                       req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
                       req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
               function(success) {
-                var html = util.format(
-                       'Estimata uzanto, <br><br>\
-                        Via aliĝo por UEA estis registrita. En kelkaj tagoj, vi ricevos konfirmon\
-                        de via pago kaj povos ekuzi viajn membrservojn<br>\
-                        En kazo de duboj, kontaktu info@uea.org. \
-                        <br><br>Kore,<br><br>\
-                        La UEA-Teamo');
-                var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
+                var html = util.format(configMail.registriUzanton, req.body.personanomo);
+                var to = util.format('{"%s" : %s}', req.body.retposxto, req.body.personanomo);
                 var mailOptions = {
                     to: JSON.parse(to),
                     subject: 'Nova aliĝo',
@@ -106,12 +101,7 @@ var _forgesisPasvorton = function(req, res) {
           UzantoAuxAsocio.find(sucess[0].id).then(
           function (sucess) {
             if(req.body.retposxto) {
-                var html = util.format(
-                       'Estimata uzanto, <br><br>\
-                        La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
-                        Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \
-                        <br><br>Agrablan uzadon,<br><br>\
-                        La UEA-Teamo', novaPasvorto);
+                var html = util.format(configMail.novaPasvorto, novaPasvorto);
                 var to = util.format('{"%s" : "UEA-membro"}', req.body.retposxto);
                 var mailOptions = {
                     to: JSON.parse(to),
@@ -130,40 +120,65 @@ var _forgesisPasvorton = function(req, res) {
 }
 
 var _updateUzanto = function(req, res){
-  if (req.body.kampo == 'id') {
-    res.status(403).send({message: "vi ne povas ŝanĝi vian ID"});
-    return;
-  }
-
-  if (req.body.kampo == 'pasvorto') {
-    var novaPasvorto = req.body.valoro;
-    var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
-    UzantoAuxAsocio.update(req.params.id, 'pasvortoSalt', pasvortajDatumoj.salt);
-    UzantoAuxAsocio.update(req.params.id, 'pasvortoHash', pasvortajDatumoj.hash);
-    res.status(200).send({message: "Ĝisdatigo sukcese farita"});
-    return;
-  }
-
-  if((req.body.kampo == 'ueakodo') || (req.body.kampo == 'uzantnomo')) {
-    UzantoAuxAsocio.update(req.params.id, req.body.kampo, req.body.valoro).then(
-      function(sucess){
-        if(sucess) {
-          res.status(200).send({message: "Ĝisdatigo sukcese farita"});
-        } else {
-          res.status(500).send({message: "Eraro en la servilo"});
+  var sciigi = new Promise(
+    function(resolve, reject) {
+      Uzanto.find('id', req.params.id).then(function(sucess){
+        if(sucess[0].retposxto) {
+          var uzanto = sucess[0];
+          if(req.body.kampo == "pasvorto") {
+            var valoro = "kaŝita pasvorto"
+          } else {
+            var valoro = req.body.valoro;
+          }
+          var html = util.format(configMail.updateUzanto, uzanto.personanomo, req.body.kampo, valoro);
+          var to = util.format('{"%s" : "%s"}', uzanto.retposxto, uzanto.personanomo);
+          var mailOptions = {
+              to: JSON.parse(to),
+              subject: 'Ĝisdatigo de datumoj en via profilo ĉe UEA',
+              html: html
+            }
+          mail.sendiRetmesagxo(mailOptions);
+          resolve();
         }
       });
-      return;
-  }
+    });
 
-  Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
-    function(sucess) {
-      if (sucess) {
-        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
-      } else {
-        res.status(500).send({message: "Eraro en la servilo"});
+  sciigi.then(function() {
+      if (req.body.kampo == 'id') {
+        res.status(403).send({message: "vi ne povas ŝanĝi vian ID"});
+        return;
       }
-  });
+
+      if (req.body.kampo == 'pasvorto') {
+        var novaPasvorto = req.body.valoro;
+        var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
+        UzantoAuxAsocio.update(req.params.id, 'pasvortoSalt', pasvortajDatumoj.salt);
+        UzantoAuxAsocio.update(req.params.id, 'pasvortoHash', pasvortajDatumoj.hash);
+        res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+        return;
+      }
+
+      if((req.body.kampo == 'ueakodo') || (req.body.kampo == 'uzantnomo')) {
+        UzantoAuxAsocio.update(req.params.id, req.body.kampo, req.body.valoro).then(
+          function(sucess){
+            if(sucess) {
+              res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+            } else {
+              res.status(500).send({message: "Eraro en la servilo"});
+            }
+          });
+          return;
+      }
+
+      Uzanto.update(req.params.id, req.body.kampo, req.body.valoro).then(
+        function(sucess) {
+          if (sucess) {
+            res.status(200).send({message: "Ĝisdatigo sukcese farita"});
+          } else {
+            res.status(500).send({message: "Eraro en la servilo"});
+          }
+      });
+    });
 }
 
 var _cxuMembro = function(req, res) {

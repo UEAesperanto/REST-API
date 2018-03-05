@@ -68,7 +68,7 @@ var _postUzanto = function(req, res){
                       req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
               function(success) {
                 var html = util.format(configMail.registriUzanton, req.body.personanomo);
-                var to = util.format('{"%s" : %s}', req.body.retposxto, req.body.personanomo);
+                var to = util.format('{"%s" : "%s"}', req.body.retposxto, req.body.personanomo);
                 var mailOptions = {
                     to: JSON.parse(to),
                     subject: 'Nova aliĝo',

@@ -67,7 +67,7 @@ var _deleteAneco = function(req, res) {
               var to = util.format('{"%s" : "%s"}', sucess[0].retposxto, sucess[0].personanomo);
               var mailOptions = {
                   to: JSON.parse(to),
-                  subject: 'UEA: Membreco forviŝita',
+                  subject: util.format('%s aneco viŝita', req.body.anecnomo),
                   html: html
                 }
               mail.sendiRetmesagxo(mailOptions);

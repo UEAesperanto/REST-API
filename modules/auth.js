@@ -10,8 +10,21 @@ var _authorizeID = function(req, res, next) {
            message: 'La ĵetono (token) ne estas korekta.' });
       } else {
         if(req.originalUrl.split('/').includes(decoded.id.toString())) {
-           req.decoded = decoded;
-           next();
+           if(req.method == "PUT"){
+             var permesatajKampoj = ["uzantnomo", "pasvorto", "retposxto",
+                                     "tttpagxo", "telhejmo", "teloficejo",
+                                     "telportebla", "titolo"];
+             if(permesatajKampoj.indexOf(req.body.kampo) > -1) {
+               req.decoded = decoded;
+               next();
+             } else {
+               return res.status(403).send({ success: false,
+                  message: 'Vi ne rajtas ĝisdatigi tiun kampon.' });
+             }
+           } else {
+             req.decoded = decoded;
+             next();
+           }
         } else {
           return res.status(403).send({ success: false,
              message: 'La ĵetono (token) ne estas korekta.' });

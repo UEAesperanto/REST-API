@@ -4,7 +4,18 @@ var connection = mysql.createConnection({
   host: process.env.DB_HOST,
   password: process.env.DB_PASSWORD,
   user: 'root',
-  database: 'uea'
+  database: 'uea',
+  typeCast: function castField( field, useDefaultTypeCasting ) {
+      if ((field.type === "BIT" ) && (field.length === 1)) {
+          var bytes = field.buffer();
+          if(bytes != null){
+            return (bytes[0] === 1);
+          } else {
+            return false;
+          }
+      }
+      return(useDefaultTypeCasting());
+  }
 });
 
 var _escape = function(uzantQuery) {

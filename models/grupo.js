@@ -52,14 +52,6 @@ var _findKategorio = function(kategorio){
   return db.mysqlExec(query);
 }
 
-var _findLaboranoj = function(id) {
-  id =  db.escape(id);
-  var query = util.format('SELECT A.personanomo, A.familianomo, A.titolo, A.bildo, A.idNacialando,\
-                           A.retposxto, B.respondeco, B.tasko FROM uzanto A INNER JOIN aneco B \
-                           ON (A.id = B.idAno) WHERE B.idGrupo = %s;', id);
-  return db.mysqlExec(query);
-}
-
 var _insertRefKategorio = function(idGrupo, idKategorio) {
   db.escapeArgs(arguments);
   var query = util.format('INSERT INTO ref_grupo_grupa_kategorio ()\
@@ -70,10 +62,11 @@ var _insertRefKategorio = function(idGrupo, idKategorio) {
 var _findAnoj = function(idGrupo) {
   if(idGrupo) {
     idGrupo = db.escape(idGrupo);
-    var query = util.format("SELECT * FROM `uzanto` JOIN `uzantoAuxAsocio`\
-                             ON uzanto.id = uzantoAuxAsocio.id \
-                             JOIN `aneco` ON aneco.idAno\
-                             = uzanto.id WHERE aneco.idGrupo = %s;", idGrupo);
+    var query = util.format("SELECT * FROM `uzanto` \
+                             JOIN `uzantoAuxAsocio` ON uzanto.id = uzantoAuxAsocio.id \
+                             JOIN `aneco` ON aneco.idAno = uzanto.id \
+                             JOIN `lando` ON uzanto.idLando = lando.id\
+                             WHERE aneco.idGrupo = %s;", idGrupo);
   } else
     var query = "SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno = uzanto.id;";
   return db.mysqlExec(query);
@@ -88,6 +81,5 @@ module.exports = {
   update: _update,
   deleteGrupoKat: _deleteGrupoKat,
   insertRefKategorio: _insertRefKategorio,
-  findKategorio: _findKategorio,
-  findLaboranoj: _findLaboranoj
+  findKategorio: _findKategorio
 }

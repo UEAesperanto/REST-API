@@ -4,7 +4,7 @@
 #author		       :Victor Hugo
 #date            :20182701
 #version         :0.1
-#usage		       :./crud-generator table
+#usage		       :./bin/crud-generator table
 #==============================================================================
 
 TEMP_FOLDER="bin/tmp"

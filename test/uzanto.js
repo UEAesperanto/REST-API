@@ -94,6 +94,10 @@ describe('Uzantoj', function() {
 
     describe('Testoj kun uzantoj en la sistemo', function(){
       var idUzanto;
+      
+      var uzanto = {
+        "naskigxtago": "1996-05-05",
+        "retposxto":"retposxto@io.com"};
 
       beforeEach(function(done) {
         chai.request(server)

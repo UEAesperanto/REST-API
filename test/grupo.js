@@ -235,25 +235,6 @@ describe('Grupoj', function() {
            });
      });
 
-     it('it should aprobi anecojn', function(done){
-       chai.request(server)
-           .post('/grupoj/1/anoj')
-           .set('x-access-token', token)
-           .send({"idAno":4})
-           .end((err, res) => {
-               res.should.have.status(201);
-                chai.request(server)
-                  .put('/grupoj/anecoj/' + res.body.id + '/aprobi')
-                  .set('x-access-token', token)
-                  .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('message');
-                    res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                    done();
-                  });
-          });
-     });
-
      it('it should delete anecojn', function(done){
        chai.request(server)
            .post('/grupoj/1/anoj')

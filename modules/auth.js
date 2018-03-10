@@ -10,14 +10,27 @@ var _authorizeID = function(req, res, next) {
            message: 'La ĵetono (token) ne estas korekta.' });
       } else {
         if(req.originalUrl.split('/').includes(decoded.id.toString())) {
-           req.decoded = decoded;
-           next();
+           if(req.method == "PUT"){
+             var permesatajKampoj = ["uzantnomo", "pasvorto", "retposxto",
+                                     "tttpagxo", "telhejmo", "teloficejo",
+                                     "telportebla", "titolo"];
+             if(permesatajKampoj.indexOf(req.body.kampo) > -1) {
+               req.decoded = decoded;
+               next();
+             } else {
+               return res.status(403).send({ success: false,
+                  message: 'Vi ne rajtas ĝisdatigi tiun kampon.' });
+             }
+           } else {
+             req.decoded = decoded;
+             next();
+           }
         } else {
           return res.status(403).send({ success: false,
              message: 'La ĵetono (token) ne estas korekta.' });
         }
       }
-    });
+  });
   } else {
     // Se ne estas ĵetono
     // redonas eraron
@@ -36,9 +49,14 @@ var _authorizeAdmin = function(req, res, next) {
         return res.status(403).send({ success: false,
           message: 'La ĵetono (token) ne estas korekta.'});
       } else {
-        if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
-           req.decoded = decoded;
-           next();
+        if(decoded.permesoj) {
+          if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+             req.decoded = decoded;
+             next();
+          } else {
+            return res.status(403).send({ success: false,
+              message: 'La ĵetono (token) ne estas korekta.'});
+          }
         } else {
           return res.status(403).send({ success: false,
             message: 'La ĵetono (token) ne estas korekta.'});
@@ -63,20 +81,25 @@ var _authorizeAdminJuna = function(req, res, next) {
         return res.status(403).send({ success: false,
           message: 'La ĵetono (token) ne estas korekta.'});
       } else {
-        if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
-           req.decoded = decoded;
-           next();
-        } else if (decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
-          var jaro = parseInt((new Date()).getFullYear());
-          var junaJaro = jaro - config.junaAgxo;
-          req.query.naskigxtago = new Date(junaJaro + '-01-01');
-          req.decoded = decoded;
-          next();
+        if(decoded.permesoj) {
+          if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+             req.decoded = decoded;
+             next();
+          } else if (decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
+            var jaro = parseInt((new Date()).getFullYear());
+            var junaJaro = jaro - config.junaAgxo;
+            req.query.naskigxtago = new Date(junaJaro + '-01-01');
+            req.decoded = decoded;
+            next();
+          } else {
+            return res.status(403).send({ success: false,
+              message: 'La ĵetono (token) ne estas korekta.'});
+          }
         } else {
           return res.status(403).send({ success: false,
             message: 'La ĵetono (token) ne estas korekta.'});
         }
-      }
+    }
     });
   } else {
       // Se ne estas ĵetono

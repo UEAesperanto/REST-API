@@ -33,13 +33,20 @@ var _updateKotizo = function(id, kampo, valoro) {
 var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, idFako, observoj, aprobita) {
   db.escapeArgs(arguments);
-
   var query = util.format ('INSERT into aneco (idAno, idGrupo, komencdato, findato,\
                             dumviva, tasko, respondeco, idAsocio, idUrbo, idFako, observoj, aprobita)\
                             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, idFako, observoj, aprobita);
 
+  return db.mysqlExec(query);
+}
+
+var _findAnecGrupo = function(idGrupo){
+  idGrupo = db.escape(idGrupo);
+  var query = util.format('SELECT grupo.* FROM `aneco` JOIN `grupo` ON \
+                           aneco.idGrupo = grupo.id WHERE aneco.id = %s;',
+                           idGrupo);
   return db.mysqlExec(query);
 }
 
@@ -56,7 +63,7 @@ var _updateAneco = function(id, kampo, valoro) {
 
 var _deleteAneco = function(id) {
   id = db.escape(id);
-  var query = util.format('DELETE FROM `aneco` WHERE `id` = %s ;', id);
+  var query = util.format('DELETE FROM `aneco` WHERE `id` = %s;', id);
   return db.mysqlExec(query);
 }
 
@@ -66,5 +73,6 @@ module.exports = {
   deleteAneco: _deleteAneco,
   updateKotizo: _updateKotizo,
   updateAneco: _updateAneco,
+  findAnecGrupo: _findAnecGrupo,
   insertAneco: _insertAneco
 }

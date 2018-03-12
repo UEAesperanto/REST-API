@@ -33,6 +33,18 @@ describe('Uzantoj', function() {
       "idLando": 1,
       "naskigxtago": "1996-05-05"};
 
+    var uzanto_ueakodo = {"uzantnomo" : "retposxto@io.com",
+       "pasvorto" : "nomoLoka",
+       "personanomo": "personanomo",
+       "titolo":"titolo",
+       "adreso":"adreso",
+       "posxtkodo":"idNacialando",
+       "idLando": 1,
+       "naskigxtago": "1996-05-05",
+       "ueakodo":"aamcf"};
+
+
+
     describe('Testoj sen Uzantoj /uzantoj', function(){
       beforeEach(function(done) {
         var query = util.format('DELETE FROM `uzantoAuxAsocio`;');
@@ -51,6 +63,23 @@ describe('Uzantoj', function() {
       it('it should POST a uzanto', function(done){
         chai.request(server)
         .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .end(function(err, res){
+          res.should.have.status(201);
+          res.body.should.have.property('id');
+          var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = %s;', res.body.id);
+          db.mysqlExec(query).then(
+            function(res) {
+              res[0].should.have.property('ueakodo');
+              res[0].ueakodo.should.be.equal('aamcf');
+              done();
+            });
+        });
+      });
+
+      it('it should POST a uzanto kun UEA-kodo', function(done){
+        chai.request(server)
+        .post('/uzantoj')
         .send(uzantoSenUzantnomo)
         .end(function(err, res){
           res.should.have.status(201);
@@ -58,6 +87,7 @@ describe('Uzantoj', function() {
           done();
         });
       });
+
 
       it('it should POST a uzanto sen uzantnomo', function(done){
         chai.request(server)
@@ -94,7 +124,7 @@ describe('Uzantoj', function() {
 
     describe('Testoj kun uzantoj en la sistemo', function(){
       var idUzanto;
-      
+
       var uzanto = {
         "naskigxtago": "1996-05-05",
         "retposxto":"retposxto@io.com"};
@@ -213,15 +243,15 @@ describe('Uzantoj', function() {
         });
     });
 
-      it('forgesis pasvorton kun uzanto', function(done){
-        chai.request(server)
-          .post('/uzantoj/forgesisPasvorton')
-          .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
-          .end(function(err, res) {
-            res.should.have.status(200);
-            done();
-          });
-      });
+    it('forgesis pasvorton kun uzanto', function(done){
+      chai.request(server)
+        .post('/uzantoj/forgesisPasvorton')
+        .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
+        .end(function(err, res) {
+          res.should.have.status(200);
+          done();
+        });
+     });
 
       var uzantoUpdate = [
         {"uzantnomo" : "retposxto@io.com"},

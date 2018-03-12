@@ -14,7 +14,7 @@ app.route('/:id(\\d+)/')
 
 app.route('/:id(\\d+)/bildo')
    .post(routerAuthID, uzanto.postBildo)
-   .get(routerAuthID, uzanto.getBildo);
+   .get(uzanto.getBildo);
 
 app.route('/:id(\\d+)/grupoj')
    .get(routerAuthID, uzanto.getGrupoj);

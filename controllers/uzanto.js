@@ -58,36 +58,60 @@ var _getUzanto = function(req, res){
   });
 }
 
+function makeUEAkodo() {
+  var text = "";
+  var possible = "abcdefghijklmnopqrstuvwxyz";
+
+  for (var i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+
 var _postUzanto = function(req, res){
-   UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto, req.body.ueakodo).then(
-    function (result){
-      if (result) {
-        Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
-                      req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
-                      req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
-                      req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
-              function(success) {
-                var html = util.format(configMail.registriUzanton, req.body.personanomo);
-                var to = util.format('{"%s" : "%s"}', req.body.retposxto, req.body.personanomo);
-                var mailOptions = {
-                    to: JSON.parse(to),
-                    subject: 'Nova aliĝo',
-                    html: html
-                  };
-                mail.sendiRetmesagxo(mailOptions);
-                res.status(201).send({id: result.insertId});
-              },
-              function (fail) {
-                res.status(500).send({message: 'Internal Error'});
+  Uzanto.find('retposxto', req.body.uzantnomo).then(function(result) {
+    if(result[0]) {
+      res.status(200).send({id: result[0].id});
+    } else{
+      UzantoAuxAsocio.find().then(function(result){
+        var ueakodoj = [];
+        result.map(function(item){ueakodoj.push(item.ueakodo)});
+        if(req.body.ueakodo) {
+          ueakodo = req.body.ueakodo;
+        } else {
+          var ueakodo = "";
+          while(true) {
+            ueakodo = makeUEAkodo();
+            if(ueakodoj.indexOf(ueakodo) < 0) {
+              break;
+            }
+          }
+        }
+        UzantoAuxAsocio.insert(req.body.uzantnomo, req.body.pasvorto, ueakodo).then(function (result){
+           if (result) {
+             Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
+                           req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
+                           req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
+                           req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
+                function(success) {
+                     var html = util.format(configMail.registriUzanton, req.body.personanomo);
+                     var to = util.format('{"%s" : "%s"}', req.body.retposxto, req.body.personanomo);
+                     var mailOptions = {
+                         to: JSON.parse(to),
+                         subject: 'Nova aliĝo',
+                         html: html
+                       };
+                     mail.sendiRetmesagxo(mailOptions);
+                     res.status(201).send({id: result.insertId});
+                   },
+                   function (fail) {
+                     res.status(500).send({message: 'Internal Error'});
+                   });
               }
-            );
-      }
-      else {
-        Uzanto.find('retposxto', req.body.uzantnomo).then(function(result) {
-          res.status(200).send({id: result[0].id});
-        });
-      }
-    });
+         });
+      });
+    }
+  });
 }
 
 var _forgesisPasvorton = function(req, res) {

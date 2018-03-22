@@ -162,7 +162,7 @@ describe('Grupoj', function() {
          query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (10, 2);');
          query.push('INSERT INTO ref_grupo_grupa_kategorio () VALUES (11, 3);');
 
-         query.push( 'INSERT INTO uzanto (id, personanomo) VALUES (4,"Ana");');
+         query.push( 'INSERT INTO uzanto (id, personanomo) VALUES (4, "Ana");');
 
          for(var i = 0; i < query.length; i++) {
            db.mysqlExec(query[i]);

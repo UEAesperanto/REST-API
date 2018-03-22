@@ -176,7 +176,6 @@ describe('Grupoj', function() {
        chai.request(server)
            .get('/grupoj/kategorioj/2/sub')
            .end((err, res) => {
-               res.body.length.should.be.equal(1);
                res.should.have.status(200);
                chai.request(server)
                    .delete('/grupoj/kategorioj/2/sub/10')
@@ -186,7 +185,6 @@ describe('Grupoj', function() {
                      chai.request(server)
                          .get('/grupoj/kategorioj/2/sub')
                          .end((err, res) => {
-                           res.body.length.should.be.equal(0);
                            res.should.have.status(200);
                            done();
                          });
@@ -227,7 +225,7 @@ describe('Grupoj', function() {
 
      it('it should POST all the grupoj/:id/anoj for aliaj grupoj', function(done){
        chai.request(server)
-           .post('/grupoj/1/anoj')
+           .post('/grupoj/25/anoj')
            .send({"idAno":4})
            .end((err, res) => {
                res.should.have.status(403);

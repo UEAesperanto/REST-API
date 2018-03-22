@@ -9,11 +9,11 @@ var _insertRevuo = function(titolo, fondjaro, issn) {
     return db.mysqlExec(query);
 }
 
-var _insertVolumo = function(numeroJaro, numeroEntute, enhavlisto, idRevuo) {
+var _insertVolumo = function(numeroJaro, numeroEntute, enhavlisto, eldondato, idRevuo) {
     db.escapeArgs(arguments);
     var query = util.format('INSERT INTO `volumo`(numeroJaro, numeroEntute, \
-                             enhavlisto, idRevuo) VALUES(%s, %s, %s, %s);',
-                             numeroJaro, numeroEntute, enhavlisto, idRevuo);
+                             enhavlisto, eldondato, idRevuo) VALUES(%s, %s, %s, %s, %s);',
+                             numeroJaro, numeroEntute, enhavlisto, eldondato,idRevuo);
     return db.mysqlExec(query);
 }
 

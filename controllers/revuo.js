@@ -82,7 +82,7 @@ var _postVolumoFiles = function(req, res) {
 */
 var _getVolumoFiles = function(req, res) {
   var tipo = 'application/pdf';
-  if(req.params.tipo == 'bildo') {
+  if(req.params.tipo == 'kovrilbildo') {
     tipo = 'image/png';
   }
   file.readFile('/volumoj/'+ req.params.tipo + req.params.id, tipo, res);

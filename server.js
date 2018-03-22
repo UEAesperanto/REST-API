@@ -33,10 +33,11 @@ vocxdonado = require('./services/vocxdonado');
 opcio = require('./services/opcio');
 config = require('./services/config');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({limit: '25mb'}));
+app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: 'application/json'}));
+
 
 //Indas ŝanĝi origin por ebligi nur kelkajn domajnojn aliri
 app.use(cors({origin: '*'}));

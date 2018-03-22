@@ -30,7 +30,9 @@ var _getLando = function(req, res){
 var _postLando = function(req, res){
   Lando.insert(req.body.valuto, req.body.radikoEo, req.body.finajxoEo, req.body.landkodo).then(
     function(sucess){
-      res.status(201).send({insertId: sucess.insertId});
+      if(sucess) {
+        res.status(201).send({insertId: sucess.insertId});
+      }
     },
     function(fail){
       res.status(500).send({message: 'Internal Error'})

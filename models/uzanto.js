@@ -4,20 +4,19 @@ var db = require('../modules/db');
 var _insert = function(id, personanomo, familianomo, titolo,
                        bildo, adreso, posxtkodo, idLando,
                        naskigxtago, notoj, retposxto, telhejmo,
-                       teloficejo, telportebla,  tttpagxo) {
+                       teloficejo, telportebla,  tttpagxo, urbo) {
     db.escapeArgs(arguments);
     var query = util.format('INSERT INTO uzanto(id, personanomo, \
                             familianomo, titolo,\
                             bildo, adreso, posxtkodo, idLando,\
                             naskigxtago, notoj, retposxto, telhejmo,\
-                            teloficejo, telportebla,  tttpagxo)\
+                            teloficejo, telportebla,  tttpagxo, urbo)\
                             VALUES(%s, %s, %s, %s, %s, %s, %s, %s,\
-                                   %s, %s, %s, %s,%s, %s, %s);',
+                                   %s, %s, %s, %s,%s, %s, %s, %s);',
                             id, personanomo, familianomo, titolo,
                             bildo, adreso, posxtkodo, idLando,
                             naskigxtago, notoj, retposxto, telhejmo,
-                            teloficejo, telportebla,  tttpagxo);
-
+                            teloficejo, telportebla,  tttpagxo, urbo);
     return db.mysqlExec(query);
 }
 

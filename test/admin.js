@@ -7,10 +7,12 @@ var util = require('util');
 var should = chai.should();
 var expect = chai.expect;
 var Admin = require('../models/admin');
-
+var jwt  = require('jsonwebtoken');
+var config = require('../config');
 
 chai.use(chaiHttp);
 describe('Admin', function() {
+    var token = '';
     before(function(done) { //Antaux cxiuj testoj, oni purigas la datumbazon
       var query1 = 'INSERT INTO adminrajto ()\
                     VALUES (\
@@ -20,9 +22,14 @@ describe('Admin', function() {
                     );'
       var query = util.format('DELETE FROM `administranto`');
       db.mysqlExec(query);
-      db.mysqlExec(query1).then(function(result){
-        done();
-      });
+      db.mysqlExec(query1);
+      var administranto = {
+        id: 1,
+        uzantnomo: 'nomo',
+        permesoj: [1]
+      };
+      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+      done();
     });
 
   describe('GET /admin/agordita sen agordoj', function(){
@@ -117,6 +124,85 @@ describe('Admin', function() {
                   res.body.should.have.property('message', 'La uzantnomo ne ekzistas');
                   done();
              });
+          });
+
+          it('it should post an admin', function(done){
+            var uzanto = {"uzantnomo":"llll", "pasvorto": "malkorekta"};
+            chai.request(server)
+                .post('/admin')
+                .set('x-access-token', token)
+                .send(uzanto)
+                .end((err, res) => {
+                  res.should.have.status(201);
+                  done();
+                });
+          });
+
+          it('it should delete an admin', function(done){
+            var uzanto = {"uzantnomo":"zzzz", "pasvorto": "malkorekta"};
+            chai.request(server)
+                .post('/admin')
+                .set('x-access-token', token)
+                .send(uzanto)
+                .end((err, res) => {
+                  res.should.have.status(201);
+                  var id = res.body.insertId;
+                  chai.request(server)
+                      .delete('/admin/' + id)
+                      .set('x-access-token', token)
+                      .end((err, res) => {
+                        res.should.have.status(204);
+                        done();
+                      });
+                });
+          });
+
+          it('it post rajtoj to an admin', function(done){
+            var uzanto = {"uzantnomo":"zzzz", "pasvorto": "malkorekta"};
+            chai.request(server)
+                .post('/admin')
+                .set('x-access-token', token)
+                .send(uzanto)
+                .end((err, res) => {
+                  res.should.have.status(201);
+                  var id = res.body.insertId;
+                  chai.request(server)
+                      .post('/admin/' + id + '/rajtoj')
+                      .set('x-access-token', token)
+                      .send({'idRajto': 1})
+                      .end((err, res) => {
+                        res.should.have.status(201);
+                        done();
+                      });
+                });
+          });
+
+          it('it get rajtoj to an admin', function(done){
+            var uzanto = {"uzantnomo":"kkkk", "pasvorto": "malkorekta"};
+            chai.request(server)
+                .post('/admin')
+                .set('x-access-token', token)
+                .send(uzanto)
+                .end((err, res) => {
+                  res.should.have.status(201);
+                  var id = res.body.insertId;
+                  console.log(id);
+                  chai.request(server)
+                      .post('/admin/' + id + '/rajtoj')
+                      .set('x-access-token', token)
+                      .send({'idRajto': 1})
+                      .end((err, res) => {
+                        res.should.have.status(201);
+                        chai.request(server)
+                            .get('/admin/' + id + '/rajtoj')
+                            .set('x-access-token', token)
+                            .end((err, res) => {
+                              res.should.have.status(200);
+                              res.body.length.should.be.equal(1);
+                              done();
+                            });
+                      });
+                });
           });
     });
 });

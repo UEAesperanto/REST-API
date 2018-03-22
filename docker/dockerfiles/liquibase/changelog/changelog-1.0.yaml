@@ -61,3 +61,34 @@ databaseChangeLog:
               - column:
                   name: nomo
                   value: Baza retmembreco
+
+databaseChangeLog:
+  - changeSet:
+      id: Aldoni urbon kiel varchar
+      author: Ana Ribeiro
+      changes:
+      ## Grupaj kategorioj##
+        - addColumn:
+            columns:
+              - column:
+                  name: urbo
+                  type: varchar(255)
+            tableName: uzanto
+        - addColumn:
+            columns:
+              - column:
+                  name: urbo
+                  type: varchar(255)
+            tableName: aneco
+
+databaseChangelog:
+  - changeSet:
+    id: addUniqueConstraint
+    author: Ana Ribeiro
+    changes:
+      - addUniqueConstraint:
+          columnNames: landkodo
+          tableName: lando
+      - addUniqueConstraint:
+          columnNames: mallongigilo
+          tableName: grupo

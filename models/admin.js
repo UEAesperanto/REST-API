@@ -55,7 +55,7 @@ var _findRajtoj = function() {
 }
 
 var _delete = function(id){
-  id = db.escape(db);
+  id = db.escape(id);
   var query = util.format('DELETE FROM `administranto` WHERE `id` = %s ;', id);
   return db.mysqlExec(query);
 }

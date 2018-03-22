@@ -92,7 +92,7 @@ var _postUzanto = function(req, res){
              Uzanto.insert(result.insertId, req.body.personanomo, req.body.familianomo, req.body.titolo,
                            req.body.bildo, req.body.adreso, req.body.posxtkodo, req.body.idLando,
                            req.body.naskigxtago, req.body.notoj, req.body.retposxto, req.body.telhejmo,
-                           req.body.teloficejo, req.body.telportebla, req.body.tttpagxo).then(
+                           req.body.teloficejo, req.body.telportebla, req.body.tttpagxo, req.body.urbo).then(
                 function(success) {
                      var html = util.format(configMail.registriUzanton, req.body.personanomo);
                      var to = util.format('{"%s" : "%s"}', req.body.retposxto, req.body.personanomo);

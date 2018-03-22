@@ -43,8 +43,6 @@ describe('Uzantoj', function() {
        "naskigxtago": "1996-05-05",
        "ueakodo":"aamcf"};
 
-
-
     describe('Testoj sen Uzantoj /uzantoj', function(){
       beforeEach(function(done) {
         var query = util.format('DELETE FROM `uzantoAuxAsocio`;');

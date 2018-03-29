@@ -12,6 +12,7 @@ var configMail = require('../configMail.js');
 var Uzanto = require('../models/uzanto');
 var UzantoAuxAsocio = require('../models/uzantoAuxAsocio');
 var Grupo = require('../models/grupo');
+var Aneco = require('../models/aneco');
 
 /*modules*/
 var query = require('../modules/query');
@@ -53,6 +54,13 @@ var _ensaluti = function(req, res) {
 */
 var _getUzanto = function(req, res){
   Uzanto.find('id', req.params.id).then(function(sucess){
+      var uzanto = sucess.filter(query.search(req.query));
+      res.status(200).send(uzanto);
+  });
+}
+
+var _getUzantoj = function(req, res){
+  Uzanto.find().then(function(sucess){
       var uzanto = sucess;
       res.status(200).send(uzanto);
   });
@@ -278,6 +286,31 @@ var _delete = function(req, res) {
   });
 }
 
+var _adapti = function(req, res) {
+
+  UzantoAuxAsocio.insert(req.body.retposxto, randomstring.generate(10), req.body.ueakodo).then(
+    function(result){
+      if (result) {
+        var id = result.insertId;
+        Uzanto.insert(result.insertId, req.body.personanomo,
+                      req.body.familianomo, req.body.titolo,
+                      req.body.bildo, req.body.adreso,
+                      req.body.posxtkodo, req.body.idLando,
+                      req.body.naskigxtago, req.body.notoj,
+                      req.body.retposxto, req.body.telhejmo,
+                      req.body.teloficejo, req.body.telportebla,
+                      req.body.tttpagxo, req.body.urbo).then(
+                        function(result){
+                          res.status(201).send({message: 'Ok', id: id});
+                        });
+      } else {
+        UzantoAuxAsocio.find(req.body.ueakodo).then(function(sucess){
+            res.status(200).send(sucess);
+        }, );
+      }
+  });
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
   getGrupoj:_getGrupoj,
@@ -288,5 +321,7 @@ module.exports = {
   updateUzanto: _updateUzanto,
   ensaluti: _ensaluti,
   cxuMembro: _cxuMembro,
+  adapti: _adapti,
+  getUzantoj: _getUzantoj,
   delete: _delete
 }

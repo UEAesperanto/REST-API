@@ -95,6 +95,9 @@ var _updateVolumo = function(req, res) {
   if (req.body.kampo == 'id') {
     res.status(403).send({message: "vi ne povas ŝanĝi la ID"});
   } else {
+    if(req.body.kampo === 'eldondato'){
+      req.body.valoro = new Date(req.body.valoro);
+    }
     Revuo.updateVolumo(req.params.id, req.body.kampo, req.body.valoro).then(
       function(sucess) {
         if (sucess) {

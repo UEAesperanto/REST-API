@@ -43,7 +43,7 @@ describe('Grupoj', function() {
          });
 
          it('it should GET all the grupoj with body', function(done){
-             Grupo.insert('mallongigilo', 'nomo', 'priskribo');
+             Grupo.insert('h', 'nomo', 'priskribo');
            chai.request(server)
                .get('/grupoj')
                .end((err, res) => {
@@ -54,7 +54,7 @@ describe('Grupoj', function() {
          });
 
         it('it should GET a grupoj with a given id', function (done) {
-            Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
+            Grupo.insert('a', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .get('/grupoj/' + success.insertId)
                     .end((err, res) => {
@@ -63,7 +63,7 @@ describe('Grupoj', function() {
                         res.body[0].should.have.property('mallongigilo');
                         res.body[0].should.have.property('nomo');
                         res.body[0].should.have.property('priskribo');
-                        res.body[0].mallongigilo.should.equal('mallongigilo');
+                        res.body[0].mallongigilo.should.equal('a');
                         res.body[0].nomo.should.equal('nomo');
                         res.body[0].priskribo.should.equal('priskribo');
                         done();
@@ -255,7 +255,7 @@ describe('Grupoj', function() {
 
        it('it should NOT POST a grupo without token', function (done) {
 
-           var grupo = {mallongigilo: 'mallongigilo', nomo: 'nomo', priskribo: 'priskribo'}
+           var grupo = {mallongigilo: 'b', nomo: 'nomo', priskribo: 'priskribo'}
 
            chai.request(server)
                .post('/grupoj')
@@ -271,7 +271,7 @@ describe('Grupoj', function() {
        });
 
        it('it should POST a grupoj', function (done) {
-           var grupo = {mallongigilo: 'mallongigilo', nomo: 'nomo', priskribo: 'priskribo'}
+           var grupo = {mallongigilo: 'c', nomo: 'nomo', priskribo: 'priskribo'}
 
            chai.request(server)
                .post('/grupoj')
@@ -288,7 +288,7 @@ describe('Grupoj', function() {
 
     describe('PUT /grupoj', function () {
         it('it should UPDATE a grupoj', function (done) {
-            Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
+            Grupo.insert('d', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .put('/grupoj/' + success.insertId)
                     .set('x-access-token', token)
@@ -303,7 +303,7 @@ describe('Grupoj', function() {
         });
 
         it('it should NOT UPDATE a grupoj', function (done) {
-            Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
+            Grupo.insert('e', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .put('/grupoj/' + success.insertId)
                     .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
@@ -321,7 +321,7 @@ describe('Grupoj', function() {
 
     describe('DELETE /grupoj', function () {
         it('it should DELETE a grupoj', function (done) {
-            Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
+            Grupo.insert('f', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .delete('/grupoj/' + success.insertId)
                     .set('x-access-token', token)
@@ -333,7 +333,7 @@ describe('Grupoj', function() {
         })
 
         it('it should NOT DELETE a grupoj', function (done) {
-            Grupo.insert('mallongigilo', 'nomo', 'priskribo').then(function (success) {
+            Grupo.insert('g', 'nomo', 'priskribo').then(function (success) {
                 chai.request(server)
                     .delete('/grupoj/' + success.insertId)
                     .end((err, res) => {

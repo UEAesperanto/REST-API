@@ -21,10 +21,10 @@ var _insert = function(uzantnomo, pasvorto, ueakodo) {
   return db.mysqlExec(query);
 }
 
-var _find = function(id) {
-  if (id) {
-    id = db.escape(id);
-    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = %s;', id);
+var _find = function(ueakodo) {
+  if (ueakodo) {
+    ueakodo = db.escape(ueakodo);
+    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `ueakodo` = %s;', ueakodo);
   } else {
     var query = util.format('SELECT * FROM `uzantoAuxAsocio`;');
   }

@@ -352,5 +352,17 @@ describe('Uzantoj', function() {
             done();
           });
       });
+
+      it('it should get ALL uzantoj - ADMIN', function(done){
+        chai.request(server)
+          .get('/uzantoj')
+          .set('x-access-token', token)
+          .send({kampo: "id", valoro: 1})
+          .end((err, res) =>  {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            done();
+          });
+      });
     });
 });

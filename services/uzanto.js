@@ -26,6 +26,7 @@ routerAuth.use(auth.authorizeAdminJuna);
 app.use('/', router);
 
 app.route('/')
+    .get(routerAuth, uzanto.getUzantoj)
     .post(uzanto.postUzanto);
 
 app.route('/admin/:id(\\d+)/')
@@ -45,6 +46,9 @@ app.route('/cxuMembro/:retposxto')
 
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
+
+router.route('/adapti')
+    .post(routerAuth, uzanto.adapti);
 
 router.route('/forgesisPasvorton')
     .post(uzanto.forgesisPasvorton);

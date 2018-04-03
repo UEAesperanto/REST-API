@@ -38,7 +38,6 @@ var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, idFako, observoj, aprobita);
-
   return db.mysqlExec(query);
 }
 

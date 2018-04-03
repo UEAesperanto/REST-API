@@ -306,7 +306,7 @@ var _adapti = function(req, res) {
       } else {
         UzantoAuxAsocio.find(req.body.ueakodo).then(function(sucess){
             res.status(200).send(sucess);
-        }, );
+        });
       }
   });
 }

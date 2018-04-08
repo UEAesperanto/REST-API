@@ -41,7 +41,7 @@ var _update = function(id, kampo, valoro) {
   id = db.escape(id);
   kampo = db.escapeId(kampo);
   valoro = db.escape(valoro);
-  var query = util.format('UPDATE `uzantoAuxAsocio` SET %s = %s WHERE `id` = %s', kampo, valoro, id);
+  var query = util.format('UPDATE `uzantoAuxAsocio` SET %s = %s WHERE `id` = %s;', kampo, valoro, id);
   return db.mysqlExec(query);
 }
 

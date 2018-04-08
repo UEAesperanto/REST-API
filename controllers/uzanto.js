@@ -171,6 +171,8 @@ var _updateUzanto = function(req, res){
             }
           mail.sendiRetmesagxo(mailOptions);
           resolve();
+        } else {
+          resolve();
         }
       });
     });
@@ -287,7 +289,6 @@ var _delete = function(req, res) {
 }
 
 var _adapti = function(req, res) {
-
   UzantoAuxAsocio.insert(req.body.retposxto, randomstring.generate(10), req.body.ueakodo).then(
     function(result){
       if (result) {
@@ -301,7 +302,11 @@ var _adapti = function(req, res) {
                       req.body.teloficejo, req.body.telportebla,
                       req.body.tttpagxo, req.body.urbo).then(
                         function(result){
-                          res.status(201).send({message: 'Ok', id: id});
+                          if(result) {
+                            res.status(201).send({message: 'Ok', id: id});
+                          } else {
+                            res.status(500).send({message: 'Internal error'});
+                          }
                         });
       } else {
         UzantoAuxAsocio.find(req.body.ueakodo).then(function(sucess){

@@ -78,6 +78,7 @@ databaseChangeLog:
                   name: urbo
                   type: varchar(255)
             tableName: aneco
+
   - changeSet:
       id: addUniqueConstraint
       author: Ana Ribeiro
@@ -88,3 +89,25 @@ databaseChangeLog:
         - addUniqueConstraint:
             columnNames: mallongigilo
             tableName: grupo
+
+  - changeSet:
+      id: add_faktemo_aneco
+      author: Ana Ribeiro
+      changes:
+        - createTable:
+            tableName: ref_faktemo_aneco
+            columns:
+              - column:
+                  name: idAneco
+                  type: int(11)
+                  references: aneco(id)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: idFaktemo
+                  type: int(11)
+                  references: faktemo(id)
+                  constraints:
+                    primaryKey: true
+                    nullable: false

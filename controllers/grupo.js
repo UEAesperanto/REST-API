@@ -106,14 +106,25 @@ var insertAneco = function(req, res, aprobita) {
   Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
                     req.body.findato, req.body.dumviva, req.body.tasko,
                     req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
-                    req.body.idFako, req.body.observoj, aprobita).then(
-                 function(result) {
-                   if (result) {
-                     res.status(201).send({message: 'aneco sukcese registrita', id: result.insertId});
-                   }
-                   else {
-                     res.status(400).send({message: 'Kontrolu viajn parametrojn'});
-                   }
+                    req.body.observoj, aprobita).then(
+                   function(result) {
+                     if(req.body.faktemoj) {
+                       promise_all = [];
+                       id = result.insertId;
+                       for (var i = 0; i < req.body.faktemoj.length; i++) {
+                         console.log(req.body.faktemoj[i]);
+                         promise_all.push(Aneco.insertFaktemo(id, req.body.faktemoj[i]));
+                       }
+                       Promise.all(promise_all).then(function(values) {
+                         res.status(201).send({message: 'aneco sukcese registrita', id: id});
+                       });
+                     } else {
+                       if (result){
+                         res.status(201).send({message: 'aneco sukcese registrita', id: result.insertId});
+                       } else{
+                         res.status(500).send({message: 'Internal error'});
+                       }
+                     }
                  }
       );
 }

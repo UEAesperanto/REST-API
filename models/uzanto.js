@@ -57,9 +57,10 @@ var _update = function(id, kampo, valoro) {
 
 var _findGrupoj = function(id) {
   id = db.escape(id);
-  var query = util.format('SELECT aneco.*, grupo.nomo  FROM `aneco` \
+  var query = util.format('SELECT aneco.*, ref_faktemo_aneco.*, grupo.nomo  FROM `aneco` \
                            JOIN `uzanto` ON uzanto.id = aneco.idAno \
                            JOIN `grupo` ON grupo.id = aneco.idGrupo \
+                           LEFT JOIN `ref_faktemo_aneco`  ON ref_faktemo_aneco.idAneco = aneco.id\
                            WHERE uzanto.id = %s;', id);
   return db.mysqlExec(query);
 }

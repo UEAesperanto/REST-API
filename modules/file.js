@@ -57,8 +57,13 @@ var _writeFile = function(dirU, pathU, file, req, res){
 }
 
 var _readFile = function(adreso, tipo, res){
-  var bitmap = fs.readFileSync(adreso);
-  res.send("data:" + tipo + ";base64," + Buffer(bitmap).toString('base64'));
+    try{
+        var bitmap = fs.readFileSync(adreso);
+        res.send("data:" + tipo + ";base64," + Buffer(bitmap).toString('base64'));
+    }catch (err){
+        res.send('No file found');
+    }
+
 }
 
 module.exports = {

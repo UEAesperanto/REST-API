@@ -4,7 +4,7 @@ module.exports = {
                         de via pago kaj povos ekuzi viajn membrservojn<br>\
                         En kazo de duboj, kontaktu info@uea.org. \
                         <br><br>Kore,<br><br>\
-                        La UEA-Teamo',
+                        La UEA-Teamo' ,
   'novaPasvorto':       'Estimata uzanto, <br><br>\
                         La pasvorto por via membrspaco ĉe UEA estas nun: %s  <br> \
                         Ni rekomendas tuj ŝanĝi tiun pasvorton je ensaluto en la membra retejo. \

@@ -17,6 +17,7 @@ var _insert = function(id, personanomo, familianomo, titolo,
                             bildo, adreso, posxtkodo, idLando,
                             naskigxtago, notoj, retposxto, telhejmo,
                             teloficejo, telportebla,  tttpagxo, urbo);
+    console.log(query);
     return db.mysqlExec(query);
 }
 
@@ -37,6 +38,7 @@ var _find = function(kampo, valoro){
                              uzanto.id = uzantoAuxAsocio.id\
                              JOIN `lando` ON \
                              uzanto.idLando = lando.id;');
+  console.log(query);
   return db.mysqlExec(query);
 }
 

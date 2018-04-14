@@ -5,7 +5,7 @@ services:
     image: uea-nodejs
     container_name: uea-api-test
     ports:
-      - "3001:3000"
+      - "3001:3001"
     environment:
       - LIQUIBASE=uea-liquibase-test
       - DB_PASSWORD=u34p4ss

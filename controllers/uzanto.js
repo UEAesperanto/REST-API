@@ -3,6 +3,8 @@ var util = require('util');
 var jwt  = require('jsonwebtoken');
 var randomstring = require('randomstring');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var Auth0Strategy = require('passport-auth0');
 
 /*config*/
 var config = require('../config.js');
@@ -19,6 +21,7 @@ var query = require('../modules/query');
 var hash = require('../modules/hash');
 var mail = require('../modules/mail');
 var file = require('../modules/file');
+var auth = require('../modules/auth');
 
 /*
   POST - /uzantoj/ensaluti
@@ -27,6 +30,8 @@ var _ensaluti = function(req, res) {
   UzantoAuxAsocio.findUzantnomo(req.body.uzantnomo).then(
     function(sucess) {
       if (sucess.length == 0) {
+
+
         res.status(401).send({message: 'La uzantnomo ne ekzistas'});
       }
 
@@ -289,7 +294,7 @@ var _delete = function(req, res) {
 }
 
 var _adapti = function(req, res) {
-  UzantoAuxAsocio.insert(req.body.retposxto, randomstring.generate(10), req.body.ueakodo).then(
+  UzantoAuxAsocio.insert(req.body.retposxto, null, req.body.ueakodo).then(
     function(result){
       if (result) {
         var id = result.insertId;
@@ -316,6 +321,28 @@ var _adapti = function(req, res) {
   });
 }
 
+var _ensalutiSenPasvorto = function(req, res){
+    Uzanto.find('retposxto', req.user.displayName).then(function(sucess){
+      var params = '';
+        if (sucess.length < 1) {
+          params = "?message=Ne estas membroj kun tiu retpoŝtadreso en nia sistemo";
+        } else if(sucess.length > 1) {
+         params = "?message=Estas pli ol 1 uzanto kies tiu retpoŝtadreso estis indikita. Provu\
+                   ensaluti pere de uzantnomo kaj pasvorto aŭ skribu al sekretario@co.uea.org\
+                   por informi al kiu tiu retpoŝtadreso vere apartenas";
+        } else {
+          var uzanto = {
+            id: sucess[0].id,
+            uzantnomo: sucess[0].uzantnomo,
+            permeso: 'uzanto'
+          };
+          var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
+          params = '?token=' + token +'&id=' + sucess[0].id
+        }
+        res.redirect(req.session.returnTo || 'http://localhost:8000/#!/' + params)
+    });
+}
+
 module.exports = {
   forgesisPasvorton:_forgesisPasvorton,
   getGrupoj:_getGrupoj,
@@ -327,6 +354,7 @@ module.exports = {
   ensaluti: _ensaluti,
   cxuMembro: _cxuMembro,
   adapti: _adapti,
+  ensalutiSenPasvorto: _ensalutiSenPasvorto,
   getUzantoj: _getUzantoj,
   delete: _delete
 }

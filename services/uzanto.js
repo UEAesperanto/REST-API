@@ -50,7 +50,7 @@ app.route('/cxuMembro/:retposxto')
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
 
-router.route('/ensaluti/senpasvorto',)
+router.route('/ensaluti/senpasvorto')
     .get(handleCallbackError, passport.authenticate('auth0'), uzanto.ensalutiSenPasvorto)
 
 router.route('/adapti')

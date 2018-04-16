@@ -11,14 +11,20 @@ module.exports = {
   'idJunaAdministranto': 2,
   'idKomunikisto': 3,
 
+  /*Auth0*/
+  'domain': 'xxxx.auth0.com',
+  'clientID': 'xxxx',
+  'clientSecret': 'xxxxx',
+  'loginURL': 'http://localhost:8000/#!/',
+
   /*Retadresoj*/
   'financaretadreso':'financoj@ekzemplo.com',
   'sendInBlueKey': 'xxxxx',
   'fromDefault': 'ekzemplo@ekzemplo.com',
-  
+
   /*Negocmodeloj*/
   'junaAgxo': 35,
 
   /*Sekretoj*/
-  'sekretoJWT': '2UjXXkEYQKBdWi4KdfQNtT39XxqCQBAd'
+  'sekretoJWT': 'shhh'
 };

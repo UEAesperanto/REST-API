@@ -37,7 +37,6 @@ var _find = function(kampo, valoro){
                              uzanto.id = uzantoAuxAsocio.id\
                              JOIN `lando` ON \
                              uzanto.idLando = lando.id;');
-  console.log(query);
   return db.mysqlExec(query);
 }
 

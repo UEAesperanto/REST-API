@@ -62,7 +62,7 @@ var _insertRefKategorio = function(idGrupo, idKategorio) {
 var _findAnoj = function(idGrupo) {
   if(idGrupo) {
     idGrupo = db.escape(idGrupo);
-    var query = util.format("SELECT * FROM `uzanto` \
+    var query = util.format("SELECT uzanto.*, aneco.idGrupo, aneco.aprobita FROM `uzanto` \
                              JOIN `uzantoAuxAsocio` ON uzanto.id = uzantoAuxAsocio.id \
                              JOIN `aneco` ON aneco.idAno = uzanto.id \
                              JOIN `lando` ON uzanto.idLando = lando.id\

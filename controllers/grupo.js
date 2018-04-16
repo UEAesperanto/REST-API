@@ -83,26 +83,8 @@ var _getGrupojKat = function(req, res){
   });
 }
 
-/*
-   GET /grupo/laboroj/:id/anoj
-*/
-var _getLaboranoj = function(req, res){
-  Grupo.findKategorio(config.idLaborgrupo).then(function(result){
-    var grupoj = result.filter(query.search({id:req.params.id}));
-    if (grupoj.length == 1) {
-        Grupo.findLaboranoj(req.params.id).then(function(sucess){
-              var anoj = sucess;
-              anoj = anoj.filter(query.search(req.query));
-              res.status(200).send(anoj);
-        });
-    }
-    else {
-      res.status(400).send({message: 'ne valida ID'});
-    }
-  });
-}
-
 var insertAneco = function(req, res, aprobita) {
+  console.log(req.body);
   Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
                     req.body.findato, req.body.dumviva, req.body.tasko,
                     req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
@@ -112,7 +94,6 @@ var insertAneco = function(req, res, aprobita) {
                        promise_all = [];
                        id = result.insertId;
                        for (var i = 0; i < req.body.faktemoj.length; i++) {
-                         console.log(req.body.faktemoj[i]);
                          promise_all.push(Aneco.insertFaktemo(id, req.body.faktemoj[i]));
                        }
                        Promise.all(promise_all).then(function(values) {
@@ -253,7 +234,6 @@ module.exports = {
   updateGrupo: _updateGrupo,
   getGrupojKat: _getGrupojKat,
   postAneco: _postAneco,
-  getLaboranoj: _getLaboranoj,
   getAnoj: _getAnoj,
   postRefKatGrupo: _postRefKatGrupo
 }

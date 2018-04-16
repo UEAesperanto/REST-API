@@ -5,6 +5,7 @@ var _find = function(id){
   if(id){
     id = db.escape(id);
     var query = util.format('SELECT * FROM `dissendo` WHERE `id` = %s;', id);
+    console.log(query)
   }
   else
     var query = util.format('SELECT * FROM `dissendo`;');

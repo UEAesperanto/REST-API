@@ -9,6 +9,9 @@ app.route('/')
     .get(dissendo.getDissendoj)
     .post(dissendo.postDissendo);
 
+app.route('/:id(\\d+)/')
+    .get(dissendo.getDissendo);
+
 app.route('/retlistoj')
      //Público
     .get(dissendo.getRetlistoj)

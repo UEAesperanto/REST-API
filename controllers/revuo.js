@@ -71,22 +71,6 @@ var _postVolumo = function(req, res) {
 }
 
 /*
- POST revuoj/:id/mp3
- */
-
-var _postMp3 = function (req, res) {
-  file.writeFile('/mp3', req.params.id, 'file', req, res);
-};
-
-/*
- GET revuoj/:id/mp3
- */
-var _getMp3 = function (req, res) {
-  var tipo = 'audio/mp3';
-  file.readFile('/mp3/'+ req.params.id, tipo, res);
-};
-
-/*
   POST revuoj/volumoj/:id/:tipo
 */
 var _postVolumoFiles = function(req, res) {
@@ -100,6 +84,8 @@ var _getVolumoFiles = function(req, res) {
   var tipo = 'application/pdf';
   if(req.params.tipo == 'bildo') {
     tipo = 'image/png';
+  }else if(req.params.tipo === 'mp3'){
+    tipo = 'audio/mp3';
   }
   file.readFile('/volumoj/'+ req.params.tipo + req.params.id, tipo, res);
 }
@@ -156,7 +142,5 @@ module.exports = {
   getVolumoj: _getVolumoj,
   getVolumoFiles: _getVolumoFiles,
   updateVolumo: _updateVolumo,
-  deleteVolumo: _deleteVolumo,
-  postMp3: _postMp3,
-  getMp3: _getMp3
+  deleteVolumo: _deleteVolumo
 }

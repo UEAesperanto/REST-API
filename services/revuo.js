@@ -24,10 +24,6 @@ app.route('/:id(\\d+)/volumoj')
     .get(revuo.getVolumoj)
     .post(routerAuth, revuo.postVolumo);
 
-app.route('/:id/mp3')
-    .get(revuo.getMp3)
-    .post(routerAuth, revuo.postMp3)
-
 app.route('/volumoj')
     .get(revuo.getVolumoj);
 

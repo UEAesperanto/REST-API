@@ -43,3 +43,8 @@ services:
       - MYSQL_DATABASE=uea
     ports:
       - "3307:3306"
+    volumes:
+      - uea-testovolume:/var/lib/mysql
+
+volumes:
+  uea-testovolume:

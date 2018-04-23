@@ -32,6 +32,7 @@ admin = require('./services/admin');
 peranto = require('./services/peranto');
 revuo = require('./services/revuo');
 vocxdonado = require('./services/vocxdonado');
+anonceto = require('./services/anonceto');
 opcio = require('./services/opcio');
 config = require('./services/config');
 
@@ -98,6 +99,7 @@ app.use('/config', config);
 app.use('/revuoj', revuo);
 app.use('/vocxdonadoj', vocxdonado);
 app.use('/opcioj', opcio);
+app.use('/anoncetoj', anonceto);
 
 // Start the server
 app.listen(PORT, () => {

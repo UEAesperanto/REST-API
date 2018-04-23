@@ -31,7 +31,6 @@ kongreso = require('./services/kongreso');
 admin = require('./services/admin');
 peranto = require('./services/peranto');
 revuo = require('./services/revuo');
-teko = require('./services/teko');
 vocxdonado = require('./services/vocxdonado');
 opcio = require('./services/opcio');
 config = require('./services/config');
@@ -97,7 +96,6 @@ app.use('/admin', admin);
 app.use('/perantoj', peranto);
 app.use('/config', config);
 app.use('/revuoj', revuo);
-app.use('/tekoj', teko);
 app.use('/vocxdonadoj', vocxdonado);
 app.use('/opcioj', opcio);
 

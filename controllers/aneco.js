@@ -61,7 +61,7 @@ var _deleteAneco = function(req, res) {
     function(sucess) {
       if(sucess) {
         Uzanto.find('id', req.params.id).then(function(sucess){
-            if(sucess[0].retposxto) {
+            if(sucess && sucess[0].retposxto) {
               var html = util.format(configMail.membrecVisxita,
                                      sucess[0].personanomo, req.body.anecnomo);
               var to = util.format('{"%s" : "%s"}', sucess[0].retposxto, sucess[0].personanomo);

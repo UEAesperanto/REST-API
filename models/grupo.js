@@ -68,7 +68,6 @@ var _findAnoj = function(idGrupo) {
                              JOIN `aneco` ON aneco.idAno = uzanto.id \
                              LEFT JOIN `ref_faktemo_aneco`  ON ref_faktemo_aneco.idAneco = aneco.id\
                              WHERE aneco.idGrupo = %s;", idGrupo);
-                            console.log(query);
   } else
     var query = "SELECT * FROM `uzanto` JOIN `aneco` on aneco.idAno = uzanto.id;";
   return db.mysqlExec(query);

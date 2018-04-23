@@ -9,9 +9,10 @@ var auth = require('../modules/auth');
 const app = express();
 
 var routerAuth = express.Router();
+var routerUzanto = express.Router();
 
-//por nun, baldaŭ estos ankaŭ por administranto pri komunikado
-routerAuth.use(auth.authorizeAdmin);
+routerAuth.use(auth.authorizeAdminKomunikisto);
+routerUzanto.use(auth.authorizeUzanto);
 
 app.route('/')
     .get(revuo.getRevuoj)
@@ -33,7 +34,6 @@ app.route('/volumoj/:id(\\d+)')
 
 app.route('/volumoj/:id(\\d+)/:tipo')
     .post(routerAuth, revuo.postVolumoFiles)
-    //Nur por membroj, aldoni tion baldaŭ
-    .get(revuo.getVolumoFiles)
+    .get(routerUzanto, revuo.getVolumoFiles)
 
 module.exports = app;

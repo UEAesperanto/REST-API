@@ -110,7 +110,7 @@ var _ensaluti = function(req, res) {
 */
 var _getUzanto = function(req, res){
   Uzanto.find('id', req.params.id).then(function(sucess){
-      var uzanto = sucess.filter(query.search(req.query));
+      var uzanto = sucess;
       res.status(200).send(uzanto);
   });
 }

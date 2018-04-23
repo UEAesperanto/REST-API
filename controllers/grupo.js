@@ -105,8 +105,7 @@ var insertAneco = function(req, res, aprobita) {
                          res.status(500).send({message: 'Internal error'});
                        }
                      }
-                 }
-      );
+                 });
 }
 
 /*
@@ -114,7 +113,8 @@ var insertAneco = function(req, res, aprobita) {
 */
 var _postAneco = function(req, res) {
   if (req.decoded) {
-      if(req.decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+      if ((req.decoded.permesoj.indexOf(config.idAdministranto) > -1)
+        || (req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1)) {
         insertAneco(req, res, 1);
       }
   } else {
@@ -188,7 +188,9 @@ var _getAnoj = function(req, res) {
         findAnoj(req, res);
       } else if(req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
           Grupo.findKategorio(config.idJunajGrupoj).then(function(result){
-            if (grupoj.length == 1) {
+            var grupoj = []
+            result.map(function(item){grupoj.push(item.id)});
+            if (grupoj.indexOf(parseInt(req.params.id)) > - 1) {
               findAnoj(req, res);
             } else {
               var jaro = parseInt((new Date()).getFullYear());

@@ -22,7 +22,7 @@ describe('Dissendoj', function() {
       var administranto = {
         id: 1,
         uzantnomo: 'nomo',
-        permesoj: [1]
+        permesoj: [3]
       };
       token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
       done();
@@ -32,6 +32,7 @@ describe('Dissendoj', function() {
      it('it should GET empty dissendoj', function(done){
        chai.request(server)
            .get('/dissendoj')
+           .set('x-access-token', token)
            .end((err, res) => {
                res.should.have.status(200);
                res.body.length.should.equals(0);

@@ -95,13 +95,6 @@ describe('LANDO', () => {
 
   describe('POST /landoj', () => {
     it('it should NOT POST a lando - Sen ĵetono (token)',(done) => {
-      var lando = Lando.insert(
-        landoModel1.valuto,
-        landoModel1.radikoEo,
-        landoModel1.finajxoEo,
-        landoModel1.landkodo
-      );
-
       request
         .post('/landoj')
         .send(landoModel1)

@@ -35,40 +35,41 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
   try {
     urllib.request('http://reto.uea.org/index.php?a=persone', options,
       function (err, data, res) {
-        var options2 = {
-                        "method": "GET",
-                        "headers":{"Cookie": res.headers['set-cookie'][0].split(';')[0]}
+        if(res.headers && res.headers['set-cookie']){
+          var options2 = {
+                          "method": "GET",
+                          "headers":{"Cookie": res.headers['set-cookie'][0].split(';')[0]}
+                        };
+          urllib.request('http://reto.uea.org/index.php?a=persone', options2, function (err, data, res) {
+            if(data) {
+              var data = data.toString();
+              var indexOf = data.indexOf('UEA-kodo');
+              if(indexOf > -1) {
+                ueakodo = data.substring(indexOf + 20, indexOf + 26).replace("-", "");
+                UzantoAuxAsocio.find(ueakodo).then(function(response){
+                  if(response.length == 1) {
+                    var id = response[0].id;
+                    var p1 = UzantoAuxAsocio.update(id, 'uzantnomo', uzantnomo);
+                    var pasvortajDatumoj = hash.sha512(pasvorto, null);
+                    var p2 = UzantoAuxAsocio.update(id, 'pasvortoSalt', pasvortajDatumoj.salt);
+                    var p3 = UzantoAuxAsocio.update(id, 'pasvortoHash', pasvortajDatumoj.hash);
+                    Promise.all([p1, p2, p3]).then(function(values) {
+                      var uzanto = {
+                        id: id,
+                        uzantnomo: uzantnomo,
+                        permeso: 'uzanto'
                       };
-        urllib.request('http://reto.uea.org/index.php?a=persone', options2, function (err, data, res) {
-          if(data) {
-            var data = data.toString();
-            var indexOf = data.indexOf('UEA-kodo');
-            if(indexOf > -1) {
-              ueakodo = data.substring(indexOf + 20, indexOf + 26).replace("-", "");
-              UzantoAuxAsocio.find(ueakodo).then(function(response){
-                if(response.length == 1) {
-                  var id = response[0].id;
-                  var p1 = UzantoAuxAsocio.update(id, 'uzantnomo', uzantnomo);
-                  var pasvortajDatumoj = hash.sha512(pasvorto, null);
-                  var p2 = UzantoAuxAsocio.update(id, 'pasvortoSalt', pasvortajDatumoj.salt);
-                  var p3 = UzantoAuxAsocio.update(id, 'pasvortoHash', pasvortajDatumoj.hash);
-                  Promise.all([p1, p2, p3]).then(function(values) {
-                    var uzanto = {
-                      id: id,
-                      uzantnomo: uzantnomo,
-                      permeso: 'uzanto'
-                    };
-                    // kaze uzanto estas trovita kaj pasvorto estas korekta
-                    // oni kreas iun token
-                    var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
-                    res.status(200).send({token: token, uzanto: sucess[0]});
-                  });
-                } else {
-                  cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \
-                                                  bonvole, kontaktu sekretario@co.uea.org\
-                                                  kaj informu vian UEA-kodo'});
-                }
-              });
+                      // kaze uzanto estas trovita kaj pasvorto estas korekta
+                      // oni kreas iun token
+                      var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
+                      res.status(200).send({token: token, uzanto: sucess[0]});
+                    });
+                  } else {
+                    cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \
+                                                    bonvole, kontaktu sekretario@co.uea.org\
+                                                    kaj informu vian UEA-kodo'});
+                  }
+                });
             } else {
               cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
             }
@@ -76,7 +77,10 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
             cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
           }
        });
-     });
+       } else {
+          cres.status(401).send({message: 'Okazis eraro je via peto! Provu denove pli malfrue.'});
+       }
+  });
   } catch(error) {
     cres.status(401).send({message: 'Okazis eraro je via peto! Provu denove pli malfrue.'});
   }

@@ -62,7 +62,7 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
                       // kaze uzanto estas trovita kaj pasvorto estas korekta
                       // oni kreas iun token
                       var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
-                      res.status(200).send({token: token, uzanto: sucess[0]});
+                      cres.status(200).send({token: token, uzanto: sucess[0]});
                     });
                   } else {
                     cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \

@@ -7,8 +7,6 @@ var _insertTable = function(titolo, ligilo, priskribo, butono, gxis) {
                              butono, gxis)\
                              VALUES(%s, %s, %s, %s, %s);',
                              titolo, ligilo, priskribo, butono, gxis);
-
-    console.log(query);
     return db.mysqlExec(query);
 }
 

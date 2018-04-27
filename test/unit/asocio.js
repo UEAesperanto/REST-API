@@ -1,4 +1,4 @@
-describe('ASOCIO', () => {
+describe('==== ASOCIO ====', () => {
 
   //Before each test we empty the database
   beforeEach((done) => {

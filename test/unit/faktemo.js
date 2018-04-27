@@ -1,4 +1,4 @@
-describe('FAKTEMO', () => {
+describe('==== FAKTEMO ====', () => {
   var Faktemo = require('../../models/faktemo');
   var token = '';
   var faktemoModel1 = {
@@ -78,47 +78,46 @@ describe('FAKTEMO', () => {
             });
         });
     });
+  });
 
-    describe('DELETE /faktemoj/:id', () => {
-      it('it should NOT DELETE faktemon - sen permeso', (done) => {
-        faktemo = Faktemo.insertTable(
-          faktemoModel1.nomo,
-          faktemoModel1.priskribo
-        );
+  describe('DELETE /faktemoj/:id', () => {
+    it('it should NOT DELETE faktemon - sen permeso', (done) => {
+      faktemo = Faktemo.insertTable(
+        faktemoModel1.nomo,
+        faktemoModel1.priskribo
+      );
 
-        faktemo.then((success) => {
-          request
-            .delete('/faktemoj/' + success.insertId)
-            .end((err, res) => {
-              res.status.should.be.equal(400);
-              done();
-            });
-        });
+      faktemo.then((success) => {
+        request
+          .delete('/faktemoj/' + success.insertId)
+          .end((err, res) => {
+            res.status.should.be.equal(400);
+            done();
+          });
       });
+    });
 
-      it('it should NOT DELETE faktemon - sen permeso', (done) => {
-        faktemo = Faktemo.insertTable(
-          faktemoModel1.nomo,
-          faktemoModel1.priskribo
-        );
+    it('it should NOT DELETE faktemon - sen permeso', (done) => {
+      faktemo = Faktemo.insertTable(
+        faktemoModel1.nomo,
+        faktemoModel1.priskribo
+      );
 
-        faktemo.then((success) => {
-          request
-            .delete('/faktemoj/' + success.insertId)
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.status.should.be.equal(204);
-              request
-                .get('/faktemoj/' + success.insertId)
-                .end((err,res) => {
-                  res.status.should.be.equal(200);
-                  res.body.length.should.equals(0);
-                  done();
-                });
-            });
-        });
+      faktemo.then((success) => {
+        request
+          .delete('/faktemoj/' + success.insertId)
+          .set('x-access-token', token)
+          .end((err, res) => {
+            res.status.should.be.equal(204);
+            request
+              .get('/faktemoj/' + success.insertId)
+              .end((err,res) => {
+                res.status.should.be.equal(200);
+                res.body.length.should.equals(0);
+                done();
+              });
+          });
       });
-
     });
 
   });

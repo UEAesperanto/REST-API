@@ -1,4 +1,4 @@
-describe('TEKO', () => {
+describe('==== TEKO ====', () => {
   var Teko = require('../../models/teko');
   tekoModel1 = {
     titolo: "titolo",

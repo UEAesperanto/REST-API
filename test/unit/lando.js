@@ -1,4 +1,4 @@
-describe('LANDO', () => {
+describe('==== LANDO ====', () => {
   var Lando = require('../../models/lando');
   var token = '';
   var landoModel1 = {
@@ -31,7 +31,7 @@ describe('LANDO', () => {
       });
     });
 
-    it('it should GET all the landoj with body', (done) => {
+    it('it should GET all the landoj', (done) => {
       request
       .get('/landoj')
       .end((err, res) => {

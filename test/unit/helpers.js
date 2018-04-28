@@ -5,11 +5,14 @@ var jwt  = require('jsonwebtoken');
 var app = require('../../app').app;
 var db = require('../../modules/db');
 var config = require('../../config');
+var {readFileSync} = require('fs');
+
 
 global.app = app;
 global.request = supertest(app);
 global.expect = chai.expect;
 global.should = chai.should();
+global.readFileSync = readFileSync;
 
 var administranto = { id: 1, uzantnomo: 'nomo', permesoj: [1], priskribo:'priskribo'};
 

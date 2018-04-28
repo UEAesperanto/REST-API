@@ -1,3 +1,6 @@
+/*
+      INCOMPLETE
+*/
 describe('==== GRUPO ====', () => {
   token = '';
   grupoModel1 = {mallongigilo: 'mallongigilo' , nomo: 'nomo', priskribo: 'priskribo'};
@@ -7,9 +10,12 @@ describe('==== GRUPO ====', () => {
   beforeEach((done) => {
       createAdmin();
       cleanTable('grupo');
+      cleanTable('grupa_kategorio');
+      cleanTable('ref_grupo_grupa_kategorio');
       token = generateToken();
       done();
   });
+
 
   describe('GET /grupoj', () => {
     it('it should GET all the grupoj',(done) => {
@@ -78,28 +84,16 @@ describe('==== GRUPO ====', () => {
   describe('GET /grupoj/kategorioj/:id/sub', () => {
     it('it should GET all the grupoj/laboroj with body', (done) => {
       request
-        .get('/grupoj/kategorioj/1/sub')
+        .post('/grupoj/kategorioj')
+        .send(kategoriojModel1)
+        .set('x-access-token', token)
         .end((err,res) => {
-          res.status.should.be.equal(200);
-          done();
-        });
-    });
-
-    it('it should GET all the grupoj/membrecoj with body', () => {
-      request
-        .get('/grupoj/kategorioj/4/sub')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
-          done();
-        });
-    });
-
-    it('it should GET all the aldonaj membrecoj with body', () => {
-      request
-        .get('/grupoj/kategorioj/5/sub')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
-          done();
+          request
+            .get('/grupoj/kategorioj/' + res.body.insertId + '/sub')
+            .end((err,res) => {
+              res.status.should.be.equal(200);
+              done();
+            });
         });
     });
   });

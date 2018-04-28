@@ -1,3 +1,6 @@
+/*
+  INCOMPLETE
+*/
 describe('==== ADMIN ====', () => {
   var token = ''
   var uzantoModel1 = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};

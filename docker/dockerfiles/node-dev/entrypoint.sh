@@ -8,18 +8,17 @@ done
 
 echo "app preta!"
 
-#node --inspect=0.0.0.0:9229 server
 npm install --unsafe-perm --only=dev
  if [ -z "$TEST" ]; then
    nodemon \
        --ext js \
        --watch ./  \
-       --exec 'node --inspect=0.0.0.0:9229 || true' \
+       --exec 'node --inspect=0.0.0.0:9229 server || true' \
        --delay 1
  else
    nodemon \
        --ext js \
        --watch ./  \
-       --exec 'mocha --opts ./test/unit/mocha.opts ./test/unit/*.js || true' \
+       --exec 'npm run test-unit || true' \
        --delay 1
  fi

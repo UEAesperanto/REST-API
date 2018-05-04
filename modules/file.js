@@ -6,7 +6,7 @@ var fs = require('fs');
 var _writeFile = function(dirU, pathU, file, req, res){
   var storage = multer.diskStorage({
       destination: function (req, file, cb) {
-        const dir = dirU;
+        const dir = "/sistemo" + dirU;
         cb(null, dir);
       },
       filename: function (req, file, cb) {

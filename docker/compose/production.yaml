@@ -16,7 +16,7 @@ services:
       - mysql
     volumes:
       - ../../config.js:/app/config.js
-      - uea-dataVolumoj:/volumoj
+      - uea-dataSistemo:/sistemo
 
 
   liquibase:
@@ -45,4 +45,4 @@ services:
 
 volumes:
   uea-datavolume:
-  uea-dataVolumoj:
+  uea-dataSistemo:

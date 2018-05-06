@@ -13,7 +13,6 @@ var db_config = {
       else
         return false;
       }
-    }
     return(useDefaultTypeCasting());
   }
 }
@@ -21,8 +20,10 @@ var db_config = {
 var connection = mysql.createConnection(db_config);
 
 connection.connect(function(err) {
-  console.log(err.code); // 'ECONNREFUSED'
-  console.log(err.fatal); // true
+  if (err != null) {
+    console.log(err.code); // 'ECONNREFUSED'
+    console.log(err.fatal); // true
+  }
 });
 
 var _escape = function(uzantQuery) {
@@ -42,8 +43,10 @@ var _escapeArgs = function(args) {
 var _mysqlExec = function(query){
   return new Promise(function(resolve, reject){
     connection.query(query, function (err, results, fields) {
-      console.log(error.code);
-      console.log(error.fatal);
+      if (err != null) {
+        console.log(error.code);
+        console.log(error.fatal);
+      }
       resolve(results);
       return results;
     });

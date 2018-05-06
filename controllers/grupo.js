@@ -188,7 +188,7 @@ var _getAnoj = function(req, res) {
         findAnoj(req, res);
       } else if(req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
           Grupo.findKategorio(config.idJunajGrupoj).then(function(result){
-            var grupoj = []
+            var grupoj = [];
             result.map(function(item){grupoj.push(item.id)});
             if (grupoj.indexOf(parseInt(req.params.id)) > - 1) {
               findAnoj(req, res);

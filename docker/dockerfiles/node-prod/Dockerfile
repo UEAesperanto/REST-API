@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     git \
 && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g nodemon mocha codecov istanbul nyc
+RUN npm install -g nodemon mocha
 EXPOSE 3000
 
 RUN git clone https://github.com/UEAesperanto/REST-API.git /app && \

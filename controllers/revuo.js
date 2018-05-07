@@ -74,7 +74,7 @@ var _postVolumo = function(req, res) {
   POST revuoj/volumoj/:id/:tipo
 */
 var _postVolumoFiles = function(req, res) {
-  file.writeFile('/volumoj', req.params.tipo + req.params.id, 'file', req, res);
+  file.writeFile('/sistemo', "volumoj" + req.params.tipo + req.params.id, 'file', req, res);
 }
 
 /*
@@ -87,7 +87,7 @@ var _getVolumoFiles = function(req, res) {
   }else if(req.params.tipo === 'mp3'){
     tipo = 'audio/mp3';
   }
-  file.readFile('/volumoj/'+ req.params.tipo + req.params.id, tipo, res);
+  file.readFile('volumoj'+ req.params.tipo + req.params.id, tipo, res);
 }
 
 /*

@@ -320,11 +320,11 @@ var _cxuMembro = function(req, res) {
 }
 
 var _postBildo = function(req, res) {
-  file.writeFile('/uzantbildoj', 'uzantbildo' + req.params.id, 'file', req, res);
+  file.writeFile('/sistemo', 'uzantbildo' + req.params.id, 'file', req, res);
 }
 
 var _getBildo = function(req, res) {
-  file.readFile('/uzantbildoj/uzantbildo' + req.params.id, 'image/png', res);
+  file.readFile('uzantbildo' + req.params.id, 'image/png', res);
 }
 
 var _getGrupoj = function(req,res) {

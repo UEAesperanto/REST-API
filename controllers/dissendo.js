@@ -96,13 +96,22 @@ var _deleteRetlisto = function(req, res) {
   POST /dissendo/retlistoj/:id/abonantoj
 */
 var _postAbonanto = function(req, res) {
-  Retlisto.insert(req.body.ekde, req.body.formato_html,
-                  req.body.kodigxo_utf8, req.body.retadreso, req.params.id).then(function(sucess) {
+  Abonanto.insert(req.params.id, new Date(req.body.ekde), req.body.formato_html,
+                  req.body.kodigxo_utf8, req.body.retadreso).then(function(sucess) {
     if(sucess) {
       res.status(201).send(sucess);
     } else {
       res.status(500).send({message: 'Internal Error'});
     }
+  });
+}
+
+
+var _getAbonanto = function (req, res) {
+  Abonanto.find().then(function(sucess){
+    var retlistoj = sucess;
+    retlistoj = retlistoj.filter(query.search(req.query));
+    res.status(200).send(retlistoj);
   });
 }
 
@@ -120,5 +129,6 @@ module.exports = {
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,
   postAbonanto: _postAbonanto,
-  deleteAbonanto: _deleteAbonanto
+  deleteAbonanto: _deleteAbonanto,
+  getAbonanto: _getAbonanto
 }

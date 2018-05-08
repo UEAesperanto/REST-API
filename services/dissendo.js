@@ -17,10 +17,11 @@ app.route('/retlistoj')
     .post(routerAuth, dissendo.postRetlisto);
 
 app.route('/retlistoj/:id(\\d+)')
-    .delete(dissendo.deleteRetlisto)
+    .delete(dissendo.deleteRetlisto);
 
 app.route('/retlistoj/:id/abonantoj')
     .post(dissendo.postAbonanto)
+    .get(dissendo.getAbonanto);
 
 app.route('/retlistoj/:id(\\d+)/abonantoj/:idAbonanto(\\d+)')
     .delete(dissendo.deleteAbonanto);

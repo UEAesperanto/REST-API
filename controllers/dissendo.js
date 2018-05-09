@@ -119,7 +119,13 @@ var _getAbonanto = function (req, res) {
   DELETE /dissendo/retlistoj/:id/abonantoj
 */
 var _deleteAbonanto = function(req, res) {
- //fari
+  Abonanto.removeAbonanton(req.params.idAbonanto, req.params.id).then(function (success) {
+      if(success){
+        res.status(200).send({message: 'Ok'});
+      }else {
+        res.status(500).send({message: 'Internal Error'});
+      }
+  });
 }
 
 module.exports = {

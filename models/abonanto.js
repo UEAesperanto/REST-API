@@ -25,8 +25,15 @@ var _delete = function(id){
   return db.mysqlExec(query);
 }
 
+var _removeAbonanton = function(id, idRetlisto) {
+  id = db.escape(id);
+  var query = util.format('DELETE FROM `retlist_abono` WHERE `id` = %s AND `idRetlisto` = %s;', id, idRetlisto);
+  return db.mysqlExec(query);
+}
+
 module.exports = {
   find: _find,
   insert: _insert,
-  delete: _delete
+  delete: _delete,
+  removeAbonanton: _removeAbonanton
 }

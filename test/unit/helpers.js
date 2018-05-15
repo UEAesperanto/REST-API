@@ -28,9 +28,8 @@ global.cleanTable = (name, done) => {
 global.createAdmin = () => {
   cleanTable('administranto');
   cleanTable('adminrajto');
-  var query = util.format('INSERT INTO adminrajto ()\
-                                (id, nomo, priskribo)\
+  var query = util.format('INSERT INTO adminrajto (id, nomo, priskribo)\
                                 VALUES (%s, %s, %s);',
-                                administranto.id, administranto.nomo, administranto.priskribo);
+                                administranto.id, administranto.uzantnomo, administranto.priskribo);
   db.mysqlExec(query);
 }

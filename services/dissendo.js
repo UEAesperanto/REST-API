@@ -2,26 +2,26 @@ const express = require('express');
 var dissendo = require('../controllers/dissendo');
 const app = express();
 
-// Asocio routes
+//Modules
+var auth = require('../modules/auth');
 
-//Apenas para administradores gerais ou de comunicação
+var routerAuth = express.Router();
+routerAuth.use(auth.authorizeAdminKomunikisto);
+
 app.route('/')
-    .get(dissendo.getDissendoj)
-    .post(dissendo.postDissendo);
+    .get(routerAuth, dissendo.getDissendoj)
+    .post(routerAuth, dissendo.postDissendo);
 
 app.route('/:id(\\d+)/')
     .get(dissendo.getDissendo);
 
 app.route('/retlistoj')
-     //Público
     .get(dissendo.getRetlistoj)
-    //Apenas para administradores gerais ou de comunicação
-    .post(dissendo.postRetlisto);
+    .post(routerAuth, dissendo.postRetlisto);
 
 app.route('/retlistoj/:id(\\d+)')
     .delete(dissendo.deleteRetlisto)
 
-//Qualquer um pode acessar
 app.route('/retlistoj/:id/abonantoj')
     .post(dissendo.postAbonanto)
 

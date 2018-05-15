@@ -5,6 +5,7 @@ var randomstring = require('randomstring');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var Auth0Strategy = require('passport-auth0');
+var urllib = require('urllib');
 
 /*config*/
 var config = require('../config.js');
@@ -23,6 +24,68 @@ var mail = require('../modules/mail');
 var file = require('../modules/file');
 var auth = require('../modules/auth');
 
+
+var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
+  var options = {
+     "method":"POST",
+     "data": {"salvt": uzantnomo, "pvorto": pasvorto,
+              "submetu": "KLAKU+POR+ENIRI"},
+      "jar": true
+  };
+  try {
+    urllib.request('http://reto.uea.org/index.php?a=persone', options,
+      function (err, data, res) {
+        if(res.headers && res.headers['set-cookie']){
+          var options2 = {
+                          "method": "GET",
+                          "headers":{"Cookie": res.headers['set-cookie'][0].split(';')[0]}
+                        };
+          urllib.request('http://reto.uea.org/index.php?a=persone', options2, function (err, data, res) {
+            if(data) {
+              var data = data.toString();
+              var indexOf = data.indexOf('UEA-kodo');
+              if(indexOf > -1) {
+                ueakodo = data.substring(indexOf + 20, indexOf + 26).replace("-", "");
+                UzantoAuxAsocio.find(ueakodo).then(function(response){
+                  if(response.length == 1) {
+                    var id = response[0].id;
+                    var p1 = UzantoAuxAsocio.update(id, 'uzantnomo', uzantnomo);
+                    var pasvortajDatumoj = hash.sha512(pasvorto, null);
+                    var p2 = UzantoAuxAsocio.update(id, 'pasvortoSalt', pasvortajDatumoj.salt);
+                    var p3 = UzantoAuxAsocio.update(id, 'pasvortoHash', pasvortajDatumoj.hash);
+                    Promise.all([p1, p2, p3]).then(function(values) {
+                      var uzanto = {
+                        id: id,
+                        uzantnomo: uzantnomo,
+                        permeso: 'uzanto'
+                      };
+                      // kaze uzanto estas trovita kaj pasvorto estas korekta
+                      // oni kreas iun token
+                      var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
+                      cres.status(200).send({token: token, uzanto: sucess[0]});
+                    });
+                  } else {
+                    cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \
+                                                    bonvole, kontaktu sekretario@co.uea.org\
+                                                    kaj informu vian UEA-kodo'});
+                  }
+                });
+            } else {
+              cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
+            }
+          } else {
+            cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
+          }
+       });
+       } else {
+          cres.status(401).send({message: 'Okazis eraro je via peto! Provu denove pli malfrue.'});
+       }
+  });
+  } catch(error) {
+    cres.status(401).send({message: 'Okazis eraro je via peto! Provu denove pli malfrue.'});
+  }
+}
+
 /*
   POST - /uzantoj/ensaluti
 */
@@ -30,28 +93,24 @@ var _ensaluti = function(req, res) {
   UzantoAuxAsocio.findUzantnomo(req.body.uzantnomo).then(
     function(sucess) {
       if (sucess.length == 0) {
+         proviMalnovaRetejo(req.body.uzantnomo, req.body.pasvorto, res);
+      } else {
+        if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
+                                  sucess[0].pasvortoHash)) {
+          res.status(401).send({message: 'Malkorekta pasvorto'});
+        }
+        var uzanto = {
+          id: sucess[0].id,
+          uzantnomo: sucess[0].uzantnomo,
+          permeso: 'uzanto'
+        };
 
-
-        res.status(401).send({message: 'La uzantnomo ne ekzistas'});
-      }
-
-      if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
-                                sucess[0].pasvortoHash)) {
-        res.status(401).send({message: 'Malkorekta pasvorto'});
-      }
-
-      var uzanto = {
-        id: sucess[0].id,
-        uzantnomo: sucess[0].uzantnomo,
-        permeso: 'uzanto'
-      };
-
-      // kaze uzanto estas trovita kaj pasvorto estas korekta
-      // oni kreas iun token
-      var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
-
-      res.status(200).send({token: token, uzanto: sucess[0]});
-    });
+        // kaze uzanto estas trovita kaj pasvorto estas korekta
+        // oni kreas iun token
+        var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
+        res.status(200).send({token: token, uzanto: sucess[0]});
+    }
+  });
 }
 
 /*
@@ -59,7 +118,7 @@ var _ensaluti = function(req, res) {
 */
 var _getUzanto = function(req, res){
   Uzanto.find('id', req.params.id).then(function(sucess){
-      var uzanto = sucess.filter(query.search(req.query));
+      var uzanto = sucess;
       res.status(200).send(uzanto);
   });
 }
@@ -261,11 +320,11 @@ var _cxuMembro = function(req, res) {
 }
 
 var _postBildo = function(req, res) {
-  file.writeFile('/uzantbildoj', 'uzantbildo' + req.params.id, 'file', req, res);
+  file.writeFile('/sistemo', 'uzantbildo' + req.params.id, 'file', req, res);
 }
 
 var _getBildo = function(req, res) {
-  file.readFile('/uzantbildoj/uzantbildo' + req.params.id, 'image/png', res);
+  file.readFile('uzantbildo' + req.params.id, 'image/png', res);
 }
 
 var _getGrupoj = function(req,res) {
@@ -294,7 +353,7 @@ var _delete = function(req, res) {
 }
 
 var _adapti = function(req, res) {
-  UzantoAuxAsocio.insert(req.body.retposxto, null, req.body.ueakodo).then(
+  UzantoAuxAsocio.insert(null, null, req.body.ueakodo).then(
     function(result){
       if (result) {
         var id = result.insertId;
@@ -339,7 +398,7 @@ var _ensalutiSenPasvorto = function(req, res){
           var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
           params = '?token=' + token +'&id=' + sucess[0].id
         }
-        res.redirect(req.session.returnTo || 'http://localhost:8000/#!/' + params)
+        res.redirect(req.session.returnTo || config.loginURL + params)
     });
 }
 

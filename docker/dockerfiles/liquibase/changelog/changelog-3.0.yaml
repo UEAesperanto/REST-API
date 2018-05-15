@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: Anoncetoj
+      author: Ana Ribeiro
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: gxis
+                  type: date
+            tableName: anonceto

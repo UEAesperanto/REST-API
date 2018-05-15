@@ -16,6 +16,7 @@ services:
       - mysql
     volumes:
       - ../../config.js:/app/config.js
+      - uea-dataSistemo:/sistemo
 
 
   liquibase:
@@ -35,6 +36,7 @@ services:
     build: ../dockerfiles/mysql
     image: uea-mysql
     container_name: uea-datumbazo
+    command: mysqld --default-authentication-plugin=mysql_native_password
     restart: always
     command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
@@ -44,3 +46,4 @@ services:
 
 volumes:
   uea-datavolume:
+  uea-dataSistemo:

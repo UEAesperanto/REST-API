@@ -1,20 +1,28 @@
 var mysql = require('mysql2');
 
-var connection = mysql.createConnection({
+var db_config = {
   host: process.env.DB_HOST,
   password: process.env.DB_PASSWORD,
   user: 'root',
   database: 'uea',
   typeCast: function castField( field, useDefaultTypeCasting ) {
-      if ((field.type === "BIT" ) && (field.length === 1)) {
-          var bytes = field.buffer();
-          if(bytes != null){
-            return (bytes[0] === 1);
-          } else {
-            return false;
-          }
+    if ((field.type === "BIT" ) && (field.length === 1)) {
+      var bytes = field.buffer();
+      if(bytes != null)
+        return (bytes[0] === 1);
+      else
+        return false;
       }
-      return(useDefaultTypeCasting());
+    return(useDefaultTypeCasting());
+  }
+}
+
+var connection = mysql.createConnection(db_config);
+
+connection.connect(function(err) {
+  if (err != null) {
+    console.log(err.code); // 'ECONNREFUSED'
+    console.log(err.fatal); // true
   }
 });
 
@@ -35,6 +43,10 @@ var _escapeArgs = function(args) {
 var _mysqlExec = function(query){
   return new Promise(function(resolve, reject){
     connection.query(query, function (err, results, fields) {
+      if (err != null) {
+        console.log(error.code);
+        console.log(error.fatal);
+      }
       resolve(results);
       return results;
     });

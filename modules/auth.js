@@ -41,6 +41,21 @@ var _authorizeID = function(req, res, next) {
   }
 }
 
+var _authorizeUzanto = function(req, res, next) {
+  var token = req.headers['x-access-token'];
+  if (token) {
+    jwt.verify(token, config.sekretoJWT, function(err, decoded) {
+      if (err) {
+        return res.status(403).send({ success: false,
+           message: 'La ĵetono (token) ne estas korekta.' });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  }
+}
+
 var _authorizeAdmin = function(req, res, next) {
   var token = req.headers['x-access-token'];
   if(token) {
@@ -51,6 +66,39 @@ var _authorizeAdmin = function(req, res, next) {
       } else {
         if(decoded.permesoj) {
           if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+             req.decoded = decoded;
+             next();
+          } else {
+            return res.status(403).send({ success: false,
+              message: 'La ĵetono (token) ne estas korekta.'});
+          }
+        } else {
+          return res.status(403).send({ success: false,
+            message: 'La ĵetono (token) ne estas korekta.'});
+        }
+      }
+    });
+  } else {
+      // Se ne estas ĵetono
+      // redonas eraron
+      return res.status(400).send({
+          success: false,
+          message: 'Sen ĵetono (token).'
+      });
+    }
+}
+
+var _authorizeAdminKomunikisto = function(req, res, next) {
+  var token = req.headers['x-access-token'];
+  if(token) {
+    jwt.verify(token, config.sekretoJWT, function(err, decoded) {
+      if (err) {
+        return res.status(403).send({ success: false,
+          message: 'La ĵetono (token) ne estas korekta.'});
+      } else {
+        if(decoded.permesoj) {
+          if((decoded.permesoj.indexOf(config.idAdministranto) > -1) ||
+             (decoded.permesoj.indexOf(config.idKomunikisto) > -1)) {
              req.decoded = decoded;
              next();
           } else {
@@ -131,5 +179,7 @@ module.exports = {
   authorizeID: _authorizeID,
   authorizeSenKondicxo: _authorizeSenKondicxo,
   authorizeAdminJuna: _authorizeAdminJuna,
-  authorizeAdmin: _authorizeAdmin
+  authorizeAdmin: _authorizeAdmin,
+  authorizeAdminKomunikisto: _authorizeAdminKomunikisto,
+  authorizeUzanto: _authorizeUzanto
 }

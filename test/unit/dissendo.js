@@ -29,6 +29,7 @@ describe('==== DISSENDO ====', () => {
     it('it should GET all the asocioj',(done) => {
       request
         .get('/dissendoj')
+        .set('x-access-token', token)
         .end((err,res) => {
           res.status.should.be.equal(200);
           res.body.length.should.equals(0);
@@ -38,7 +39,7 @@ describe('==== DISSENDO ====', () => {
   });
 
   describe('POST /dissendoj/retlistoj', () =>{
-    it('it should POST a dissendo - with token', (done) => {
+    it('it should POST a retlisto - with token', (done) => {
       request
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
@@ -61,7 +62,7 @@ describe('==== DISSENDO ====', () => {
           dissendoModel1["idRetlisto"] = res.body.insertId;
           request
             .post('/dissendoj')
-            .set('x-ccess-token', token)
+            .set('x-access-token', token)
             .send(dissendoModel1)
             .end((err,res) => {
               res.status.should.be.equal(201);
@@ -72,7 +73,7 @@ describe('==== DISSENDO ====', () => {
   });
 
   describe('POST /dissendoj/retlistoj/:id/abonantoj', () => {
-    it('it should POST a dissendo - with token',(done) => {
+    it('it should POST a dissendo 2- with token',(done) => {
       request
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
@@ -102,7 +103,7 @@ describe('==== DISSENDO ====', () => {
           dissendoModel1["idRetlisto"] = res.body.insertId;
           request
             .post('/dissendoj')
-            .set('x-ccess-token', token)
+            .set('x-access-token', token)
             .send(dissendoModel1)
             .end((err,res) => {
               res.status.should.be.equal(201);

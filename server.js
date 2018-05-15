@@ -1,105 +1,7 @@
-//Libraries
-const express = require('express');
-const passport = require('passport');
-const Auth0Strategy = require('passport-auth0');
-
-var cors = require('cors');
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
-var bodyParser  = require('body-parser');
-var multer = require('multer');
-var morgan = require('morgan');
-
 //Modules
-var db  = require('./modules/db');
-
-require('shelljs/global');
-
+const app = require('./app').app
 const PORT = process.env.PORT || 3000;
-const app = express();
-
-uzanto = require('./services/uzanto');
-dissendo = require('./services/dissendo');
-lando = require('./services/lando');
-asocio = require('./services/asocio');
-faktemo = require('./services/faktemo');
-urbo = require('./services/urbo');
-grupo = require('./services/grupo');
-financoj = require('./services/financoj');
-kongreso = require('./services/kongreso');
-admin = require('./services/admin');
-peranto = require('./services/peranto');
-revuo = require('./services/revuo');
-vocxdonado = require('./services/vocxdonado');
-anonceto = require('./services/anonceto');
-opcio = require('./services/opcio');
-config = require('./services/config');
-
-
-let strategy = new Auth0Strategy({
-    domain: 'uea.eu.auth0.com',
-    clientID: 'vSU6gfEi5jvlxPj23ejYZpTSwmabubDB',
-    clientSecret: 'xyz',
-    callbackURL:  '/uzantoj/ensaluti/senpasvorto'
-  }, function(accessToken, refreshToken, extraParams, profile, done) {
-    done(null,profile);
-});
-
-passport.use(strategy);
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
-// you can use this section to keep a smaller payload
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-app.use(bodyParser.json({limit: '25mb'}));
-app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
-app.use(bodyParser.text());
-app.use(bodyParser.json({ type: 'application/json'}));
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-//Indas ŝanĝi origin por ebligi nur kelkajn domajnojn aliri
-app.use(cors({origin: '*'}));
-
-//Allow Cross
-app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Headers',
-                  'X-Requested-With, content-type, Authorization, x-access-token');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, UPDATE, DELETE');
-    next();
-});
-
-//Saluton Mondo
-app.get('/', function (req, res) {
-   res.json({message: 'Saluton Mondo!'});
-});
-
-// Mouting applications.
-app.use('/uzantoj', uzanto);
-app.use('/landoj', lando);
-app.use('/dissendoj', dissendo);
-app.use('/asocioj', asocio);
-app.use('/faktemoj', faktemo);
-app.use('/urboj', urbo);
-app.use('/grupoj', grupo);
-app.use('/financoj', financoj);
-app.use('/kongresoj', kongreso);
-app.use('/admin', admin);
-app.use('/perantoj', peranto);
-app.use('/config', config);
-app.use('/revuoj', revuo);
-app.use('/vocxdonadoj', vocxdonado);
-app.use('/opcioj', opcio);
-app.use('/anoncetoj', anonceto);
+var db  = require('./modules/db');
 
 // Start the server
 app.listen(PORT, () => {
@@ -109,5 +11,3 @@ app.listen(PORT, () => {
       db.mysqlExec('SELECT 1');
   }, 5000);
 });
-
-module.exports = app; // for testing

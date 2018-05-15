@@ -44,8 +44,8 @@ kongreso = require('./services/kongreso');
 admin = require('./services/admin');
 peranto = require('./services/peranto');
 revuo = require('./services/revuo');
-teko = require('./services/teko');
 vocxdonado = require('./services/vocxdonado');
+anonceto = require('./services/anonceto');
 opcio = require('./services/opcio');
 config = require('./services/config');
 
@@ -63,9 +63,9 @@ app.use('/admin', admin);
 app.use('/perantoj', peranto);
 app.use('/config', config);
 app.use('/revuoj', revuo);
-app.use('/tekoj', teko);
 app.use('/vocxdonadoj', vocxdonado);
 app.use('/opcioj', opcio);
+app.use('/anoncetoj', anonceto);
 
 let strategy = new Auth0Strategy({
     domain: 'uea.eu.auth0.com',

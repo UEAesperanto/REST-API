@@ -28,6 +28,11 @@ describe('Dissendoj', function() {
       done();
     });
 
+    var retlisto = { nomo: 'nomo', priskribo: 'priskribo'};
+    var dissendo = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto', idRetlisto: 1};
+    var abonanto = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true, retadreso:'email@email.com'};
+
+
     describe('GET /dissendoj', function(){
      it('it should GET empty dissendoj', function(done){
        chai.request(server)
@@ -43,7 +48,6 @@ describe('Dissendoj', function() {
 
      describe('POST /dissendoj', function(){
          it('it should POST a dissendo - with token', function (done) {
-            var dissendo = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto', idRetlisto: 1};
              chai.request(server)
                  .post('/dissendoj')
                  .set('x-access-token', token)
@@ -53,6 +57,21 @@ describe('Dissendoj', function() {
                      done();
                  });
             });
+      });
+
+      describe('GET /dissendoj/:id', function(){
+          it('it should GET a retlisto - with token', function (done) {
+                  var query = util.format('INSERT INTO dissendo VALUES (1, 1, "1996-05-05", "temo", "teksto", 1);');
+                  db.mysqlExec(query).then(function(result){
+                     chai.request(server)
+                     .get('/dissendoj/1')
+                     .set('x-access-token', token)
+                     .end((err, res) => {
+                       res.should.have.status(200);
+                       done();
+                     });
+               });
+         });
       });
 
       describe('GET /dissendoj/retlistoj', function(){
@@ -69,7 +88,6 @@ describe('Dissendoj', function() {
 
         describe('POST /dissendoj/retlistoj', function(){
             it('it should POST a dissendo - with token', function (done) {
-               var retlisto = { nomo: 'nomo', priskribo: 'priskribo'}
                 chai.request(server)
                     .post('/dissendoj/retlistoj')
                     .set('x-access-token', token)
@@ -83,8 +101,6 @@ describe('Dissendoj', function() {
 
          describe('DELETE /dissendoj/retlistoj', function(){
              it('it should DELETE a retlisto - with token', function (done) {
-                 var retlisto = { nomo: 'nomo', priskribo: 'priskribo'}
-
                      Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
                          chai.request(server)
                              .delete('/dissendoj/retlistoj/' + success.insertId)
@@ -98,14 +114,9 @@ describe('Dissendoj', function() {
                   });
             });
 
-
-
             describe('POST /dissendoj/retlistoj/:id/abonantoj', function(){
                 it('it should POST a dissendo - with token', function (done) {
-                   var retlisto = { nomo: 'nomo', priskribo: 'priskribo'};
                    Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
-                     var abonanto = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true,
-                     retadreso:'email@email.com'};
                      chai.request(server)
                        .post('/dissendoj/retlistoj/' + success.insertId + '/abonantoj')
                        .set('x-access-token', token)

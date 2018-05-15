@@ -38,6 +38,7 @@ services:
     container_name: uea-datumbazo
     command: mysqld --default-authentication-plugin=mysql_native_password
     restart: always
+    command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
     volumes:

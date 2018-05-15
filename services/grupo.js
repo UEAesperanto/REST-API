@@ -20,7 +20,8 @@ app.route('/')
     .post(routerAuth, grupo.postGrupo);
 
 app.route('/kategorioj')
-    .get(grupo.getKategorioj);
+    .get(grupo.getKategorioj)
+    .post(routerAuth, grupo.postKategorio);
 
 app.route('/kategorioj/:id/sub')
     .get(grupo.getGrupojKat);

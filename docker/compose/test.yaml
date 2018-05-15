@@ -37,9 +37,15 @@ services:
     build: ../dockerfiles/mysql
     image: uea-mysql
     container_name: uea-datumbazo-test
+    command: mysqld --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=u34p4ss
       - MYSQL_DATABASE=uea
     ports:
       - "3307:3306"
+    volumes:
+      - uea-testovolume:/var/lib/mysql
+
+volumes:
+  uea-testovolume:

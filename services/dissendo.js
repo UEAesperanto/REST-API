@@ -12,6 +12,9 @@ app.route('/')
     .get(routerAuth, dissendo.getDissendoj)
     .post(routerAuth, dissendo.postDissendo);
 
+app.route('/:id(\\d+)/')
+    .get(dissendo.getDissendo);
+
 app.route('/retlistoj')
     .get(dissendo.getRetlistoj)
     .post(routerAuth, dissendo.postRetlisto);

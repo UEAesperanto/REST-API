@@ -8,6 +8,12 @@ describe('==== REVUO ====', () => {
     issn:"333"
   };
 
+  var volumoModel1 = {
+    numeroJaro: 1,
+    numeroEntute: 2,
+    enhavlisto: "enhavo"
+  }
+
   //Before each test we empty the database
   beforeEach((done) => {
       createAdmin();
@@ -107,6 +113,7 @@ describe('==== REVUO ====', () => {
     });
   });
 
+
   describe('POST /revuoj/:id/volumoj', () => {
     it('it should POST volumon', (done) => {
       request
@@ -127,56 +134,120 @@ describe('==== REVUO ====', () => {
   });
 
   describe('POST /revuoj/volumoj/:id/bildo', () => {
-    it('it should POST volumon files - bildo', (done) => {
-      request
-        .post('/revuoj/volumoj/1/bildo')
-        .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .get('/revuoj/volumoj/1/bildo')
-            .set('x-access-token', token)
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.text.should.to.be.a('string');
-              res.text.substring(0,15).should.to.have.string('data:image/png');
-              done();
-            })
-        });
-    });
-
     it('it should NOT POST volumon files - sen ĵetono', (done) => {
       request
-        .post('/revuoj/volumoj/1/bildo')
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err,res) => {
-          res.status.should.be.equal(400);
-          done();
-        });
-    });
-
-  });
-
-  describe('POST /revuoj/volumoj/1/kvalita', () => {
-    it('it should POST volumon files - PDF', (done) => {
-      request
-        .post('/revuoj/volumoj/1/kvalita')
+        .post('/revuoj')
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+        .send(revuoModel1)
         .end((err,res) => {
           res.status.should.be.equal(201);
           request
-            .get('/revuoj/volumoj/1/kvalita')
+            .post('/revuoj/' + res.body.insertId + '/volumoj')
             .set('x-access-token', token)
             .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.text.should.to.be.a('string');
-              res.text.substring(0,20).should.to.have.string('data:application/pdf');
-              done();
+              res.status.should.be.equal(201);
+              request
+                .post('/revuoj/volumoj/' + res.body.insertId +'/bildo')
+                .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+                .end((err,res) => {
+                  res.status.should.be.equal(400);
+                  done();
+                });
             });
         });
     });
+
+    it('it should POST volumon files - bildo', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .end((err,res) => {
+          res.status.should.be.equal(201);
+          request
+            .post('/revuoj/' + res.body.insertId + '/volumoj')
+            .set('x-access-token', token)
+            .end((err,res) => {
+              res.status.should.be.equal(201);
+              var volumeId = res.body.insertId;
+              request
+                .post('/revuoj/volumoj/' + volumeId +'/bildo')
+                .set('x-access-token', token)
+                .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+                .end((err,res) => {
+                  res.status.should.be.equal(201);
+                  request
+                    .get('/revuoj/volumoj/' + volumeId +'/bildo')
+                    .set('x-access-token', token)
+                    .end((err,res) => {
+                      res.status.should.be.equal(200);
+                      res.text.should.to.be.a('string');
+                      res.text.substring(0,15).should.to.have.string('data:image/png');
+                      done();
+                    })
+                });
+            });
+        });
+    });
+  });
+
+  describe('POST /revuoj/volumoj/:id/kvalita', () => {
+    it('it should NOT POST volumon files - sen ĵetono', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .end((err,res) => {
+          res.status.should.be.equal(201);
+          request
+            .post('/revuoj/' + res.body.insertId + '/volumoj')
+            .set('x-access-token', token)
+            .end((err,res) => {
+              res.status.should.be.equal(201);
+              request
+                .post('/revuoj/volumoj/' + res.body.insertId +'/kvalita')
+                .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+                .end((err,res) => {
+                  res.status.should.be.equal(400);
+                  done();
+                });
+            });
+        });
+    });
+
+    it('it should POST volumon files - PDF', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .end((err,res) => {
+          res.status.should.be.equal(201);
+          request
+            .post('/revuoj/' + res.body.insertId + '/volumoj')
+            .set('x-access-token', token)
+            .end((err,res) => {
+              res.status.should.be.equal(201);
+              var volumeId = res.body.insertId;
+              request
+                .post('/revuoj/volumoj/' + volumeId +'/kvalita')
+                .set('x-access-token', token)
+                .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+                .end((err,res) => {
+                  res.status.should.be.equal(201);
+                  request
+                    .get('/revuoj/volumoj/' + volumeId +'/kvalita')
+                    .set('x-access-token', token)
+                    .end((err,res) => {
+                      res.status.should.be.equal(200);
+                      res.text.should.to.be.a('string');
+                      res.text.substring(0,20).should.to.have.string('data:application/pdf');
+                      done();
+                    })
+                });
+            });
+        });
+    });
+
   });
 
 });

@@ -44,6 +44,7 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
+            docker exec -it uea-api bash -c "git pull"
             docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
             docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
             docker exec -it uea-api bash -c "nyc npm run test-unit"

@@ -7,9 +7,10 @@ describe('==== ADMIN ====', () => {
   var uzantoModel2   = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
 
   //Before each test we empty the database
-  before((done) => {
+  beforeEach((done) => {
       createAdmin();
       cleanTable('administranto');
+      cleanTable('ref_administranto_adminrajto')
       token = generateToken();
       done();
   });
@@ -20,39 +21,108 @@ describe('==== ADMIN ====', () => {
       it('sen administrantoj en la sistemo',(done) => {
         request
           .get('/admin/agordita')
-          .end((err,res) => {
-            res.status.should.be.equal(200);
+          .expect(200)
+          .expect((res) => {
             res.body.should.have.property('agordita', false);
-            done();
-          });
+          })
+        .then((success) => {done()}, (error) => {done(error)});
       });
     });
-
   });
 
   describe('Admin kun agordo', () => {
-    before((done) => {
-      request
-        .post('/admin/ensaluti')
-        .send(uzantoModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          res.body.should.have.property('message');
-          done();
-        });
-    });
 
     describe('GET /admin/agordita', () => {
       it('kun administrantoj en la sistemo', (done) => {
         request
-        .get('/admin/agordita')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
-          res.body.should.have.property('agordita', true);
-          done();
-        });
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(201)
+          .expect((res) => {
+            res.body.should.have.property('message');
+          })
+        .then((res) => {
+        return request
+          .get('/admin/agordita')
+          .expect(200)
+          .expect((res) => {
+            res.body.should.have.property('agordita', true);
+          })
+        })
+        .then((success) => {done()}, (error) => {done(error)});
       });
     });
+
+    describe('POST /admin/ensaluti', () => {
+      it('Enmeti iun kun administrantoj en la sistemo', (done) => {
+        request
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(201)
+          .expect((res) => {
+            res.body.should.have.property('message');
+          })
+        .then((res) => {
+        return request
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(200)
+          .expect((res) => {
+            res.body.should.have.property('token');
+          })
+        })
+        .then((res) => {
+        return request
+          .post('/admin')
+          .set('x-access-token', res.body.token)
+          .send(uzantoModel2)
+          .expect(201)
+        })
+        .then((success) => {done()}, (error) => {done(error)});
+      })
+
+      it('korekte ensaluti', (done) => {
+        request
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(201)
+          .expect((res) => {
+            res.body.should.have.property('message');
+          })
+        .then((res) => {
+        return request
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(200)
+          .expect((res) => {
+            res.body.should.have.property('token')
+          })
+        })
+        .then((success) => {done()}, (error) => {done(error)});
+      })
+
+      it('ensaluti kun malkorekta pasvorto', (done) => {
+        request
+          .post('/admin/ensaluti')
+          .send(uzantoModel1)
+          .expect(201)
+          .expect((res) => {
+            res.body.should.have.property('message');
+          })
+        .then((res) => {
+        var uzanto = uzantoModel1;
+        uzanto["pasvorto"] = "malkorekta"
+        return request
+          .post('/admin/ensaluti')
+          .send(uzanto)
+          .expect(401)
+          .expect((res) => {
+              res.body.should.have.property('message', 'Malkorekta pasvorto');
+          })
+        })
+        .then((success) => {done()}, (error) => {done(error)});
+      })
+    })
 
   });
 

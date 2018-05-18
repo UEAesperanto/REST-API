@@ -36,40 +36,35 @@ var _ensaluti = function (req, res) {
                   });
           });
       } else {
-          Admin.findUzantnomo(req.body.uzantnomo).then(
-            function(sucess){
-              if (sucess.length == 0) {
+          Admin.findUzantnomo(req.body.uzantnomo).then((sucess) => {
+              if (sucess.length == 0)
                 res.status(401).send({message: 'La uzantnomo ne ekzistas'});
-              }
-
-              if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
-                                        sucess[0].pasvortoHash)){
+              else if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
+                                            sucess[0].pasvortoHash)){
                 res.status(401).send({message: 'Malkorekta pasvorto'});
-              }
+              } else {
+                var administranto = {
+                  id: sucess[0].id,
+                  uzantnomo: sucess[0].uzantnomo,
+                  permesoj: []
+                };
 
-              var administranto = {
-                id: sucess[0].id,
-                uzantnomo: sucess[0].uzantnomo,
-                permesoj: []
-              };
-
-              Admin.getRajtojAdmin(sucess[0].id).then(
-                function(sucess){
+                Admin.getRajtojAdmin(sucess[0].id)
+                .then((sucess) => {
                   //res.status(200).send({message: sucess});
                   for (var i = 0; i < sucess.length; i++) {
                     administranto.permesoj[i] = (sucess[i].idAdminrajto);
                   }
-
                   // kaze uzanto estas trovita kaj pasvorto estas korekta
                   // oni kreas iun token
-                  var token = jwt.sign(administranto, config.sekretoJWT,
-                                       {expiresIn: "8h"});
+                  var token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: "8h"});
+                    res.status(200).send({token: token, administranto: administranto});
+                  })
+              }
 
-                  res.status(200).send({token: token, administranto: administranto});
-              });
-            });
-      }
-  });
+          });
+        }
+    });
 }
 
 /*

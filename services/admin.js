@@ -12,9 +12,10 @@ routerAuth.use(auth.authorizeAdmin);
 // Admin routes
 app.route('/')
     .post(routerAuth, admin.postAdmin)
-    .get(routerAuth, admin.getAdmin);
+    .get(routerAuth, admin.getAdmins);
 
 app.route('/:id(\\d+)')
+    .get(routerAuth, admin.getAdmin)
     .delete(routerAuth, admin.deleteAdmin)
     .put(routerAuth, admin.updateAdmin);
 

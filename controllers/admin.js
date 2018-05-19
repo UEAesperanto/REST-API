@@ -85,11 +85,26 @@ var _agordita = function (req, res) {
 /*
   GET /Admin
 */
-var _getAdmin = function(req, res){
+var _getAdmins = function(req, res){
   Admin.find().then(function(sucess){
         var admin = sucess;
         admin = admin.filter(query.search(req.query));
         res.status(200).send(admin);
+  });
+}
+
+/*
+  GET /Admin/:id
+*/
+var _getAdmin = function(req, res){
+  Admin.find(req.params.id).then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(404).send({message: 'not found'});
+      else{
+        var admin = sucess;
+        admin = admin.filter(query.search(req.query));
+        res.status(200).send(admin);
+      }
   });
 }
 
@@ -173,6 +188,7 @@ module.exports = {
    postRajtoAdmin: _postRajtoAdmin,
    getRajtojAdmin:_getRajtojAdmin,
    getRajtoj: _getRajtoj,
+   getAdmins: _getAdmins,
    getAdmin: _getAdmin,
    updateAdmin: _updateAdmin,
    deleteAdmin: _deleteAdmin

@@ -30,7 +30,7 @@ var _getDissendoj = function(req, res){
 */
 var _postDissendo = function(req, res){
   Dissendo.insert(req.body.idRetlisto, req.body.dissendanto,
-                  req.body.dato, req.body.temo, req.body.teksto).then(function(sucess){
+                   new Date(req.body.dato), req.body.temo, req.body.teksto).then(function(sucess){
     if(sucess){
       Retlisto.getEmails(req.body.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
         var keys = Object.keys(list);

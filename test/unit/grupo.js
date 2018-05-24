@@ -2,7 +2,7 @@
       INCOMPLETE
 */
 describe('==== GRUPO ====', () => {
-  token = '';
+  tokenAdmin = '';
   grupoModel1 = {mallongigilo: 'mallongigilo' , nomo: 'nomo', priskribo: 'priskribo'};
   kategoriojModel1 = {nomo: 'kategorio1'};
 
@@ -12,7 +12,9 @@ describe('==== GRUPO ====', () => {
       cleanTable('grupo');
       cleanTable('grupa_kategorio');
       cleanTable('ref_grupo_grupa_kategorio');
-      token = generateToken();
+      tokenAdmin  =  generateToken();
+      tokenUzanto = generateToken(['uzanto']);
+      tokenMembro = generateToken(['uzanto','membro']);
       done();
   });
 
@@ -21,50 +23,53 @@ describe('==== GRUPO ====', () => {
     it('it should GET all the grupoj',(done) => {
       request
         .get('/grupoj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
+        .expect(200)
+        .expect((res) => {
           res.body.length.should.equal(0);
-          done();
-        });
+        })
+      .then((success) => {done()}, (error) => {done(error)});
     });
 
     it('it should GET all the grupoj with body', (done) => {
       request
         .post('/grupoj')
         .send(grupoModel1)
-        .set('x-access-token', token)
-        .end((err,res) => {
-          request
-            .get('/grupoj')
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.body.length.should.equal(1);
-              done();
-            });
-        });
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equal(1);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
   describe('GET /grupoj/:id', () => {
-    it('it should GET all the grupoj with body', (done) => {
+    it('it should GET a grupoj with a given id', (done) => {
       request
         .post('/grupoj')
         .send(grupoModel1)
-        .set('x-access-token', token)
-        .end((err,res) => {
-          request
-            .get('/grupoj/' + res.body.insertId)
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.body[0].should.have.property('mallongigilo');
-              res.body[0].should.have.property('nomo');
-              res.body[0].should.have.property('priskribo');
-              res.body[0].mallongigilo.should.equal(grupoModel1.mallongigilo);
-              res.body[0].nomo.should.equal(grupoModel1.nomo);
-              res.body[0].priskribo.should.equal(grupoModel1.priskribo);
-              done();
-            });
-        });
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.status.should.be.equal(200);
+          res.body[0].should.have.property('mallongigilo');
+          res.body[0].should.have.property('nomo');
+          res.body[0].should.have.property('priskribo');
+          res.body[0].mallongigilo.should.equal(grupoModel1.mallongigilo);
+          res.body[0].nomo.should.equal(grupoModel1.nomo);
+          res.body[0].priskribo.should.equal(grupoModel1.priskribo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -73,11 +78,9 @@ describe('==== GRUPO ====', () => {
       request
         .post('/grupoj/kategorioj')
         .send(kategoriojModel1)
-        .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          done();
-        });
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -86,27 +89,66 @@ describe('==== GRUPO ====', () => {
       request
         .post('/grupoj/kategorioj')
         .send(kategoriojModel1)
-        .set('x-access-token', token)
-        .end((err,res) => {
-          request
-            .get('/grupoj/kategorioj/' + res.body.insertId + '/sub')
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              done();
-            });
-        });
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj/kategorioj/' + res.body.insertId + '/sub')
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
-  describe('GET /grupoj/1/kotizoj', () => {
-    it('', (done) => {
+  describe('GET /grupoj/:id/kotizoj', () => {
+    it('it should GET all the grupoj/:id/kotizoj with body', (done) => {
       request
-        .get('/grupoj/1/kotizoj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
-          done();
-        });
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj/' + res.body.insertId + '/kotizoj')
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
+
+  describe('GET grupoj/:id/anoj', () => {
+    it('it NOT should GET all grupoj/:id/anoj - sen ĵetono', (done) => {
+      var idGrupo;
+      var idKategorio;
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj/' + res.body.insertId + '/anoj')
+        .expect(403)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+
+    it('it NOT should GET all grupoj/:id/anoj - uzanto sen membreco', (done) => {
+      var idGrupo;
+      var idKategorio;
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/grupoj/' + res.body.insertId + '/anoj')
+        .set('x-access-token', tokenUzanto)
+        .expect(403)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
 
 });

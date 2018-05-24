@@ -30,7 +30,7 @@ var _getDissendoj = function(req, res){
 */
 var _postDissendo = function(req, res){
   Dissendo.insert(req.body.idRetlisto, req.body.dissendanto,
-                  req.body.dato, req.body.temo, req.body.teksto).then(function(sucess){
+                   new Date(req.body.dato), req.body.temo, req.body.teksto).then(function(sucess){
     if(sucess){
       Retlisto.getEmails(req.body.idRetlisto).then(function(list){ //Get All emails from Retlisto ID
         var keys = Object.keys(list);
@@ -96,8 +96,8 @@ var _deleteRetlisto = function(req, res) {
   POST /dissendo/retlistoj/:id/abonantoj
 */
 var _postAbonanto = function(req, res) {
-  Retlisto.insert(req.body.ekde, req.body.formato_html,
-                  req.body.kodigxo_utf8, req.body.retadreso, req.params.id).then(function(sucess) {
+  Abonanto.insert(req.params.id, new Date(req.body.ekde), req.body.formato_html,
+                  req.body.kodigxo_utf8, req.body.retadreso).then(function(sucess) {
     if(sucess) {
       res.status(201).send(sucess);
     } else {
@@ -106,11 +106,26 @@ var _postAbonanto = function(req, res) {
   });
 }
 
+
+var _getAbonanto = function (req, res) {
+  Abonanto.find().then(function(sucess){
+    var retlistoj = sucess;
+    retlistoj = retlistoj.filter(query.search(req.query));
+    res.status(200).send(retlistoj);
+  });
+}
+
 /*
   DELETE /dissendo/retlistoj/:id/abonantoj
 */
 var _deleteAbonanto = function(req, res) {
- //fari
+  Abonanto.removeAbonanton(req.params.idAbonanto, req.params.id).then(function (success) {
+      if(success){
+        res.status(200).send({message: 'Ok'});
+      }else {
+        res.status(500).send({message: 'Internal Error'});
+      }
+  });
 }
 
 module.exports = {
@@ -120,5 +135,6 @@ module.exports = {
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,
   postAbonanto: _postAbonanto,
-  deleteAbonanto: _deleteAbonanto
+  deleteAbonanto: _deleteAbonanto,
+  getAbonanto: _getAbonanto
 }

@@ -22,6 +22,19 @@ describe('Grupoj', function() {
         permesoj: [1]
       };
       token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+
+      var uzanto = {
+         id: 1,
+         permesoj: ['uzanto']
+       };
+      tokenUzanto = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
+
+      var membro = {
+         id: 1,
+         permesoj: ['uzanto', 'membro']
+       };
+      tokenMembro = jwt.sign(membro, config.sekretoJWT, {expiresIn: 18000});
+
       done();
     });
 
@@ -130,9 +143,29 @@ describe('Grupoj', function() {
            });
      });
 
-     it('it should GET all the grupoj/:id/anoj', function(done){
+     it('it should GET all the grupoj/:id/anoj laborgrupo - sen ĵetono(Token)', function(done){
        chai.request(server)
            .get('/grupoj/2/anoj')
+           .end((err, res) => {
+               res.should.have.status(403);
+               done();
+           });
+     });
+
+     it('it should GET all the grupoj/:id/anoj laborgrupo - uzanto sen membreco', function(done){
+       chai.request(server)
+           .get('/grupoj/2/anoj')
+           .set('x-access-token', tokenUzanto)
+           .end((err, res) => {
+               res.should.have.status(403);
+               done();
+           });
+     });
+
+     it('it should GET all the grupoj/:id/anoj laborgrupo', function(done){
+       chai.request(server)
+           .get('/grupoj/2/anoj')
+           .set('x-access-token', tokenMembro)
            .end((err, res) => {
                res.should.have.status(200);
                done();

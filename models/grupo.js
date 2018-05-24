@@ -71,7 +71,8 @@ var _findAnoj = function(idGrupo) {
   if(idGrupo) {
     idGrupo = db.escape(idGrupo);
     var query = util.format("SELECT uzanto.*, aneco.idGrupo, aneco.tasko, aneco.aprobita,\
-                              aneco.respondeco, ref_faktemo_aneco.* FROM `uzanto` \
+                              aneco.respondeco, aneco.findato, aneco.komencdato\
+                              , ref_faktemo_aneco.* FROM `uzanto` \
                              JOIN `uzantoAuxAsocio` ON uzanto.id = uzantoAuxAsocio.id \
                              JOIN `aneco` ON aneco.idAno = uzanto.id \
                              LEFT JOIN `ref_faktemo_aneco`  ON ref_faktemo_aneco.idAneco = aneco.id\

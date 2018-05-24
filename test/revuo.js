@@ -30,6 +30,18 @@ describe('Revuoj', function() {
       };
       token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
       done();
+
+      var uzanto = {
+         id: 1,
+         permesoj: ['uzanto']
+       };
+      tokenUzanto = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
+
+      var membro = {
+         id: 1,
+         permesoj: ['uzanto', 'membro']
+       };
+      tokenMembro = jwt.sign(membro, config.sekretoJWT, {expiresIn: 18000});
     });
 
     it('it should POST revuon', function(done){
@@ -195,6 +207,35 @@ describe('Revuoj', function() {
             res.text.substring(0,20).should.to.have.string('data:application/pdf');
             done();
           });
+        });
+      });
+
+      it('it should not GET volumon files - sen ĵetono', function(done) {
+        chai.request(server)
+        .get('/revuoj/volumoj/1/kvalita')
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+      });
+
+      it('it should not GET volumon files - uzanto sen membreco', function(done) {
+        chai.request(server)
+        .get('/revuoj/volumoj/1/kvalita')
+        .set('x-access-token', tokenUzanto)
+        .end((err, res) => {
+          res.should.have.status(403);
+          done();
+        });
+      });
+
+      it('it should GET volumon files - uzanto kun membreco', function(done) {
+        chai.request(server)
+        .get('/revuoj/volumoj/1/kvalita')
+        .set('x-access-token', tokenMembro)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
         });
       });
 

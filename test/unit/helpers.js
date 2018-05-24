@@ -9,6 +9,7 @@ var {readFileSync} = require('fs');
 
 
 global.app = app;
+global.config = config;
 global.request = supertest(app);
 global.expect = chai.expect;
 global.should = chai.should();
@@ -16,8 +17,14 @@ global.readFileSync = readFileSync;
 
 var administranto = { id: 1, uzantnomo: 'nomo', permesoj: [1], priskribo:'priskribo'};
 
-global.generateToken = () => {
-  return jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+global.generateToken = (permeso) => {
+  if (permeso == undefined)
+    return jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  else {
+    var uzanto = JSON.parse(JSON.stringify(administranto)) // Cloning object adminstranto
+    uzanto["permesoj"] = permeso;
+    return jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
+  }
 }
 
 global.cleanTable = (name, done) => {

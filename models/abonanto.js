@@ -4,10 +4,11 @@ var db = require('../modules/db');
 var _find = function(id){
   if(id){
     id = db.escape(id);
-    var query = util.format('SELECT * FROM `retlist_abono` WHERE `id` = %s;', id);
+    var query = util.format('SELECT * FROM `retlist_abono` WHERE `idRetlisto` = %s;', id);
   }
   else
     var query = util.format('SELECT * FROM `retlist_abono`;');
+
   return db.mysqlExec(query);
 }
 

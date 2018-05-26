@@ -19,7 +19,8 @@ app.route('/retlistoj')
 app.route('/retlistoj/:id(\\d+)')
     .delete(dissendo.deleteRetlisto)
 
-app.route('/retlistoj/:id/abonantoj')
+app.route('/retlistoj/:id(\\d+)/abonantoj')
+    .get(routerAuth, dissendo.getAbonantoj)
     .post(dissendo.postAbonanto)
 
 app.route('/retlistoj/:id(\\d+)/abonantoj/:idAbonanto(\\d+)')

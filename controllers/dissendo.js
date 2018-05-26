@@ -96,8 +96,8 @@ var _deleteRetlisto = function(req, res) {
   POST /dissendo/retlistoj/:id/abonantoj
 */
 var _postAbonanto = function(req, res) {
-  Retlisto.insert(req.body.ekde, req.body.formato_html,
-                  req.body.kodigxo_utf8, req.body.retadreso, req.params.id).then(function(sucess) {
+  Abonanto.insert(req.params.id, req.body.ekde, req.body.formato_html,
+                  req.body.kodigxo_utf8, req.body.retadreso).then(function(sucess) {
     if(sucess) {
       res.status(201).send(sucess);
     } else {
@@ -106,11 +106,26 @@ var _postAbonanto = function(req, res) {
   });
 }
 
+var _getAbonantoj = function(req, res) {
+  Abonanto.find(req.params.id).then(function(sucess){
+    if(sucess){
+      res.status(201).send(sucess);
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
 /*
   DELETE /dissendo/retlistoj/:id/abonantoj
 */
 var _deleteAbonanto = function(req, res) {
- //fari
+  Abonanto.delete(req.params.id).then(function(sucess){
+    if(sucess){
+      res.status(202).send();
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
 }
 
 module.exports = {
@@ -120,5 +135,6 @@ module.exports = {
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,
   postAbonanto: _postAbonanto,
+  getAbonantoj: _getAbonantoj,
   deleteAbonanto: _deleteAbonanto
 }

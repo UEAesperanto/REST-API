@@ -16,7 +16,6 @@ var _insert = function(idRetlisto, dissendanto, dato, temo, teksto){
   var query = util.format( 'INSERT INTO dissendo (idRetlisto, dissendanto, dato, temo, teksto)\
                             VALUES (%s, %s, %s, %s, %s);',
                             idRetlisto, dissendanto, dato, temo, teksto );
-
   return db.mysqlExec(query);
 }
 

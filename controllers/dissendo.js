@@ -19,6 +19,16 @@ var _getDissendoj = function(req, res){
 }
 
 /*
+  GET /dissendoj/:id
+*/
+var _getDissendo = function(req, res){
+  Dissendo.find(req.params.id).then(function(sucess){
+      var lando = sucess;
+      res.status(200).send(lando);
+  });
+}
+
+/*
   POST /dissendoj
   body:
   @idRetlisto
@@ -130,6 +140,7 @@ var _deleteAbonanto = function(req, res) {
 
 module.exports = {
   getDissendoj: _getDissendoj,
+  getDissendo:_getDissendo,
   postDissendo: _postDissendo,
   getRetlistoj: _getRetlistoj,
   deleteRetlisto: _deleteRetlisto,

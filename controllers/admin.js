@@ -36,40 +36,35 @@ var _ensaluti = function (req, res) {
                   });
           });
       } else {
-          Admin.findUzantnomo(req.body.uzantnomo).then(
-            function(sucess){
-              if (sucess.length == 0) {
+          Admin.findUzantnomo(req.body.uzantnomo).then((sucess) => {
+              if (sucess.length == 0)
                 res.status(401).send({message: 'La uzantnomo ne ekzistas'});
-              }
-
-              if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
-                                        sucess[0].pasvortoHash)){
+              else if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
+                                            sucess[0].pasvortoHash)){
                 res.status(401).send({message: 'Malkorekta pasvorto'});
-              }
+              } else {
+                var administranto = {
+                  id: sucess[0].id,
+                  uzantnomo: sucess[0].uzantnomo,
+                  permesoj: []
+                };
 
-              var administranto = {
-                id: sucess[0].id,
-                uzantnomo: sucess[0].uzantnomo,
-                permesoj: []
-              };
-
-              Admin.getRajtojAdmin(sucess[0].id).then(
-                function(sucess){
+                Admin.getRajtojAdmin(sucess[0].id)
+                .then((sucess) => {
                   //res.status(200).send({message: sucess});
                   for (var i = 0; i < sucess.length; i++) {
                     administranto.permesoj[i] = (sucess[i].idAdminrajto);
                   }
-
                   // kaze uzanto estas trovita kaj pasvorto estas korekta
                   // oni kreas iun token
-                  var token = jwt.sign(administranto, config.sekretoJWT,
-                                       {expiresIn: "8h"});
+                  var token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: "8h"});
+                    res.status(200).send({token: token, administranto: administranto});
+                  })
+              }
 
-                  res.status(200).send({token: token, administranto: administranto});
-              });
-            });
-      }
-  });
+          });
+        }
+    });
 }
 
 /*
@@ -90,11 +85,26 @@ var _agordita = function (req, res) {
 /*
   GET /Admin
 */
-var _getAdmin = function(req, res){
+var _getAdmins = function(req, res){
   Admin.find().then(function(sucess){
         var admin = sucess;
         admin = admin.filter(query.search(req.query));
         res.status(200).send(admin);
+  });
+}
+
+/*
+  GET /Admin/:id
+*/
+var _getAdmin = function(req, res){
+  Admin.find(req.params.id).then(function(sucess){
+      if(sucess.length <= 0)
+        res.status(404).send({message: 'not found'});
+      else{
+        var admin = sucess;
+        admin = admin.filter(query.search(req.query));
+        res.status(200).send(admin);
+      }
   });
 }
 
@@ -178,6 +188,7 @@ module.exports = {
    postRajtoAdmin: _postRajtoAdmin,
    getRajtojAdmin:_getRajtojAdmin,
    getRajtoj: _getRajtoj,
+   getAdmins: _getAdmins,
    getAdmin: _getAdmin,
    updateAdmin: _updateAdmin,
    deleteAdmin: _deleteAdmin

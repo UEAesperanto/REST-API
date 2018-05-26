@@ -52,6 +52,14 @@ var _findKategorio = function(kategorio){
   return db.mysqlExec(query);
 }
 
+var _insertKategorio = function(nomo){
+  db.escapeArgs(arguments);
+  var query = util.format('INSERT into `grupa_kategorio` (nomo)\
+                           VALUES(%s);',
+                           nomo);
+  return db.mysqlExec(query);
+}
+
 var _insertRefKategorio = function(idGrupo, idKategorio) {
   db.escapeArgs(arguments);
   var query = util.format('INSERT INTO ref_grupo_grupa_kategorio ()\
@@ -83,5 +91,6 @@ module.exports = {
   update: _update,
   deleteGrupoKat: _deleteGrupoKat,
   insertRefKategorio: _insertRefKategorio,
-  findKategorio: _findKategorio
+  findKategorio: _findKategorio,
+  insertKategorio: _insertKategorio,
 }

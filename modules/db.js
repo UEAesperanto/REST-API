@@ -21,8 +21,8 @@ var connection = mysql.createConnection(db_config);
 
 connection.connect(function(err) {
   if (err != null) {
-    console.log(err.code); // 'ECONNREFUSED'
-    console.log(err.fatal); // true
+    console.err(err.code); // 'ECONNREFUSED'
+    console.err(err); // true
   }
 });
 
@@ -44,8 +44,8 @@ var _mysqlExec = function(query){
   return new Promise(function(resolve, reject){
     connection.query(query, function (err, results, fields) {
       if (err != null) {
-        console.log(error.code);
-        console.log(error.fatal);
+        console.log(query, err.code);
+        console.log(query, err.sqlMessage);
       }
       resolve(results);
       return results;

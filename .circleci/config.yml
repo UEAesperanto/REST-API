@@ -32,6 +32,8 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
+            docker-compose -f docker/compose/circle.yaml down
+            docker rmi -f uea-liquibase uea-circle uea-mysql
             docker-compose -f docker/compose/circle.yaml up -d --build
 
       - run:

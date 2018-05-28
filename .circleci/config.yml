@@ -33,7 +33,8 @@ jobs:
           command: |
             set -x
             docker-compose -f docker/compose/circle.yaml down
-            docker rmi -f uea-liquibase uea-circle uea-mysql
+            docker ps -a
+            docker images -a
             docker-compose -f docker/compose/circle.yaml up -d --build
 
       - run:

@@ -2,11 +2,11 @@
   "name": "uea-api",
   "description": "Rest api al uea",
   "version": "0.0.1",
-  "private": true,
-  "license": "Apache Version 2.0",
+  "private": false,
+  "license": "MIT License",
   "author": "Ana Ribeiro kaj Victor Hugo",
   "engines": {
-    "node": ">=4.3.2"
+    "node": ">=8.3.2"
   },
   "scripts": {
     "start": "node server.js",
@@ -32,9 +32,9 @@
     "shelljs": "^0.7.6"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "mocha": "^3.5.3",
-    "supertest": "^3.0.0"
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0",
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
   }
 }

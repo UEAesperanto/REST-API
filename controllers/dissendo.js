@@ -117,7 +117,7 @@ var _postAbonanto = function(req, res) {
 }
 
 var _getAbonantoj = function(req, res) {
-  Abonanto.find(req.params.id).then(function(sucess){
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
     if(sucess){
       res.status(201).send(sucess);
     } else {
@@ -125,11 +125,25 @@ var _getAbonantoj = function(req, res) {
     }
   });
 }
+
+
+var _getAbonanto = function(req, res) {
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
+    if(sucess){
+      req.query.retadreso = req.params.retposxto;
+      res.status(201).send(sucess.filter(query.search(req.query)));
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+
 /*
-  DELETE /dissendo/retlistoj/:id/abonantoj
+  DELETE /dissendo/retlistoj/abonantoj/:idAbonanto
 */
 var _deleteAbonanto = function(req, res) {
-  Abonanto.delete(req.params.id).then(function(sucess){
+  Abonanto.delete(req.params.idAbonanto).then(function(sucess){
     if(sucess){
       res.status(202).send();
     } else {
@@ -142,6 +156,7 @@ module.exports = {
   getDissendoj: _getDissendoj,
   getDissendo:_getDissendo,
   postDissendo: _postDissendo,
+  getAbonanto: _getAbonanto,
   getRetlistoj: _getRetlistoj,
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,

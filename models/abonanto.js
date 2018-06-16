@@ -1,10 +1,11 @@
 var util = require('util');
 var db = require('../modules/db');
 
-var _find = function(id){
-  if(id){
-    id = db.escape(id);
-    var query = util.format('SELECT * FROM `retlist_abono` WHERE `idRetlisto` = %s;', id);
+var _find = function(kampo, valoro){
+  if(kampo){
+    kampo = db.escapeId(kampo);
+    valoro = db.escape(valoro);
+    var query = util.format('SELECT * FROM `retlist_abono` WHERE %s = %s;', kampo, valoro);
   }
   else
     var query = util.format('SELECT * FROM `retlist_abono`;');
@@ -21,8 +22,8 @@ var _insert = function(idRetlisto, ekde, formato_html, kodigxo_utf8, retadreso){
 }
 
 var _delete = function(id){
-  var query = util.format(
-  'DELETE FROM `retlist_abono` WHERE `id` = %s ;', id);
+  id = db.escape(id);
+  var query = util.format('DELETE FROM `retlist_abono` WHERE `id` = %s ;', id);
   return db.mysqlExec(query);
 }
 

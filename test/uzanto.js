@@ -113,8 +113,8 @@ describe('Uzantoj', function() {
         .get('/uzantoj/cxuMembro/retposxto@io.com')
         .end(function(err, res) {
           res.should.have.status(200);
-          res.body.should.have.property('uzantoID');
-          res.body.uzantoID.should.equal(-1);
+          res.body.should.have.property('membro');
+          res.body.membro.should.equal(false);
           done();
         });
       });
@@ -142,8 +142,7 @@ describe('Uzantoj', function() {
                                config.sekretoJWT, {expiresIn: 18000});
               var uzanto = {
                  id: idUzanto,
-                 uzantnomo: "retposxto@io.com",
-                 permeso: 'uzanto'
+                 permesoj: ['uzanto']
                };
 
               tokenUzanto = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});

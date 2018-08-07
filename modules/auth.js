@@ -56,6 +56,40 @@ var _authorizeUzanto = function(req, res, next) {
   }
 }
 
+var _authorizeMembro = function(req, res, next) {
+  var token = req.headers['x-access-token'];
+  if(token) {
+    jwt.verify(token, config.sekretoJWT, function(err, decoded) {
+      if (err) {
+        return res.status(403).send({ success: false,
+          message: 'La ĵetono (token) ne estas korekta.'});
+      } else {
+        if(decoded.permesoj) {
+          if((decoded.permesoj.indexOf('membro') > -1)
+             ||(decoded.permesoj.indexOf(config.idAdministranto) > -1)
+             || (decoded.permesoj.indexOf(config.idKomunikisto) > -1)) {
+             req.decoded = decoded;
+             next();
+          } else {
+            return res.status(403).send({ success: false,
+              message: 'La ĵetono (token) ne estas korekta.'});
+          }
+        } else {
+          return res.status(403).send({ success: false,
+            message: 'La ĵetono (token) ne estas korekta.'});
+        }
+      }
+    });
+  } else {
+      // Se ne estas ĵetono
+      // redonas eraron
+      return res.status(400).send({
+          success: false,
+          message: 'Sen ĵetono (token).'
+      });
+    }
+}
+
 var _authorizeAdmin = function(req, res, next) {
   var token = req.headers['x-access-token'];
   if(token) {
@@ -181,5 +215,6 @@ module.exports = {
   authorizeAdminJuna: _authorizeAdminJuna,
   authorizeAdmin: _authorizeAdmin,
   authorizeAdminKomunikisto: _authorizeAdminKomunikisto,
-  authorizeUzanto: _authorizeUzanto
+  authorizeUzanto: _authorizeUzanto,
+  authorizeMembro: _authorizeMembro
 }

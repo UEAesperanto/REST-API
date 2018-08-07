@@ -32,6 +32,9 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
+            docker-compose -f docker/compose/circle.yaml down
+            docker ps -a
+            docker images -a
             docker-compose -f docker/compose/circle.yaml up -d --build
 
       - run:
@@ -44,9 +47,10 @@ jobs:
           name: Start container and verify it's working
           command: |
             set -x
+            docker exec -it uea-api bash -c "git pull"
             docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
-            docker exec -it uea-api bash -c "npm install"
-            docker exec -it uea-api bash -c "nyc npm test"
+            docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
+            docker exec -it uea-api bash -c "nyc npm run test-unit"
             docker exec -it uea-api bash -c "nyc report --reporter=lcov"
             docker exec -it uea-api bash -c "codecov -t ${CODECOV_TOKEN}"
 

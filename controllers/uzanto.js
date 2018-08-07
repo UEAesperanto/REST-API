@@ -22,8 +22,25 @@ var query = require('../modules/query');
 var hash = require('../modules/hash');
 var mail = require('../modules/mail');
 var file = require('../modules/file');
+var utilAPI = require('../modules/utilAPI');
 var auth = require('../modules/auth');
 
+
+var sendToken = function(id, res){
+  utilAPI.cxuMembro(id).then(function(sucess){
+    if(sucess) {
+      permeso = ['uzanto', 'membro'];
+    } else {
+      permeso = ['uzanto'];
+    }
+    var uzanto = {
+      id: id,
+      permesoj: permeso,
+    };
+    var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
+    res.status(200).send({token: token, uzanto: uzanto});
+  });
+}
 
 var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
   var options = {
@@ -46,7 +63,7 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
               var indexOf = data.indexOf('UEA-kodo');
               if(indexOf > -1) {
                 ueakodo = data.substring(indexOf + 20, indexOf + 26).replace("-", "");
-                UzantoAuxAsocio.find(ueakodo).then(function(response){
+                UzantoAuxAsocio.find('ueakodo', ueakodo).then(function(response){
                   if(response.length == 1) {
                     var id = response[0].id;
                     var p1 = UzantoAuxAsocio.update(id, 'uzantnomo', uzantnomo);
@@ -54,15 +71,7 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
                     var p2 = UzantoAuxAsocio.update(id, 'pasvortoSalt', pasvortajDatumoj.salt);
                     var p3 = UzantoAuxAsocio.update(id, 'pasvortoHash', pasvortajDatumoj.hash);
                     Promise.all([p1, p2, p3]).then(function(values) {
-                      var uzanto = {
-                        id: id,
-                        uzantnomo: uzantnomo,
-                        permeso: 'uzanto'
-                      };
-                      // kaze uzanto estas trovita kaj pasvorto estas korekta
-                      // oni kreas iun token
-                      var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
-                      cres.status(200).send({token: token, uzanto: sucess[0]});
+                      sendToken(id, res);
                     });
                   } else {
                     cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \
@@ -90,28 +99,41 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
   POST - /uzantoj/ensaluti
 */
 var _ensaluti = function(req, res) {
-  UzantoAuxAsocio.findUzantnomo(req.body.uzantnomo).then(
+  UzantoAuxAsocio.find('uzantnomo', req.body.uzantnomo).then(
     function(sucess) {
       if (sucess.length == 0) {
+        if (req.body.uzantnomo.indexOf('@') > -1) {
+          Uzanto.find('retposxto', req.body.uzantnomo).then(function(sucess){
+            if(sucess.length == 1) {
+              UzantoAuxAsocio.find('id', sucess[0].id).then(function(sucess){
+                if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
+                                          sucess[0].pasvortoHash)) {
+                  res.status(401).send({message: 'Malkorekta pasvorto'});
+                }
+                sendToken(sucess[0].id, res);
+              });
+            } else if(sucess.length == 0){
+              res.status(401).send({message: 'Tiu retadreso apartenas al neniu en nia datumbazo. \
+                                              Bonvole, provu ensaluti per uzantnomo'});
+            } else {
+              res.status(401).send({message: 'Tiu retadreso apartenas al\
+                                              pli ol unu persono en nia datumbazo. \
+                                              Bonvole, provu ensaluti per uzantnomo'});
+            }
+          });
+        } else {
          proviMalnovaRetejo(req.body.uzantnomo, req.body.pasvorto, res);
+        }
       } else {
         if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
                                   sucess[0].pasvortoHash)) {
           res.status(401).send({message: 'Malkorekta pasvorto'});
         }
-        var uzanto = {
-          id: sucess[0].id,
-          uzantnomo: sucess[0].uzantnomo,
-          permeso: 'uzanto'
-        };
-
-        // kaze uzanto estas trovita kaj pasvorto estas korekta
-        // oni kreas iun token
-        var token = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: "30d"});
-        res.status(200).send({token: token, uzanto: sucess[0]});
+        sendToken(sucess[0].id, res);
     }
   });
 }
+
 
 /*
   GET /uzantoj/:id
@@ -125,7 +147,7 @@ var _getUzanto = function(req, res){
 
 var _getUzantoj = function(req, res){
   Uzanto.find().then(function(sucess){
-      var uzanto = sucess;
+      var uzanto = sucess.filter(query.search(req.query));
       res.status(200).send(uzanto);
   });
 }
@@ -194,7 +216,7 @@ var _forgesisPasvorton = function(req, res) {
           var pasvortajDatumoj = hash.sha512(novaPasvorto, null);
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoSalt', pasvortajDatumoj.salt);
           UzantoAuxAsocio.update(sucess[0].id, 'pasvortoHash', pasvortajDatumoj.hash);
-          UzantoAuxAsocio.find(sucess[0].id).then(
+          UzantoAuxAsocio.find('id', sucess[0].id).then(
           function (sucess) {
             if(req.body.retposxto) {
                 var html = util.format(configMail.novaPasvorto, novaPasvorto);
@@ -284,39 +306,23 @@ var _cxuMembro = function(req, res) {
     res.status(200).send({membroID: false});
   }
 
-  Uzanto.find('retposxto', req.params.retposxto).then(
-    function(sucess){
-      if(sucess && sucess.length >= 1) {
-        var id = sucess[0].id;
-        Grupo.findKategorio(config.idMembrecgrupo).then(function(sucess){
-            var grupoj = sucess;
-            var promises = [];
-            for(var i = 0; i < grupoj.length; i++) {
-              promises.push(Grupo.findAnoj(grupoj[i].id));
-            }
-            Promise.all(promises).then(function(values){
-              for(var i = 0; i < values.length; i++) {
-                 var ano = values[i].filter(query.search({idAno:id}));
-                 if(ano.length >= 1) {
-                   var result = {uzantoID: id,
-                                 membro: true,
-                                 idGrupo: ano[0].idGrupo,
-                                 komencdato: ano[0].komencdato,
-                                 dumviva: parseInt(ano[0].dumviva.toString('hex')),
-                                 aprobita: parseInt(ano[0].aprobita.toString('hex')),
-                                 findato: ano[0].findato};
-                   result = result.filter(query.search(req.query));
-                   res.status(200).send(result);
-                   return;
-                  }
-              }
-              res.status(200).send({uzantoID: id, membro: false});
-            });
+  Uzanto.find('retposxto', req.params.retposxto).then(function(sucess){
+      if(sucess && sucess.length == 1) {
+        utilAPI.cxuMembro(sucess[0].id).then(function(sucess){
+          res.status(200).send({membro: sucess});
         });
       } else {
-        res.status(200).send({uzantoID: -1, membro: false});
+        UzantoAuxAsocio.find('ueakodo', req.params.retposxto).then(function(sucess){
+          if(sucess && sucess.length == 1){
+            utilAPI.cxuMembro(sucess[0].id).then(function(sucess){
+              res.status(200).send({membro: sucess});
+            });
+          } else {
+            res.status(200).send({membro: false});
+          }
+        });
       }
-    });
+  });
 }
 
 var _postBildo = function(req, res) {
@@ -335,7 +341,7 @@ var _getGrupoj = function(req,res) {
 
 var _delete = function(req, res) {
   UzantoAuxAsocio.delete(req.params.id).then(function(sucess){
-    UzantoAuxAsocio.find(req.params.id).then(function(sucess){
+    UzantoAuxAsocio.find('id', req.params.id).then(function(sucess){
       if(sucess.length <= 0){
         Uzanto.delete(req.params.id).then(function(sucess){
           Uzanto.find('id', req.params.id).then(function(sucess){
@@ -373,7 +379,7 @@ var _adapti = function(req, res) {
                           }
                         });
       } else {
-        UzantoAuxAsocio.find(req.body.ueakodo).then(function(sucess){
+        UzantoAuxAsocio.find('ueakodo', req.body.ueakodo).then(function(sucess){
             res.status(200).send(sucess);
         });
       }

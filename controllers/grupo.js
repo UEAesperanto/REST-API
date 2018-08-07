@@ -34,6 +34,22 @@ var _getKategorioj = function(req, res){
 }
 
 /*
+  POST /grupoj/kategorioj
+*/
+var _postKategorio = function(req, res){
+  Grupo.insertKategorio(req.body.nomo).then(
+    function(sucess){
+      if(sucess) {
+        res.status(201).send({insertId: sucess.insertId});
+      }
+    },
+    function(fail){
+      res.status(500).send({message: 'Internal Error'})
+    }
+  );
+}
+
+/*
   GET /grupoj/:id
 */
 var _getGrupo = function(req, res){
@@ -186,7 +202,8 @@ var _getAnoj = function(req, res) {
   if (req.decoded) {
       if(req.decoded.permesoj.indexOf(config.idAdministranto) > -1) {
         findAnoj(req, res);
-      } else if(req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
+      }
+      else if(req.decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {
           Grupo.findKategorio(config.idJunajGrupoj).then(function(result){
             var grupoj = [];
             result.map(function(item){grupoj.push(item.id)});
@@ -200,16 +217,20 @@ var _getAnoj = function(req, res) {
            }
           });
       }
-  } else {
-    //Ĉu la celata grupo estas en laborgrupo?
-    Grupo.findKategorio(config.idLaborgrupo).then(function(result){
-      var grupoj = result.filter(query.search({id:req.params.id}));
-      if (grupoj.length == 1) {
-        findAnoj(req, res);
+      else if(req.decoded.permesoj.indexOf('membro') > -1) {
+        Grupo.findKategorio(config.idLaborgrupo).then(function(result){
+          var grupoj = result.filter(query.search({id:req.params.id}));
+          if (grupoj.length == 1) {
+            findAnoj(req, res);
+          } else {
+            res.status(403).send({message: 'Vi ne rajtas vidi la membrojn de tiu grupo'});
+         }
+        });
       } else {
         res.status(403).send({message: 'Vi ne rajtas vidi la membrojn de tiu grupo'});
-     }
-    });
+      }
+  } else {
+    res.status(403).send({message: 'Vi ne rajtas vidi la membrojn de tiu grupo'});
   }
 }
 
@@ -229,6 +250,7 @@ module.exports = {
   getGrupoj: _getGrupoj,
   deleteGrupoKat: _deleteGrupoKat,
   getKategorioj: _getKategorioj,
+  postKategorio: _postKategorio,
   getGrupo: _getGrupo,
   postGrupo: _postGrupo,
   deleteGrupo: _deleteGrupo,

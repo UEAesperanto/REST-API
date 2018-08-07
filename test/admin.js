@@ -186,7 +186,6 @@ describe('Admin', function() {
                 .end((err, res) => {
                   res.should.have.status(201);
                   var id = res.body.insertId;
-                  console.log(id);
                   chai.request(server)
                       .post('/admin/' + id + '/rajtoj')
                       .set('x-access-token', token)

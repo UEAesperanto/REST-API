@@ -19,6 +19,16 @@ var _getDissendoj = function(req, res){
 }
 
 /*
+  GET /dissendoj/:id
+*/
+var _getDissendo = function(req, res){
+  Dissendo.find(req.params.id).then(function(sucess){
+      var lando = sucess;
+      res.status(200).send(lando);
+  });
+}
+
+/*
   POST /dissendoj
   body:
   @idRetlisto
@@ -96,7 +106,7 @@ var _deleteRetlisto = function(req, res) {
   POST /dissendo/retlistoj/:id/abonantoj
 */
 var _postAbonanto = function(req, res) {
-  Abonanto.insert(req.params.id, new Date(req.body.ekde), req.body.formato_html,
+  Abonanto.insert(req.params.id, req.body.ekde, req.body.formato_html,
                   req.body.kodigxo_utf8, req.body.retadreso).then(function(sucess) {
     if(sucess) {
       res.status(201).send(sucess);
@@ -106,29 +116,51 @@ var _postAbonanto = function(req, res) {
   });
 }
 
-
-var _getAbonanto = function (req, res) {
-  Abonanto.find().then(function(sucess){
-    var retlistoj = sucess;
-    retlistoj = retlistoj.filter(query.search(req.query));
-    res.status(200).send(retlistoj);
+var _getAbonantoj = function(req, res) {
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
+    if(sucess){
+      res.status(201).send(sucess);
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
   });
 }
 
+
+var _getAbonanto = function(req, res) {
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
+    if(sucess){
+      req.query.retadreso = req.params.retposxto;
+      res.status(201).send(sucess.filter(query.search(req.query)));
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+
 /*
-  DELETE /dissendo/retlistoj/:id/abonantoj
+  DELETE /dissendo/retlistoj/abonantoj/:idAbonanto
 */
 var _deleteAbonanto = function(req, res) {
- //fari
+  Abonanto.delete(req.params.idAbonanto).then(function(sucess){
+    if(sucess){
+      res.status(202).send();
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
 }
 
 module.exports = {
   getDissendoj: _getDissendoj,
+  getDissendo:_getDissendo,
   postDissendo: _postDissendo,
+  getAbonanto: _getAbonanto,
   getRetlistoj: _getRetlistoj,
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,
   postAbonanto: _postAbonanto,
-  deleteAbonanto: _deleteAbonanto,
-  getAbonanto: _getAbonanto
+  getAbonantoj: _getAbonantoj,
+  deleteAbonanto: _deleteAbonanto
 }

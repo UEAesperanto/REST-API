@@ -17,12 +17,13 @@ module.exports = {
                         <br><br>Kore,<br><br>\
                         La UEA-Teamo',
   'membrecAprobita':    'Estimata %s, <br><br>\
-                        Via peto por membriĝi en %s en UEA/TEJO estis aprobita. \
+                        Via peto por membriĝi en %s en UEA/TEJO estis akceptita. \
                         En kazo de duboj, kontaktu info@uea.org. \
                         <br><br>Kore,<br><br>\
                         La UEA-Teamo',
   'membrecMalaprobita': 'Estimata %s, <br><br>\
                         Via peto por membriĝi en %s en UEA/TEJO estis malaprobita. \
+                        Plej verŝajne temas pri pag-problemo.\
                         En kazo de duboj, kontaktu info@uea.org. \
                         <br><br>Kore,<br><br>\
                         La UEA-Teamo',

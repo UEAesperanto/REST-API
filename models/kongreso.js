@@ -11,7 +11,7 @@ var _find = function(id){
 
 var _findKromaj = function(id){
   id = db.escape(id);
-  var query = util.format('SELECT * FROM kongreso A INNER JOIN ref_kongreso_kroma_kongreso B on (A.id = B.id_kroma_kongreso) WHERE B.id_cxefa_kongreso = %s;', id);
+  var query = util.format('SELECT * FROM kongreso A INNER JOIN ref_kongreso_kroma_kongreso B on (A.id = B.idKromaKongreso) WHERE B.idCxefaKongreso = %s;', id);
   return db.mysqlExec(query);
 }
 

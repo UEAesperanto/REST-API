@@ -12,7 +12,7 @@ var routerAuth = express.Router();
 var routerUzanto = express.Router();
 
 routerAuth.use(auth.authorizeAdminKomunikisto);
-routerUzanto.use(auth.authorizeUzanto);
+routerUzanto.use(auth.authorizeMembro);
 
 app.route('/')
     .get(revuo.getRevuoj)

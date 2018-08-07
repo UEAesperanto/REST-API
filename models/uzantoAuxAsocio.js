@@ -21,19 +21,14 @@ var _insert = function(uzantnomo, pasvorto, ueakodo) {
   return db.mysqlExec(query);
 }
 
-var _find = function(ueakodo) {
-  if (ueakodo) {
-    ueakodo = db.escape(ueakodo);
-    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `ueakodo` = %s;', ueakodo);
+var _find = function(kampo, valoro) {
+  if (valoro) {
+    kampo = db.escapeId(kampo);
+    valoro = db.escape(valoro);
+    var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE %s = %s;', kampo, valoro);
   } else {
     var query = util.format('SELECT * FROM `uzantoAuxAsocio`;');
   }
-  return db.mysqlExec(query);
-}
-
-var _findUzantnomo = function(uzantnomo) {
-  uzantnomo = db.escape(uzantnomo);
-  var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `uzantnomo` = %s;', uzantnomo);
   return db.mysqlExec(query);
 }
 
@@ -53,7 +48,6 @@ var _delete = function(id) {
 
 module.exports = {
   insert: _insert,
-  findUzantnomo: _findUzantnomo,
   delete: _delete,
   update: _update,
   find: _find

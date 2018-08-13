@@ -106,8 +106,8 @@ var _deleteRetlisto = function(req, res) {
   POST /dissendo/retlistoj/:id/abonantoj
 */
 var _postAbonanto = function(req, res) {
-  Retlisto.insert(req.body.ekde, req.body.formato_html,
-                  req.body.kodigxo_utf8, req.body.retadreso, req.params.id).then(function(sucess) {
+  Abonanto.insert(req.params.id, req.body.ekde, req.body.formato_html,
+                  req.body.kodigxo_utf8, req.body.retadreso).then(function(sucess) {
     if(sucess) {
       res.status(201).send(sucess);
     } else {
@@ -116,20 +116,51 @@ var _postAbonanto = function(req, res) {
   });
 }
 
+var _getAbonantoj = function(req, res) {
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
+    if(sucess){
+      res.status(201).send(sucess);
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+
+var _getAbonanto = function(req, res) {
+  Abonanto.find('idRetlisto', req.params.id).then(function(sucess){
+    if(sucess){
+      req.query.retadreso = req.params.retposxto;
+      res.status(201).send(sucess.filter(query.search(req.query)));
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
+}
+
+
 /*
-  DELETE /dissendo/retlistoj/:id/abonantoj
+  DELETE /dissendo/retlistoj/abonantoj/:idAbonanto
 */
 var _deleteAbonanto = function(req, res) {
- //fari
+  Abonanto.delete(req.params.idAbonanto).then(function(sucess){
+    if(sucess){
+      res.status(202).send();
+    } else {
+      res.status(500).send({message: 'Internal Error'});
+    }
+  });
 }
 
 module.exports = {
   getDissendoj: _getDissendoj,
   getDissendo:_getDissendo,
   postDissendo: _postDissendo,
+  getAbonanto: _getAbonanto,
   getRetlistoj: _getRetlistoj,
   deleteRetlisto: _deleteRetlisto,
   postRetlisto: _postRetlisto,
   postAbonanto: _postAbonanto,
+  getAbonantoj: _getAbonantoj,
   deleteAbonanto: _deleteAbonanto
 }

@@ -1,73 +1,281 @@
 version: 2
 jobs:
   build:
-    docker:
-      # using custom image, see .circleci/images/primary/Dockerfile
-      - image: circleci/cci-demo-docker-primary:0.0.2
-
+    machine:
+      docker_layer_caching: true
     steps:
       - checkout
-
-      # This should go into custom primary image, here's only for the sake of explanation
       - run:
-          name: Install Docker client
+          name: Build Docker Images
           command: |
             set -x
-            VER="17.03.0-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            mv /tmp/docker/* /usr/bin
-      # This should go into custom primary image, here's only for the sake of explanation
-
+            docker-compose -f docker/compose/circle.yaml build
       - run:
-          name: Install Docker Compose
+          name: Save Docker image layer cache
           command: |
             set -x
-            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-            chmod +x /usr/local/bin/docker-compose
+            docker save -o ~/.cache/uea-circle.tar uea-circle
+            docker save -o ~/.cache/uea-mysql.tar uea-mysql
+            docker save -o ~/.cache/uea-liquibase.tar uea-liquibase
 
-      - setup_remote_docker
+      - save_cache:
+          key: docker-images-cache
+          paths:
+            - ~/.cache/uea-circle.tar
+            - ~/.cache/uea-mysql.tar
+            - ~/.cache/uea-liquibase.tar
 
+  test_1:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - docker-images-cache
+          paths:
+            - ~/.cache/uea-circle.tar
+            - ~/.cache/uea-mysql.tar
+            - ~/.cache/uea-liquibase.tar
       - run:
-          name: Start container and verify it's working
+          name: Load Docker image layer cache
           command: |
             set -x
-            docker-compose -f docker/compose/circle.yaml down
-            docker ps -a
-            docker images -a
-            docker-compose -f docker/compose/circle.yaml up -d --build
-
+            docker load -i ~/.cache/uea-circle.tar
+            docker load -i ~/.cache/uea-mysql.tar
+            docker load -i ~/.cache/uea-liquibase.tar
+      - run:
+          name: Start containers
+          command: |
+            set -x
+            docker-compose -f docker/compose/circle.yaml up -d
       - run:
           name: Wait container is ready
           command: |
             set -x
             sleep 20
-
       - run:
-          name: Start container and verify it's working
+          name: NPM Install
           command: |
             set -x
             docker exec -it uea-api bash -c "git pull"
             docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
             docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
-            docker exec -it uea-api bash -c "nyc npm run test-unit"
+      - run:
+          name: Verify it's working
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc mocha --opts test/unit/mocha.opts --exit \
+              test/unit/admin.js \
+              test/unit/asocio.js \
+              test/unit/dissendo.js \
+              "
+      - run:
+          name: Deploy to Codecov
+          command: |
+            set -x
             docker exec -it uea-api bash -c "nyc report --reporter=lcov"
             docker exec -it uea-api bash -c "codecov -t ${CODECOV_TOKEN}"
 
-      - add_ssh_keys:
-          fingerprints:
-            - "a5:94:99:bb:d9:3f:72:4c:52:f1:97:4c:0f:b0:28:b8"
-
-      - deploy:
-          name: Deployment
+  test_2:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - docker-images-cache
+          paths:
+            - ~/.cache/uea-circle.tar
+            - ~/.cache/uea-mysql.tar
+            - ~/.cache/uea-liquibase.tar
+      - run:
+          name: Load Docker image layer cache
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./deploy/production.sh
-            fi
+            set -x
+            docker load -i ~/.cache/uea-circle.tar
+            docker load -i ~/.cache/uea-mysql.tar
+            docker load -i ~/.cache/uea-liquibase.tar
+      - run:
+          name: Start containers
+          command: |
+            set -x
+            docker-compose -f docker/compose/circle.yaml up -d
+      - run:
+          name: Wait container is ready
+          command: |
+            set -x
+            sleep 20
+      - run:
+          name: NPM Install
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "git pull"
+            docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
+            docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
+      - run:
+          name: Verify it's working
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc mocha --opts test/unit/mocha.opts --exit \
+              test/unit/faktemo.js \
+              test/unit/grupo.js \
+              test/unit/kongresso.js \
+              "
+      - run:
+          name: Deploy to Codecov
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc report --reporter=lcov"
+            docker exec -it uea-api bash -c "codecov -t ${CODECOV_TOKEN}"
 
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
+  test_3:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - docker-images-cache
+          paths:
+            - ~/.cache/uea-circle.tar
+            - ~/.cache/uea-mysql.tar
+            - ~/.cache/uea-liquibase.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set -x
+            docker load -i ~/.cache/uea-circle.tar
+            docker load -i ~/.cache/uea-mysql.tar
+            docker load -i ~/.cache/uea-liquibase.tar
+      - run:
+          name: Start containers
+          command: |
+            set -x
+            docker-compose -f docker/compose/circle.yaml up -d
+      - run:
+          name: Wait container is ready
+          command: |
+            set -x
+            sleep 20
+      - run:
+          name: NPM Install
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "git pull"
+            docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
+            docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
+      - run:
+          name: Verify it's working
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc mocha --opts test/unit/mocha.opts --exit \
+              test/unit/lando.js \
+              test/unit/opcio.js \
+              test/unit/peranto.js \
+              "
+      - run:
+          name: Deploy to Codecov
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc report --reporter=lcov"
+            docker exec -it uea-api bash -c "codecov -t ${CODECOV_TOKEN}"
+    deploy:
+      machine: true
+      steps:
+        - add_ssh_keys:
+            fingerprints:
+              - "a5:94:99:bb:d9:3f:72:4c:52:f1:97:4c:0f:b0:28:b8"
+        - run:
+            name: Deployment
+            command: |
+              ssh -oStrictHostKeyChecking=no splab@ocarina.splab.ufcg.edu.br /home/splab/deploy/uea2.sh
 
-      - store_test_results:
-          path: /tmp/test-results
+  test_4:
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - docker-images-cache
+          paths:
+            - ~/.cache/uea-circle.tar
+            - ~/.cache/uea-mysql.tar
+            - ~/.cache/uea-liquibase.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set -x
+            docker load -i ~/.cache/uea-circle.tar
+            docker load -i ~/.cache/uea-mysql.tar
+            docker load -i ~/.cache/uea-liquibase.tar
+      - run:
+          name: Start containers
+          command: |
+            set -x
+            docker-compose -f docker/compose/circle.yaml up -d
+      - run:
+          name: Wait container is ready
+          command: |
+            set -x
+            sleep 20
+      - run:
+          name: NPM Install
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "git pull"
+            docker exec -it uea-api bash -c "git checkout ${CIRCLE_BRANCH} && git pull"
+            docker exec -it uea-api bash -c "npm install --unsafe-perm --only=dev"
+      - run:
+          name: Verify it's working
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc mocha --opts test/unit/mocha.opts --exit \
+              test/unit/revuo.js \
+              test/unit/urbo.js \
+              "
+      - run:
+          name: Deploy to Codecov
+          command: |
+            set -x
+            docker exec -it uea-api bash -c "nyc report --reporter=lcov"
+            docker exec -it uea-api bash -c "codecov -t ${CODECOV_TOKEN}"
+    deploy:
+      machine: true
+      steps:
+        - add_ssh_keys:
+            fingerprints:
+              - "a5:94:99:bb:d9:3f:72:4c:52:f1:97:4c:0f:b0:28:b8"
+        - run:
+            name: Deployment
+            command: |
+              ssh -oStrictHostKeyChecking=no splab@ocarina.splab.ufcg.edu.br /home/splab/deploy/uea2.sh
+
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - test_1:
+          requires:
+            - build
+      - test_2:
+          requires:
+            - build
+      - test_3:
+          requires:
+            - build
+      - test_4:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test_1
+            - test_2
+            - test_3
+            - test_4
+          filters:
+            branches:
+              only: master

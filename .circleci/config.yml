@@ -19,7 +19,7 @@ jobs:
             docker save -o ~/.cache/uea-liquibase.tar uea-liquibase
 
       - save_cache:
-          key: docker-images-cache-{{ epoch }}
+          key: uea-{{ .Branch }}-{{ epoch }}
           paths:
             - ~/.cache/uea-circle.tar
             - ~/.cache/uea-mysql.tar
@@ -32,7 +32,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - docker-images-cache-{{ epoch }}
+            - uea-{{ .Branch }}
           paths:
             - ~/.cache/uea-circle.tar
             - ~/.cache/uea-mysql.tar
@@ -84,7 +84,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - docker-images-cache-{{ epoch }}
+            - uea-{{ .Branch }}
           paths:
             - ~/.cache/uea-circle.tar
             - ~/.cache/uea-mysql.tar
@@ -136,7 +136,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - docker-images-cache-{{ epoch }}
+            - uea-{{ .Branch }}
           paths:
             - ~/.cache/uea-circle.tar
             - ~/.cache/uea-mysql.tar
@@ -188,7 +188,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - docker-images-cache-{{ epoch }}
+            - uea-{{ .Branch }}
           paths:
             - ~/.cache/uea-circle.tar
             - ~/.cache/uea-mysql.tar

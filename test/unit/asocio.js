@@ -12,11 +12,9 @@ describe('==== ASOCIO ====', () => {
     it('it should GET all the asocioj',(done) => {
       request
         .get('/asocioj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
-          done();
-        });
+        .expect(200)
+      .then((success) => {done()}, (error) => {done(error)});
     });
-  }); 
+  });
 
 });

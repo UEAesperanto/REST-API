@@ -217,7 +217,7 @@ describe('==== GRUPO ====', () => {
       .then((res) => {
       return request
         .delete('/grupoj/kategorioj/2/sub/10')
-        .set('x-access-token', token)
+        .set('x-access-token', tokenAdmin)
         .expect(204)
       })
       .then((success) => {done()}, (error) => {done(error)});
@@ -234,7 +234,7 @@ describe('==== GRUPO ====', () => {
       .then((res) => {
       return request
         .post('/grupoj/' + res.body.insertId + '/anoj')
-        .set('x-access-token', token)
+        .set('x-access-token', tokenAdmin)
         .send({"idAno":4})
         .expect(201)
       })

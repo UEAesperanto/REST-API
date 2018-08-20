@@ -4,7 +4,7 @@
 describe('==== GRUPO ====', () => {
   tokenAdmin = '';
   grupoModel1 = {mallongigilo: 'mallongigilo' , nomo: 'nomo', priskribo: 'priskribo'};
-  kategoriojModel1 = {nomo: 'kategorio1'};
+  kategoriojModel1 = {nomo: 'laboro'};
 
   //Before each test we empty the database
   beforeEach((done) => {
@@ -13,8 +13,9 @@ describe('==== GRUPO ====', () => {
       cleanTable('grupa_kategorio');
       cleanTable('ref_grupo_grupa_kategorio');
       tokenAdmin  =  generateToken();
-      tokenUzanto = generateToken(['uzanto']);
-      tokenMembro = generateToken(['uzanto','membro']);
+      tokenUzanto = generateToken('uzanto');
+      tokenMembro = generateToken('membro');
+      generateKategorioj();
       done();
   });
 
@@ -93,7 +94,7 @@ describe('==== GRUPO ====', () => {
         .expect(201)
       .then((res) => {
       return request
-        .get('/grupoj/kategorioj/' + res.body.insertId + '/sub')
+        .get('/grupoj/kategorioj/' + testConfig.idLaborgrupo + '/sub')
         .expect(200)
       })
       .then((success) => {done()}, (error) => {done(error)});
@@ -133,9 +134,7 @@ describe('==== GRUPO ====', () => {
       .then((success) => {done()}, (error) => {done(error)});
     })
 
-    it('it NOT should GET all grupoj/:id/anoj - uzanto sen membreco', (done) => {
-      var idGrupo;
-      var idKategorio;
+    it('it should GET a grupoj anoj', function (done) {
       request
         .post('/grupoj')
         .send(grupoModel1)
@@ -144,6 +143,56 @@ describe('==== GRUPO ====', () => {
       .then((res) => {
       return request
         .get('/grupoj/' + res.body.insertId + '/anoj')
+        .set('x-access-token', tokenAdmin)
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should GET all the grupoj/:id/anoj laborgrupo', (done) => {
+      var idGrupo;
+      var idKategorio;
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      idGrupo = res.body.insertId;
+      return request
+        .post('/grupoj/kategorioj/'+ config.idLaborgrupo + '/sub/' + idGrupo)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      })
+      .then((res) => {
+      idKategorio = res.body.insertId;
+      return request
+        .get('/grupoj/' + idGrupo + '/anoj')
+        .set('x-access-token', tokenMembro)
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+
+    it('it should GET all the grupoj/:id/anoj laborgrupo - uzanto sen membreco', (done) => {
+      var idGrupo;
+      var idKategorio;
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      idGrupo = res.body.insertId;
+      return request
+        .post('/grupoj/kategorioj/'+ config.idLaborgrupo + '/sub/' + idGrupo)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      })
+      .then((res) => {
+      idKategorio = res.body.insertId;
+      return request
+        .get('/grupoj/' + idGrupo + '/anoj')
         .set('x-access-token', tokenUzanto)
         .expect(403)
       })
@@ -151,4 +200,45 @@ describe('==== GRUPO ====', () => {
     })
   })
 
+  describe('DELETE /grupoj/kategorioj/:idKat/sub/:idGrupo', () => {
+    it('it should delete ref_grupo_grupa_kategorio', (done) => {
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      idGrupo = res.body.insertId;
+      return request
+        .post('/grupoj/kategorioj/'+ config.idLaborgrupo + '/sub/' + idGrupo)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .delete('/grupoj/kategorioj/2/sub/10')
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('POST /grupoj/:id/anoj', () => {
+    it('it should POST all the grupoj/:id/anoj for membrecgrupo', (done) => {
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .set('x-access-token', tokenAdmin)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/grupoj/' + res.body.insertId + '/anoj')
+        .set('x-access-token', token)
+        .send({"idAno":4})
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
 });

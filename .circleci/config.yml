@@ -65,7 +65,7 @@ jobs:
           name: Verify it's working
           command: |
             set -x
-            docker exec -it uea-api bash -c " npm run test-unit"
+            docker exec -it uea-api bash -c "nyc npm run test-unit"
       - run:
           name: Deploy to Codecov
           command: |

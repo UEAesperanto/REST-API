@@ -1,6 +1,3 @@
-/*
-      INCOMPLETE
-*/
 describe('==== GRUPO ====', () => {
   tokenAdmin = '';
   grupoModel1 = {mallongigilo: 'mallongigilo' , nomo: 'nomo', priskribo: 'priskribo'};
@@ -237,6 +234,100 @@ describe('==== GRUPO ====', () => {
         .set('x-access-token', tokenAdmin)
         .send({"idAno":4})
         .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('POST /grupoj', () => {
+    it('it should NOT POST a grupo without token', (done) => {
+      request
+        .post('/grupoj')
+        .send(grupoModel1)
+        .expect(400)
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+
+    it('it should POST a grupoj', (done) => {
+      request
+        .post('/grupoj')
+        .set('x-access-token', tokenAdmin)
+        .send(grupoModel1)
+        .expect(201)
+        .expect((res) => {
+          res.body.should.have.property('insertId');
+          res.body.should.have.property('affectedRows');
+          res.body.affectedRows.should.equal(1);
+        })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('PUT /grupoj', () => {
+    it('it should UPDATE a grupoj', (done) => {
+      request
+        .post('/grupoj')
+        .set('x-access-token', tokenAdmin)
+        .send(grupoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .put('/grupoj/' + res.body.insertId)
+        .set('x-access-token', tokenAdmin)
+        .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
+        .expect(200)
+        .expect((res) => {
+          res.body.should.have.property('message');
+          res.body.message.should.equal('Ĝisdatigo sukcese farita');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+
+    it('it should NOT UPDATE a grupoj', (done) => {
+      request
+        .post('/grupoj')
+        .set('x-access-token', tokenAdmin)
+        .send(grupoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .put('/grupoj/' + res.body.insertId)
+        .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('DELETE /grupoj', () => {
+    it('it should DELETE a grupoj', (done) => {
+      request
+        .post('/grupoj')
+        .set('x-access-token', tokenAdmin)
+        .send(grupoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/grupoj/' + res.body.insertId)
+        .set('x-access-token', tokenAdmin)
+        .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
+        .expect(204)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+
+    it('it should NOT DELETE a grupoj', (done) => {
+      request
+        .post('/grupoj')
+        .set('x-access-token', tokenAdmin)
+        .send(grupoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/grupoj/' + res.body.insertId)
+        .send({kampo: 'mallongigilo', valoro: 'new mallongigilo'})
+        .expect(400)
       })
       .then((success) => {done()}, (error) => {done(error)});
     })

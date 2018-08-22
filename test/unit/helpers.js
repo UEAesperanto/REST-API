@@ -5,9 +5,11 @@ var jwt  = require('jsonwebtoken');
 var app = require('../../app').app;
 var db = require('../../modules/db');
 var config = require('../../config');
+var async = require('async');
 var {readFileSync} = require('fs');
 
 
+global.async = async;
 global.app = app;
 global.config = config;
 global.testConfig = { idLaborgrupo: 1,
@@ -42,6 +44,10 @@ global.generateToken = (permeso) => {
       userToken = administranto;
   }
   return jwt.sign(userToken, config.sekretoJWT, {expiresIn: 18000});
+}
+
+global.getToken = (uzanto) => {
+  return jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
 }
 
 global.cleanTable = (name, done) => {

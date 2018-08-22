@@ -33,6 +33,16 @@ describe('==== UZANTO ====', () => {
      "ueakodo":"aamcf"
    };
 
+   var permesatajKampoj = [
+     "uzantnomo",
+     "retposxto",
+     "tttpagxo",
+     "telhejmo",
+     "teloficejo",
+     "telportebla",
+     "titolo"
+   ];
+
   //Before each test we empty the database
   beforeEach((done) => {
       createAdmin();
@@ -105,6 +115,196 @@ describe('==== UZANTO ====', () => {
           res.body.should.have.property('membro');
           res.body.membro.should.equal(false);
         })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('PUT /uzantoj/:id', () => {
+    async.each(permesatajKampoj, (item, callback) => {
+      it('Devus ĝisdatigi uzanton - Kampo:' + item, (done) => {
+        var uzantoId;
+        request
+          .post('/uzantoj')
+          .send(uzanto_ueakodo)
+          .expect(201)
+        .then((res) => {
+        uzantoId = res.body.id;
+        uzanto["id"] = uzantoId;
+        return request
+          .put('/uzantoj/' + uzantoId)
+          .set('x-access-token', getToken(uzanto))
+          .send({kampo: item, valoro: "valoro"})
+          .expect(200)
+        })
+        .then((res) => {
+        return request
+          .get('/uzantoj/' + uzantoId)
+          .set('x-access-token', getToken(uzanto))
+          .expect(200)
+          .expect((res) => {
+            res.body[0][item].should.equals("valoro");
+          })
+        })
+        .then((sucess) => {done()}, (error) => {done(error)});
+      })
+      callback();
+    })
+
+    it('Devus ĝisdatigi uzanton - Kampo: pasvorto', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      uzanto["id"] = uzantoId;
+      return request
+        .put('/uzantoj/' + uzantoId)
+        .set('x-access-token', getToken(uzanto))
+        .send({kampo: "pasvorto", valoro: "valoro"})
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+
+    it('It should NOT ĝisdatigi uzanton - Malpermesata kampo', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      uzanto["id"] = uzantoId;
+      return request
+        .put('/uzantoj/' + uzantoId)
+        .set('x-access-token', getToken(uzanto))
+        .send({kampo: "adreso", valoro: "valoro"})
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('GET /uzantoj/:id', () => {
+    it('it should NOT GET uzanto - Alia ID', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/' + uzanto["id"] + 1)
+        .set('x-access-token', getToken(uzanto))
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('GET /uzantoj/:id/grupoj', () => {
+    it('it should GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/' + uzanto["id"])
+        .set('x-access-token', getToken(uzanto))
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('GET /uzantoj/admin/:id/grupoj', () => {
+    it('it should GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/admin/' + uzanto["id"] + '/grupoj')
+        .set('x-access-token', token)
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should NOT GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/admin/' + uzanto["id"] + '/grupoj')
+        .set('x-access-token', getToken(uzanto))
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('DELETE /uzantoj/:id', () => {
+    it('it should delete uzanton - ADMIN', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .delete('/uzantoj/admin/' + uzanto["id"])
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should NOT delete uzanton - Sen ĵetono - ADMIN', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .delete('/uzantoj/admin/' + uzanto["id"])
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('POST /uzantoj/forgesisPasvorton', () => {
+    it('forgesis pasvorton kun uzanto', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .post('/uzantoj/forgesisPasvorton')
+        .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+
+    it('forgesis pasvorton sen uzanto', (done) => {
+      request
+        .post('/uzantoj/forgesisPasvorton')
+        .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
+        .expect(400)
       .then((sucess) => {done()}, (error) => {done(error)});
     })
   })

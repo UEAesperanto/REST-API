@@ -5,9 +5,11 @@ var jwt  = require('jsonwebtoken');
 var app = require('../../app').app;
 var db = require('../../modules/db');
 var config = require('../../config');
+var async = require('async');
 var {readFileSync} = require('fs');
 
 
+global.async = async;
 global.app = app;
 global.config = config;
 global.testConfig = { idLaborgrupo: 1,

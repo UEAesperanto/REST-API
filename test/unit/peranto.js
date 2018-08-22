@@ -16,10 +16,8 @@ describe('==== PERANTO ====', () => {
       request
         .post('/perantoj')
         .send(perantoModel)
-        .end((err,res) => {
-          res.status.should.be.equal(400);
-          done();
-        });
+        .expect(400)
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
     it('it should POST a peranto',(done) => {
@@ -27,10 +25,8 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          done();
-        });
+        .expect(201)
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -38,11 +34,11 @@ describe('==== PERANTO ====', () => {
     it('it should GET all the peranto',(done) => {
       request
         .get('/perantoj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
+        .expect(200)
+        .expect((res) => {
           res.body.length.should.equals(0);
-          done();
-        });
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
     it('it should GET all the peranto',(done) => {
@@ -50,16 +46,16 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .get('/perantoj/')
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.body.length.should.equals(1);
-              done();
-            });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/perantoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -69,18 +65,18 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .put('/perantoj/' + res.body.insertId)
-            .set('x-access-token', token)
-            .send({kampo: 'publikaNomo', valoro: 'new publikaNomo'})
-            .end((err,res) => {
-              res.status.should.be.equal(200);
-              res.body.message.should.equal("Ĝisdatigo sukcese farita");
-              done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .put('/perantoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .send({kampo: 'publikaNomo', valoro: 'new publikaNomo'})
+        .expect(200)
+        .expect((res) => {
+          res.body.message.should.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
     it('it should NOT UPDATE a peranto without token', (done) => {
@@ -88,16 +84,14 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .put('/perantoj/' + res.body.insertId)
-            .send({kampo: 'publikaNomo', valoro: 'new publikaNomo'})
-            .end((err,res) => {
-              res.status.should.be.equal(400);
-              done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .put('/perantoj/' + res.body.insertId)
+        .send({kampo: 'publikaNomo', valoro: 'new publikaNomo'})
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -107,16 +101,14 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .delete('/perantoj/' + res.body.insertId)
-            .set('x-access-token', token)
-            .end((err,res) => {
-              res.status.should.be.equal(204);
-              done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/perantoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
     it('it should NOT DELETE a peranto without token', (done) => {
@@ -124,15 +116,13 @@ describe('==== PERANTO ====', () => {
         .post('/perantoj')
         .send(perantoModel)
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .delete('/perantoj/' + res.body.insertId)
-            .end((err,res) => {
-              res.status.should.be.equal(400);
-              done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/perantoj/' + res.body.insertId)
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
   });
 

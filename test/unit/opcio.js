@@ -16,11 +16,11 @@ describe('==== OPCIO ====', () => {
     it('it should POST opcion',(done) => {
       request
         .get('/opcioj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
+        .expect(200)
+        .expect((res) => {
           res.body.length.should.equals(0);
-          done();
-        });
+        })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -30,20 +30,16 @@ describe('==== OPCIO ====', () => {
         .post('/opcioj')
         .set('x-access-token', token)
         .send(opcioModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          done();
-        });
+        .expect(201)
+      .then((success) => {done()}, (error) => {done(error)});
     });
 
     it('it should NOT POST opcion',(done) => {
       request
         .post('/opcioj')
         .send(opcioModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(400);
-          done();
-        });
+        .expect(400)
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -53,19 +49,19 @@ describe('==== OPCIO ====', () => {
         .post('/opcioj')
         .set('x-access-token', token)
         .send(opcioModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-          .get('/opcioj/' + res.body.insertId)
-          .end((err,res) => {
-            res.status.should.be.equal(200);
-            res.body[0].should.have.property('priskribo');
-            res.body[0].priskribo.should.equal(opcioModel1.priskribo);
-            res.body[0].should.have.property('idVocxdonado');
-            res.body[0].idVocxdonado.should.equal(opcioModel1.idVocxdonado);
-            done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/opcioj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.body[0].should.have.property('priskribo');
+          res.body[0].priskribo.should.equal(opcioModel1.priskribo);
+          res.body[0].should.have.property('idVocxdonado');
+          res.body[0].idVocxdonado.should.equal(opcioModel1.idVocxdonado);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -75,16 +71,14 @@ describe('==== OPCIO ====', () => {
         .post('/opcioj')
         .set('x-access-token', token)
         .send(opcioModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-          .delete('/opcioj/' + res.body.insertId)
-          .set('x-access-token', token)
-          .end((err,res) => {
-            res.status.should.be.equal(204);
-            done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/opcioj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
 
     it('it should NOT DELETE opcion - sen permeso',(done) => {
@@ -92,15 +86,13 @@ describe('==== OPCIO ====', () => {
         .post('/opcioj')
         .set('x-access-token', token)
         .send(opcioModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-          .delete('/opcioj/' + res.body.insertId)
-          .end((err,res) => {
-            res.status.should.be.equal(400);
-            done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/opcioj/' + res.body.insertId)
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 

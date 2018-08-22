@@ -13,11 +13,9 @@ describe('==== URBO ====', () => {
     it('it should GET all the urboj', (done) => {
       request
         .get('/urboj')
-        .end((err, res) => {
-          res.status.should.be.equal(200);
-          done();
-        });
-      });
+        .expect(200)
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
+  });
 
 });

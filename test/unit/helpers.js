@@ -44,6 +44,10 @@ global.generateToken = (permeso) => {
   return jwt.sign(userToken, config.sekretoJWT, {expiresIn: 18000});
 }
 
+global.getToken = (uzanto) => {
+  return jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
+}
+
 global.cleanTable = (name, done) => {
   var query = util.format('DELETE FROM `%s`', name);
   db.mysqlExec(query).then((result) => {});

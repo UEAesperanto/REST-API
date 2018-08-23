@@ -1,6 +1,5 @@
 const express = require('express');
 const passport = require('passport');
-const Auth0Strategy = require('passport-auth0');
 var app = express();
 var cors = require('cors');
 var fs = require('fs');
@@ -48,6 +47,7 @@ vocxdonado = require('./services/vocxdonado');
 anonceto = require('./services/anonceto');
 opcio = require('./services/opcio');
 config = require('./services/config');
+gxirpropono = require('./services/gxirpropono');
 
 // Mouting applications.
 app.use('/uzantoj', uzanto);
@@ -66,25 +66,7 @@ app.use('/revuoj', revuo);
 app.use('/vocxdonadoj', vocxdonado);
 app.use('/opcioj', opcio);
 app.use('/anoncetoj', anonceto);
-
-let strategy = new Auth0Strategy({
-    domain: 'uea.eu.auth0.com',
-    clientID: 'vSU6gfEi5jvlxPj23ejYZpTSwmabubDB',
-    clientSecret: 'xyz',
-    callbackURL:  '/uzantoj/ensaluti/senpasvorto'
-  }, function(accessToken, refreshToken, extraParams, profile, done) {
-    done(null,profile);
-});
-
-passport.use(strategy);
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
-
-// you can use this section to keep a smaller payload
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
+app.use('/gxirpropono', gxirpropono);
 
 //Saluton Mondo
 app.get('/', function (req, res) {

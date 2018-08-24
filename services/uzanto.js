@@ -2,9 +2,6 @@ const express = require('express');
 var uzanto = require('../controllers/uzanto');
 var auth = require('../modules/auth');
 const app = express();
-const handleCallbackError = require('../modules/auth0')();
-const passport = require('passport');
-
 
 var router = express.Router();
 
@@ -49,10 +46,7 @@ app.route('/cxuMembro/:retposxto')
 
 router.route('/ensaluti')
     .post(uzanto.ensaluti);
-
-router.route('/ensaluti/senpasvorto')
-    .get(handleCallbackError, passport.authenticate('auth0'), uzanto.ensalutiSenPasvorto)
-
+    
 router.route('/adapti')
     .post(routerAuth, uzanto.adapti);
 

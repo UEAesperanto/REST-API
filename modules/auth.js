@@ -155,6 +155,39 @@ var _authorizeAdminKomunikisto = function(req, res, next) {
     }
 }
 
+var _authorizeAdminFinancoj = function(req, res, next) {
+  var token = req.headers['x-access-token'];
+  if(token) {
+    jwt.verify(token, config.sekretoJWT, function(err, decoded) {
+      if (err) {
+        return res.status(403).send({ success: false,
+          message: 'La ĵetono (token) ne estas korekta.'});
+      } else {
+        if(decoded.permesoj) {
+          if((decoded.permesoj.indexOf(config.idAdministranto) > -1) ||
+             (decoded.permesoj.indexOf(config.idFinancoj) > -1)) {
+             req.decoded = decoded;
+             next();
+          } else {
+            return res.status(403).send({ success: false,
+              message: 'La ĵetono (token) ne estas korekta.'});
+          }
+        } else {
+          return res.status(403).send({ success: false,
+            message: 'La ĵetono (token) ne estas korekta.'});
+        }
+      }
+    });
+  } else {
+      // Se ne estas ĵetono
+      // redonas eraron
+      return res.status(400).send({
+          success: false,
+          message: 'Sen ĵetono (token).'
+      });
+    }
+}
+
 var _authorizeAdminJuna = function(req, res, next) {
   var token = req.headers['x-access-token'];
   if(token) {
@@ -216,5 +249,6 @@ module.exports = {
   authorizeAdmin: _authorizeAdmin,
   authorizeAdminKomunikisto: _authorizeAdminKomunikisto,
   authorizeUzanto: _authorizeUzanto,
-  authorizeMembro: _authorizeMembro
+  authorizeMembro: _authorizeMembro,
+  authorizeAdminFinancoj: _authorizeAdminFinancoj
 }

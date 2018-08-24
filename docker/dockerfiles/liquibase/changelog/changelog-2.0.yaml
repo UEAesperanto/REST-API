@@ -40,3 +40,16 @@ databaseChangeLog:
                   type: int(11)
                   references: retlisto(id)
             tableName: dissendo
+  - changeSet:
+       id: UniqueConstraintRetlisto
+       author: Ana Ribeiro
+       changes:
+        - changeSet:
+            id: addUniqueConstraint
+            author: Ana Ribeiro
+            changes:
+                - addUniqueConstraint:
+                    columnNames: retadreso
+                    tableName: retlist_abono
+
+ 

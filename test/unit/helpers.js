@@ -8,7 +8,7 @@ var config = require('../../config');
 var async = require('async');
 var {readFileSync} = require('fs');
 
-
+global.bildoPath1 = "test/files/logoo.png";
 global.async = async;
 global.app = app;
 global.config = config;

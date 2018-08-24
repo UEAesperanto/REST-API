@@ -1,111 +1,99 @@
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-const {readFileSync} = require('fs');
-var util = require('util');
-var jwt  = require('jsonwebtoken');
+describe('==== ANONCETO ====', () => {
 
-var server = require('../server');
-var config = require('../config');
-var db = require('../modules/db');
+  var anoncetoModel1 = {
+    'titolo': 'Anoncu ĉi tie',
+    'ligilo': '/pliaj-informoj',
+    'priskribo': 'xyzkwrlkdjf lkjasd',
+    'butono': 'Vidu pli',
+    'gxis': '2018-03-03'
+  };
 
-var expect = chai.expect;
-var should = chai.should();
-chai.use(chaiHttp);
-
-describe('Anoncetoj', function() {
-    var token = '';
-    var insert_sql = "INSERT INTO `anonceto`(id, titolo, ligilo, priskribo, butono, gxis) \
-                      VALUES(1, 'Anoncu ĉi tie', '/pliaj-informoj', 'xyz', 'Vidu pli',  '2018-03-03');"
-    var  anonceto = {'titolo': 'Anoncu ĉi tie',
-      'ligilo': '/pliaj-informoj',
-      'priskribo': 'xyzkwrlkdjf lkjasd',
-      'butono': 'Vidu pli',
-      'gxis': '2018-03-03'};
-
-    beforeEach(function(done){
-      var query = util.format('DELETE FROM `anonceto`;');
-      db.mysqlExec(query);
-
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [3]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('anonceto');
+      token = generateToken();
       done();
+  });
+
+  describe('POST /anoncetoj', () => {
+    it('it should POST Anonceton', (done) => {
+      request
+        .post('/anoncetoj')
+        .set('x-access-token', token)
+        .send(anoncetoModel1)
+        .expect(201)
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
-    //req.body.titolo, req.body.ligilo, req.body.priskribo,
-                      //req.body.butono, req.body.gxis
 
-    it('it should POST Anonceton', function(done){
-      chai.request(server)
-          .post('/anoncetoj')
-          .set('x-access-token', token)
-          .send(anonceto)
-          .end((err, res) => {
-            res.should.have.status(201);
-            done();
-         });
-     });
+    it('it should NOT POST Anonceton - sen permeson', (done) => {
+      request
+        .post('/anoncetoj')
+        .send(anoncetoModel1)
+        .expect(400)
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
 
-     it('it should NOT POST Anonceton - sen permeso', function(done){
-       chai.request(server)
-           .post('/anoncetoj')
-           .send(anonceto)
-           .end((err, res) => {
-             res.should.have.status(400);
-             done();
-          });
-      });
+  describe('GET /anoncetoj', () => {
+    it('it should POST Anonceton', (done) => {
+      request
+        .get('/anoncetoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should GET anonceton - sen anoncetoj', function(done){
-        chai.request(server)
-            .get('/anoncetoj')
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.length.should.equals(0)
-              done();
-           });
-       });
+    it('it should GET anonceton - kun anoncetoj', (done) => {
+      request
+        .post('/anoncetoj')
+        .set('x-access-token', token)
+        .send(anoncetoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/anoncetoj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.body[0].should.have.property('priskribo');
+          res.body[0].priskribo.should.equal('xyzkwrlkdjf lkjasd');
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
 
-       it('it should GET anonceton - kun anoncetoj', function(done){
-         var query = util.format(insert_sql);
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/anoncetoj/1')
-             .end((err, res) => {
-               res.should.have.status(200);
-               res.body[0].should.have.property('id');
-               res.body[0].id.should.equal(1);
-               res.body[0].should.have.property('priskribo');
-               res.body[0].priskribo.should.equal('xyz');
-               done();
-             });
-           });
-      });
+  describe('DELETE /anoncetoj', () => {
+    it('it should DELETE anonceton', (done) => {
+      request
+        .post('/anoncetoj')
+        .set('x-access-token', token)
+        .send(anoncetoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/anoncetoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should DELETE anonceton', function(done) {
-        var query = util.format(insert_sql);
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/anoncetoj/1')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-      });
+    it('it should NOT DELETE anonceton - sen permeso', (done) => {
+      request
+        .post('/anoncetoj')
+        .set('x-access-token', token)
+        .send(anoncetoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/anoncetoj/' + res.body.insertId)
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should NOT DELETE anonceton - sen permeso', function(done) {
-        var query = util.format(insert_sql);
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/anoncetoj/1')
-            .end((err, res) => {
-              res.should.have.status(400);
-              done();
-            });
-          });
-      });
 });

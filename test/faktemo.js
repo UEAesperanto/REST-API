@@ -1,104 +1,111 @@
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-const {readFileSync} = require('fs');
-var util = require('util');
-var jwt  = require('jsonwebtoken');
+describe('==== FAKTEMO ====', () => {
 
-var server = require('../server');
-var config = require('../config');
-var db = require('../modules/db');
+  var token = '';
+  var faktemoModel1 = {
+    nomo : "Edukado",
+    priskribo : "priskribo"
+  };
 
-var expect = chai.expect;
-var should = chai.should();
-chai.use(chaiHttp);
-
-describe('faktemoj', function() {
-    var token = '';
-    var faktemo = {"nomo": "Edukado", "priskribo": "priskribo"}
-
-    beforeEach(function(done){
-      var query = util.format('DELETE FROM `faktemo`;');
-      db.mysqlExec(query);
-
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [1]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('faktemo');
+      token = generateToken();
       done();
-    });
+  });
 
-    it('it should POST faktemon', function(done){
-      chai.request(server)
-          .post('/faktemoj')
-          .set('x-access-token', token)
-          .send(faktemo)
-          .end((err, res) => {
-            res.should.have.status(201);
-            done();
-         });
+  describe('GET /faktemoj', () => {
+    it('it should GET faktemon - sen faktemoj', (done) => {
+      request
+        .get('/faktemoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('GET /faktemoj/:id', () => {
+    it('it should GET faktemon - kun faktemoj', (done) => {
+      request
+        .post('/faktemoj')
+        .set('x-access-token', token)
+        .send(faktemoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/faktemoj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.body[0].should.have.property('nomo');
+          res.body[0].nomo.should.equal(faktemoModel1.nomo);
+          res.body[0].should.have.property('priskribo');
+          res.body[0].priskribo.should.equal(faktemoModel1.priskribo);
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('POST /faktemoj', () => {
+    it('it should NOT POST faktemon - sen permeso', (done) => {
+      request
+        .post('/faktemoj')
+        .send(faktemoModel1)
+        .expect(400)
+      .then((sucess) => {done()}, (error) => {done(error)});
      });
 
-     it('it should NOT POST faktemon - sen permeso', function(done){
-       chai.request(server)
-           .post('/faktemoj')
-           .send(faktemo)
-           .end((err, res) => {
-             res.should.have.status(400);
-             done();
-          });
-      });
+     it('it should POST faktemon', (done) => {
+       request
+        .post('/faktemoj')
+        .set('x-access-token', token)
+        .send(faktemoModel1)
+        .expect(201)
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should GET faktemon - sen faktemoj', function(done){
-        chai.request(server)
-            .get('/faktemoj')
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.length.should.equals(0)
-              done();
-           });
-       });
+  describe('DELETE /faktemoj/:id', () => {
+    it('it should NOT DELETE faktemon - sen permeso', (done) => {
+      request
+        .post('/faktemoj')
+        .set('x-access-token', token)
+        .send(faktemoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/faktemoj/' + res.body.insertId)
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
 
-       it('it should GET faktemon - kun faktemoj', function(done){
-         var query = "INSERT INTO `faktemo`(id, nomo, priskribo)\
-                                  VALUES(1, 'a', 'b')";
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/faktemoj/1')
-             .end((err, res) => {
-               res.should.have.status(200);
-               res.body[0].nomo.should.be.equal("a");
-               res.body[0].priskribo.should.be.equal("b");
-               done();
-             });
-           });
-      });
+    it('it should NOT DELETE faktemon - sen permeso', (done) => {
+      var faktemoId;
+      request
+        .post('/faktemoj')
+        .set('x-access-token', token)
+        .send(faktemoModel1)
+        .expect(201)
+      .then((res) => {
+      faktemoId = res.body.insertId;
+      return request
+        .delete('/faktemoj/' + faktemoId)
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((res) => {
+      return request
+        .get('/faktemoj/' + faktemoId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should DELETE faktemon', function(done) {
-        var query = "INSERT INTO `faktemo`(id, nomo, priskribo)\
-                                 VALUES(1, 'a', 'b')";
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/faktemoj/1')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-      });
-
-      it('it should NOT DELETE faktemon - sen permeso', function(done) {
-        var query = "INSERT INTO `faktemo`(id, nomo, priskribo)\
-                                 VALUES(1, 'a', 'b')";
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/faktemoj/1')
-            .end((err, res) => {
-              res.should.have.status(400);
-              done();
-            });
-          });
-      });
 });

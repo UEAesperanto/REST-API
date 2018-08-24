@@ -2,9 +2,9 @@ var supertest = require('supertest');
 var chai = require('chai');
 var util = require('util');
 var jwt  = require('jsonwebtoken');
-var app = require('../../app').app;
-var db = require('../../modules/db');
-var config = require('../../config');
+var app = require('../app').app;
+var db = require('../modules/db');
+var config = require('../config');
 var async = require('async');
 var {readFileSync} = require('fs');
 

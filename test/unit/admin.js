@@ -1,8 +1,19 @@
 describe('==== ADMIN ====', () => {
+
   var token = ''
-  var uzantoModel1 = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-  var uzantoModel2   = {"uzantnomo":"duauzanto", "pasvorto": "iupasvort"};
-  var rajtojModel1 = {"idRajto": 1};
+  var uzantoModel1 = {
+    "uzantnomo":"unuauzanto",
+    "pasvorto": "iupasvort"
+  };
+
+  var uzantoModel2   = {
+    "uzantnomo":"duauzanto",
+    "pasvorto": "iupasvort"
+  };
+
+  var rajtojModel1 = {
+    "idRajto": 1
+  };
 
   //Before each test we empty the database
   beforeEach((done) => {

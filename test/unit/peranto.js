@@ -1,7 +1,15 @@
 describe('==== PERANTO ====', () => {
+
   var token = '';
-  var uzantoModel = {"uzantnomo":"unuauzanto", "pasvorto": "iupasvort"};
-  var perantoModel = {publikaNomo: 'publikaNomo', retadreso: 'retadreso', idLando: '43'};
+  var uzantoModel = {
+    "uzantnomo":"unuauzanto",
+    "pasvorto": "iupasvort"
+  };
+  var perantoModel = {
+    publikaNomo: 'publikaNomo',
+    retadreso: 'retadreso',
+    idLando: '43'
+  };
 
   //Before each test we empty the database
   beforeEach((done) => {

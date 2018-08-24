@@ -1,4 +1,4 @@
-describe('==== VOCXDONADOJ  ====', () => {
+describe('==== VOCXDONADO  ====', () => {
 
   var vocxdonadoModel1 = {
     "id":1,
@@ -77,7 +77,6 @@ describe('==== VOCXDONADOJ  ====', () => {
     });
   });
 
-
   describe('DELETE /vocxdonadoj', () => {
     it('it should DELETE vocxdonadon', (done) => {
       request
@@ -108,6 +107,5 @@ describe('==== VOCXDONADOJ  ====', () => {
       .then((sucess) => {done()}, (error) => {done(error)});
     });
   });
-
 
 });

@@ -1,4 +1,5 @@
 describe('==== OPCIO ====', () => {
+
   var token = '';
   var opcioModel1 = {
     "priskribo":"priskribo",

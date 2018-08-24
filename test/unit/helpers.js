@@ -8,28 +8,47 @@ var config = require('../../config');
 var async = require('async');
 var {readFileSync} = require('fs');
 
-global.bildoPath1 = "test/files/logoo.png";
-global.async = async;
+var administranto = {
+  id: 1,
+  uzantnomo: 'nomo',
+  permesoj: [1],
+  priskribo:'priskribo'
+};
+
+var uzanto = {
+  id: 2,
+  uzantnomo: 'nomo',
+  permesoj: ['uzanto'],
+  priskribo:'priskribo'
+};
+
+var membro = {
+  id: 3,
+  uzantnomo: 'nomo',
+  permesoj: ['uzanto', 'membro'],
+  priskribo:'priskribo'
+};
+
+
 global.app = app;
-global.config = config;
-global.testConfig = { idLaborgrupo: 1,
-                  idMembrecgrupo: 2,
-                  idAldonaMembrecgrupo: 3,
-                  idJunajGrupoj: 4,
-                  idBazaMembreco: 1,
-                  idAdministranto: 1,
-                  idJunaAdministranto: 2,
-                  idKomunikisto: 3,
-                  junaAgxo: 35
-                };
 global.request = supertest(app);
+global.async = async;
 global.expect = chai.expect;
 global.should = chai.should();
 global.readFileSync = readFileSync;
-
-var administranto = { id: 1, uzantnomo: 'nomo', permesoj: [1], priskribo:'priskribo'};
-var uzanto = { id: 2, uzantnomo: 'nomo', permesoj: ['uzanto'], priskribo:'priskribo'};
-var membro = { id: 3, uzantnomo: 'nomo', permesoj: ['uzanto', 'membro'], priskribo:'priskribo'};
+global.config = config;
+global.bildoPath1 = "test/files/logoo.png";
+global.pdfPath1 = "test/files/LIBRO.pdf";
+global.testConfig = { idLaborgrupo: 1,
+  idMembrecgrupo: 2,
+  idAldonaMembrecgrupo: 3,
+  idJunajGrupoj: 4,
+  idBazaMembreco: 1,
+  idAdministranto: 1,
+  idJunaAdministranto: 2,
+  idKomunikisto: 3,
+  junaAgxo: 35
+};
 
 global.generateToken = (permeso) => {
   var userToken;

@@ -1,8 +1,24 @@
 describe('==== DISSENDO ====', () => {
+
   var token = ''
-  var retlistoModel1 = { nomo: 'nomo', priskribo: 'priskribo'};
-  var dissendoModel1 = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto'};
-  var abonantoModel1 = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true, retadreso:'email@email.com'};
+  var retlistoModel1 = {
+    nomo: 'nomo',
+    priskribo: 'priskribo'
+  };
+
+  var dissendoModel1 = {
+    dissendanto: 1,
+    dato: '1996-05-05',
+    temo:'temo',
+    teksto:'teksto'
+  };
+
+  var abonantoModel1 = {
+    ekde: '1996-05-05',
+    formato_html:true,
+    kodigxo_utf8:true,
+    retadreso:'email@email.com'
+  };
 
   //Before each test we empty the database
   beforeEach((done) => {

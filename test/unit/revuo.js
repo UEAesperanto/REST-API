@@ -1,4 +1,4 @@
-describe('==== REVUO ====', () => { 
+describe('==== REVUO ====', () => {
   var revuoModel1 = {
     "titolo":"Revuo Esperanto",
     fondjaro:1920,
@@ -152,7 +152,7 @@ describe('==== REVUO ====', () => {
       volumeId = res.body.insertId;
       return request
         .post('/revuoj/volumoj/' + volumeId +'/bildo')
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .attach("file", readFileSync(bildoPath1), "file.test")
         .expect(400)
       })
       .then((success) => {done()}, (error) => {done(error)});
@@ -176,7 +176,7 @@ describe('==== REVUO ====', () => {
       return request
         .post('/revuoj/volumoj/' + volumeId +'/bildo')
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
+        .attach("file", readFileSync(bildoPath1), "file.test")
         .expect(201)
       })
       .then((res) => {
@@ -212,7 +212,7 @@ describe('==== REVUO ====', () => {
       volumeId = res.body.insertId;
       return request
         .post('/revuoj/volumoj/' + volumeId +'/kvalita')
-        .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+        .attach("file", readFileSync(pdfPath1), "file.test")
         .expect(400)
       })
       .then((success) => {done()}, (error) => {done(error)});
@@ -236,7 +236,7 @@ describe('==== REVUO ====', () => {
       return request
         .post('/revuoj/volumoj/' + volumeId +'/kvalita')
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
+        .attach("file", readFileSync(pdfPath1), "file.test")
         .expect(201)
       })
       .then((res) => {

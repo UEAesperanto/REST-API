@@ -1,4 +1,4 @@
-describe('==== ANONCETOJ ====', () => {
+describe('==== ANONCETO ====', () => {
 
   var anoncetoModel1 = {
     'titolo': 'Anoncu ĉi tie',

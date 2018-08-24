@@ -1,5 +1,5 @@
 describe('==== LANDO ====', () => {
-  var Lando = require('../../models/lando');
+
   var token = '';
   var landoModel1 = {
     valuto : "eur",

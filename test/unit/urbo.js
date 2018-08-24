@@ -1,6 +1,5 @@
 describe('==== URBO ====', () => {
 
-
   //Before each test we empty the database
   beforeEach((done) => {
       createAdmin();

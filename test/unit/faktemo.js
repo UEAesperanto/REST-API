@@ -1,5 +1,5 @@
 describe('==== FAKTEMO ====', () => {
-  var Faktemo = require('../../models/faktemo');
+
   var token = '';
   var faktemoModel1 = {
     nomo : "Edukado",

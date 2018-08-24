@@ -1,7 +1,15 @@
 describe('==== GRUPO ====', () => {
+
   tokenAdmin = '';
-  grupoModel1 = {mallongigilo: 'mallongigilo' , nomo: 'nomo', priskribo: 'priskribo'};
-  kategoriojModel1 = {nomo: 'laboro'};
+  grupoModel1 = {
+    mallongigilo: 'mallongigilo' ,
+    nomo: 'nomo',
+    priskribo: 'priskribo'
+  };
+
+  kategoriojModel1 = {
+    nomo: 'laboro'
+  };
 
   //Before each test we empty the database
   beforeEach((done) => {
@@ -15,7 +23,6 @@ describe('==== GRUPO ====', () => {
       generateKategorioj();
       done();
   });
-
 
   describe('GET /grupoj', () => {
     it('it should GET all the grupoj',(done) => {

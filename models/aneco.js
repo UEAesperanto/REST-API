@@ -44,7 +44,7 @@ var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
   db.escapeArgs(arguments);
   var query = util.format ('INSERT into aneco (idAno, idGrupo, komencdato, findato,\
                             dumviva, tasko, respondeco, idAsocio, idUrbo, observoj, idGxirpropono, aprobita)\
-                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);',
+                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko,
                             respondeco, idAsocio, idUrbo, observoj, idGxirpropono, aprobita);
   return db.mysqlExec(query);

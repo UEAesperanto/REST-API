@@ -111,3 +111,54 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+  - changeSet:
+      id: financoj
+      author: Ana Ribeiro
+      changes:
+        - addColumn:
+                columns:
+                - column:
+                    name: traktita
+                    type: boolean
+                tableName: gxirpropono
+        - addColumn:
+            columns:
+              - column:
+                  name: pagmaniero
+                  type: varchar(255)
+            tableName: gxirpropono
+        - addColumn:
+            columns:
+              - column:
+                  name: aligxo
+                  type: boolean
+            tableName: gxirpropono
+        - addColumn:
+            columns:
+              - column:
+                  name: valuto
+                  type: varchar(3)
+            tableName: gxirpropono
+        - addColumn:
+            columns:
+              - column:
+                  name: kvanto
+                  type: int(11)
+            tableName: gxirpropono
+        - addColumn:
+            columns:
+              - column:
+                  name: idGxirpropono
+                  type: int(11)
+                  references: gxirpropono(id)
+            tableName: gxirpropono  
+        - insert:
+            tableName: adminrajto
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: nomo
+                  value: financoj
+

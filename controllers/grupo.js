@@ -103,7 +103,7 @@ var insertAneco = function(req, res, aprobita) {
   Aneco.insertAneco(req.body.idAno, req.params.id, req.body.komencdato,
                     req.body.findato, req.body.dumviva, req.body.tasko,
                     req.body.respondeco, req.body.idAsocio, req.body.idUrbo,
-                    req.body.observoj, aprobita).then(
+                    req.body.observoj, req.body.idGxirpropono, aprobita).then(
                    function(result) {
                      if(req.body.faktemoj) {
                        promise_all = [];

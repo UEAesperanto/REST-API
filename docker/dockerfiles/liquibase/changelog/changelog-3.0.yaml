@@ -9,3 +9,13 @@ databaseChangeLog:
                   name: gxis
                   type: date
             tableName: anonceto
+  - changeSet:
+      id: Aneco-Gxipropono
+      author: Victor Hugo
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: idGxirpropono
+                  type: int
+            tableName: aneco

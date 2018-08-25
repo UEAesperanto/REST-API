@@ -10,57 +10,56 @@ describe('==== Gxirproponoj ====', () => {
       kvanto: 199
     };
 
-    beforeEach(function(done){
+    beforeEach((done) => {
       cleanTable('gxirpropono');
       tokenAdmin = generateToken([4]);
       done();
     });
 
-    it('it should POST Gxirproponojn', function(done){
-      request
-          .post('/gxirpropono')
-          .send(gxirpropono)
-          .end((err, res) => {
-            res.status.should.be.equal(201);
-            request
-            .get('/gxirpropono')
-            .set('x-access-token', tokenAdmin)
-            .end((err, res) => {
-              res.status.should.be.equal(200);
-              res.body.length.should.equals(1);
-              console.log(res.body[0]);
-              done();
-           });
-         });
-     });
-
-     it('it should update gxirpropono', function(done){
+    it('it should POST Gxirproponojn', (done) => {
       request
         .post('/gxirpropono')
         .send(gxirpropono)
-        .end((err, res) => {
-        request
-          .put('/gxirpropono/' + res.body.insertId)
-          .set('x-access-token', tokenAdmin)
-          .send({kampo: 'valuto', valoro: 'gbp'})
-          .end((err, res) => {
-            res.status.should.be.equal(200);
-            res.clientError.should.be.equal(false);
-            res.serverError.should.be.equal(false);
-            res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
-            done();
-          });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/gxirpropono')
+        .set('x-access-token', tokenAdmin)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
      });
 
-      it('it should GET TABLEn - sen Gxirproponoj', function(done){
+     it('it should update gxirpropono', (done) => {
+      request
+        .post('/gxirpropono')
+        .send(gxirpropono)
+      .then((res) => {
+      return request
+        .put('/gxirpropono/' + res.body.insertId)
+        .set('x-access-token', tokenAdmin)
+        .send({kampo: 'valuto', valoro: 'gbp'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+     });
+
+      it('it should GET TABLEn - sen Gxirproponoj', (done) => {
         request
-            .get('/gxirpropono')
-            .set('x-access-token', tokenAdmin)
-            .end((err, res) => {
-              res.status.should.be.equal(200);
-              res.body.length.should.equals(0);
-              done();
-           });
+          .get('/gxirpropono')
+          .set('x-access-token', tokenAdmin)
+          .expect(200)
+          .expect((res) => {
+            res.body.length.should.equals(0);
+          })
+        .then((success) => {done()}, (error) => {done(error)});
        });
 });

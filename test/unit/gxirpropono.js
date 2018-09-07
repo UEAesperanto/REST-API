@@ -1,91 +1,65 @@
 describe('==== Gxirproponoj ====', () => {
     var token = '';
     var gxirpropono = {
-      valuto : "eur",
-      radikoEo : "radiko",
-      finajxoEo: "finajxo",
-      landkodo : "l1"
+      idGxiranto : 1,
+      kialo : "radiko",
+      traktita: false,
+      pagmaniero : "paypal",
+      aligxo: true,
+      valuto: "EUR",
+      kvanto: 199
     };
-  
 
-    beforeEach(function(done){
-      var query = util.format('DELETE FROM `gxirpropono`;');
-      db.mysqlExec(query);
-
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [4]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+    beforeEach((done) => {
+      cleanTable('gxirpropono');
+      tokenAdmin = generateToken([4]);
       done();
     });
 
-    it('it should POST Gxirproponojn', function(done){
-      chai.request(server)
-          .post('/Gxirproponoj')
-          .set('x-access-token', token)
-          .send(gxirpropono)
-          .end((err, res) => {
-            res.should.have.status(201);
-            done();
-         });
+    it('it should POST Gxirproponojn', (done) => {
+      request
+        .post('/gxirpropono')
+        .send(gxirpropono)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/gxirpropono')
+        .set('x-access-token', tokenAdmin)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
      });
 
-     it('it should NOT POST TABLEn - sen permeso', function(done){
-       chai.request(server)
-           .post('/Gxirproponoj')
-           .send(gxirpropono)
-           .end((err, res) => {
-             res.should.have.status(400);
-             done();
-          });
-      });
+     it('it should update gxirpropono', (done) => {
+      request
+        .post('/gxirpropono')
+        .send(gxirpropono)
+      .then((res) => {
+      return request
+        .put('/gxirpropono/' + res.body.insertId)
+        .set('x-access-token', tokenAdmin)
+        .send({kampo: 'valuto', valoro: 'gbp'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+     });
 
-      it('it should GET TABLEn - sen Gxirproponoj', function(done){
-        chai.request(server)
-            .get('/Gxirproponoj')
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.length.should.equals(0)
-              done();
-           });
+      it('it should GET TABLEn - sen Gxirproponoj', (done) => {
+        request
+          .get('/gxirpropono')
+          .set('x-access-token', tokenAdmin)
+          .expect(200)
+          .expect((res) => {
+            res.body.length.should.equals(0);
+          })
+        .then((success) => {done()}, (error) => {done(error)});
        });
-
-       it('it should GET TABLEn - kun Gxirproponoj', function(done){
-         var query = util.format(INSERT_SQL);
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/Gxirproponoj/1')
-             .end((err, res) => {
-               res.should.have.status(200);
-               done();
-             });
-           });
-      });
-
-      it('it should DELETE TABLEn', function(done) {
-        var query = util.format(INSERT_SQL);
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/Gxirproponoj/1')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-      });
-
-      it('it should NOT DELETE TABLEn - sen permeso', function(done) {
-        var query = util.format(INSERT_SQL);
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/Gxirproponoj/1')
-            .end((err, res) => {
-              res.should.have.status(400);
-              done();
-            });
-          });
-      });
 });

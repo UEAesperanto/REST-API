@@ -29,7 +29,9 @@ var _getGxiro = function(req, res){
   POST /Gxiroj
 */
 var _postGxiro = function(req, res) {
-    Gxiro.insertGxiro(REQ_BODY).then(
+    Gxiro.insertGxiro(req.body.idGxiranto, req.body.idRicevanto, 
+      req.body.kialo, req.body.traktita, req.body.aligxo, 
+      req.body.kvanto,req.body.valuto).then(
       function(sucess){
         if(sucess) {
           res.status(201).send({insertId: sucess.insertId});

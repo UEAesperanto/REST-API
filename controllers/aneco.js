@@ -17,7 +17,7 @@ var configMail = require('../configMail.js');
    GET /grupo/membrecoj/:id/kotizoj
 */
 var _getKotizoj = function(req, res){
-  Aneco.findGrupo(req.params.id).then(function(sucess){
+  Aneco.findKotizoj(req.params.id).then(function(sucess){
         var kotizoj = sucess;
         kotizoj = kotizoj.filter(query.search(req.query));
         res.status(200).send(kotizoj);

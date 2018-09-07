@@ -17,11 +17,11 @@ describe('==== DISSENDO ====', () => {
     it('it should GET empty retlistoj',(done) => {
       request
         .get('/dissendoj/retlistoj')
-        .end((err,res) => {
-          res.status.should.be.equal(200);
+        .expect(200)
+        .expect((res) => {
           res.body.length.should.equals(0);
-          done();
-        });
+        })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -30,11 +30,11 @@ describe('==== DISSENDO ====', () => {
       request
         .get('/dissendoj')
         .set('x-access-token', token)
-        .end((err,res) => {
-          res.status.should.be.equal(200);
+        .expect(200)
+        .expect((res) => {
           res.body.length.should.equals(0);
-          done();
-        });
+        })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -44,10 +44,8 @@ describe('==== DISSENDO ====', () => {
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
         .send(retlistoModel1)
-        .end((err, res) => {
-          res.status.should.be.equal(201);
-          done();
-        });
+        .expect(201)
+      .then((success) => {done()}, (error) => {done(error)});
       });
    });
 
@@ -57,18 +55,16 @@ describe('==== DISSENDO ====', () => {
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
         .send(retlistoModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          dissendoModel1["idRetlisto"] = res.body.insertId;
-          request
-            .post('/dissendoj')
-            .set('x-access-token', token)
-            .send(dissendoModel1)
-            .end((err,res) => {
-              res.status.should.be.equal(201);
-              done();
-            });
-        });
+        .expect(201)
+      .then((res) => {
+      dissendoModel1["idRetlisto"] = res.body.insertId;
+      return request
+        .post('/dissendoj')
+        .set('x-access-token', token)
+        .send(dissendoModel1)
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -78,17 +74,15 @@ describe('==== DISSENDO ====', () => {
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
         .send(retlistoModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .post('/dissendoj/retlistoj/' + res.body.insertId + '/abonantoj')
-            .set('x-access-token', token)
-            .send(abonantoModel1)
-            .end((err,res) => {
-              res.status.should.be.equal(201);
-              done();
-            });
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/dissendoj/retlistoj/' + res.body.insertId + '/abonantoj')
+        .set('x-access-token', token)
+        .send(abonantoModel1)
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -98,24 +92,22 @@ describe('==== DISSENDO ====', () => {
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
         .send(retlistoModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          dissendoModel1["idRetlisto"] = res.body.insertId;
-          request
-            .post('/dissendoj')
-            .set('x-access-token', token)
-            .send(dissendoModel1)
-            .end((err,res) => {
-              res.status.should.be.equal(201);
-              request
-                .get('/dissendoj/' + res.body.insertId)
-                .set('x-access-token', token)
-                .end((err,res) => {
-                  res.status.should.be.equal(200);
-                  done();
-                });
-            });
-        });
+        .expect(201)
+      .then((res) => {
+      dissendoModel1["idRetlisto"] = res.body.insertId;
+      return request
+        .post('/dissendoj')
+        .set('x-access-token', token)
+        .send(dissendoModel1)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/dissendoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
 
@@ -125,21 +117,18 @@ describe('==== DISSENDO ====', () => {
         .post('/dissendoj/retlistoj')
         .set('x-access-token', token)
         .send(retlistoModel1)
-        .end((err,res) => {
-          res.status.should.be.equal(201);
-          request
-            .delete('/dissendoj/retlistoj/' + res.body.insertId)
-            .set('x-access-token', token)
-            .end(function (err, res) {
-                res.status.should.be.equal(200);
-                res.body.message.should.equal("Ok");
-                done();
-            });
-
-        });
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/dissendoj/retlistoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) => {
+          res.body.message.should.equal("Ok");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
   });
-
-
 
 });

@@ -20,14 +20,13 @@ var _insertFaktemo  = function(idAneco, idFaktemo) {
    return db.mysqlExec(query);
 }
 
-var _findGrupo = function(idGrupo){
+var _findKotizoj = function(idGrupo){
   idGrupo = db.escape(idGrupo);
-  var query = util.format('SELECT * FROM `aneckotizo` JOIN `grupo`\
+  var query = util.format('SELECT aneckotizo.* FROM `aneckotizo` JOIN `grupo` \
                            ON aneckotizo.idGrupo = grupo.id \
                            WHERE idGrupo = %s;', idGrupo);
   return db.mysqlExec(query);
 }
-
 var _updateKotizo = function(id, kampo, valoro) {
   id = db.escape(id);
   kampo = db.escapeId(kampo);
@@ -40,13 +39,13 @@ var _updateKotizo = function(id, kampo, valoro) {
 
 
 var _insertAneco = function(idAno, idGrupo, komencdato, findato, dumviva, tasko,
-                            respondeco, idAsocio, idUrbo, observoj, aprobita) {
+                            respondeco, idAsocio, idUrbo, observoj,idGxirpropono, aprobita) {
   db.escapeArgs(arguments);
   var query = util.format ('INSERT into aneco (idAno, idGrupo, komencdato, findato,\
-                            dumviva, tasko, respondeco, idAsocio, idUrbo, observoj, aprobita)\
-                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);',
+                            dumviva, tasko, respondeco, idAsocio, idUrbo, observoj, idGxirpropono, aprobita)\
+                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s);',
                             idAno, idGrupo, komencdato, findato, dumviva, tasko,
-                            respondeco, idAsocio, idUrbo, observoj, aprobita);
+                            respondeco, idAsocio, idUrbo, observoj, idGxirpropono, aprobita);
   return db.mysqlExec(query);
 }
 
@@ -77,7 +76,7 @@ var _deleteAneco = function(id) {
 
 module.exports = {
   insertKotizo: _insertKotizo,
-  findGrupo: _findGrupo,
+  findKotizoj: _findKotizoj,
   deleteAneco: _deleteAneco,
   updateKotizo: _updateKotizo,
   updateAneco: _updateAneco,

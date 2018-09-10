@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "mocha --timeout 10000",
-    "test-unit": "mocha --opts test/unit/mocha.opts test/unit/*.js"
+    "test-unit": "mocha --opts test/mocha.opts test/*.js"
   },
   "dependencies": {
     "audit": "0.0.6",

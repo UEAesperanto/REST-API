@@ -1,133 +1,150 @@
-//Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../server');
-var db = require('../modules/db');
-var util = require('util');
-var should = chai.should();
-var expect = chai.expect;
-var Lando = require('../models/dissendo');
-var Retlisto = require('../models/retlisto');
-var jwt  = require('jsonwebtoken');
-var config = require('../config');
+describe('==== DISSENDO ====', () => {
 
-chai.use(chaiHttp);
-describe('Dissendoj', function() {
-    var token = '';
-    beforeEach( function(done) { //Before each test we empty the database
-      var query = util.format('DELETE FROM `dissendo`');
-      db.mysqlExec(query).then(function(result){});
-      var query = util.format('DELETE FROM `retlisto`');
-      db.mysqlExec(query).then(function(result){});
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [3]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  var token = ''
+  var retlistoModel1 = {
+    nomo: 'nomo',
+    priskribo: 'priskribo'
+  };
+
+  var dissendoModel1 = {
+    dissendanto: 1,
+    dato: '1996-05-05',
+    temo:'temo',
+    teksto:'teksto'
+  };
+
+  var abonantoModel1 = {
+    ekde: '1996-05-05',
+    formato_html:true,
+    kodigxo_utf8:true,
+    retadreso:'email@email.com'
+  };
+
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('dissendo');
+      cleanTable('retlisto');
+      token = generateToken();
       done();
+  });
+
+  describe('GET /dissendoj/retlistoj', () => {
+    it('it should GET empty retlistoj',(done) => {
+      request
+        .get('/dissendoj/retlistoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      .then((success) => {done()}, (error) => {done(error)});
     });
+  });
 
-    var retlisto = { nomo: 'nomo', priskribo: 'priskribo'};
-    var dissendo = { dissendanto: 1, dato: '1996-05-05', temo:'temo', teksto:'teksto', idRetlisto: 1};
-    var abonanto = { ekde: '1996-05-05', formato_html:true, kodigxo_utf8:true, retadreso:'email@email.com'};
+  describe('GET /dissendoj', () => {
+    it('it should GET all the asocioj',(done) => {
+      request
+        .get('/dissendoj')
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
 
-
-    describe('GET /dissendoj', function(){
-     it('it should GET empty dissendoj', function(done){
-       chai.request(server)
-           .get('/dissendoj')
-           .set('x-access-token', token)
-           .end((err, res) => {
-               res.should.have.status(200);
-               res.body.length.should.equals(0);
-               done();
-           });
-     });
-
-
-     describe('POST /dissendoj', function(){
-         it('it should POST a dissendo - with token', function (done) {
-             chai.request(server)
-                 .post('/dissendoj')
-                 .set('x-access-token', token)
-                 .send(dissendo)
-                 .end(function (err, res) {
-                     res.should.have.status(201)
-                     done();
-                 });
-            });
+  describe('POST /dissendoj/retlistoj', () =>{
+    it('it should POST a retlisto - with token', (done) => {
+      request
+        .post('/dissendoj/retlistoj')
+        .set('x-access-token', token)
+        .send(retlistoModel1)
+        .expect(201)
+      .then((success) => {done()}, (error) => {done(error)});
       });
-
-      describe('GET /dissendoj/:id', function(){
-          it('it should GET a retlisto - with token', function (done) {
-                  var query = util.format('INSERT INTO dissendo VALUES (1, 1, "1996-05-05", "temo", "teksto", 1);');
-                  db.mysqlExec(query).then(function(result){
-                     chai.request(server)
-                     .get('/dissendoj/1')
-                     .set('x-access-token', token)
-                     .end((err, res) => {
-                       res.should.have.status(200);
-                       done();
-                     });
-               });
-         });
-      });
-
-      describe('GET /dissendoj/retlistoj', function(){
-       it('it should GET empty retlistoj', function(done){
-         chai.request(server)
-             .get('/dissendoj/retlistoj')
-             .end((err, res) => {
-                 res.should.have.status(200);
-                 res.body.length.should.equals(0);
-                 done();
-             });
-           });
-        });
-
-        describe('POST /dissendoj/retlistoj', function(){
-            it('it should POST a dissendo - with token', function (done) {
-                chai.request(server)
-                    .post('/dissendoj/retlistoj')
-                    .set('x-access-token', token)
-                    .send(retlisto)
-                    .end(function (err, res) {
-                        res.should.have.status(201)
-                        done();
-                    });
-               });
-         });
-
-         describe('DELETE /dissendoj/retlistoj', function(){
-             it('it should DELETE a retlisto - with token', function (done) {
-                     Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
-                         chai.request(server)
-                             .delete('/dissendoj/retlistoj/' + success.insertId)
-                             .set('x-access-token', token)
-                             .end(function (err, res) {
-                                 res.should.have.status(200);
-                                 res.body.message.should.equal("Ok");
-                                 done();
-                             });
-                        });
-                  });
-            });
-
-            describe('POST /dissendoj/retlistoj/:id/abonantoj', function(){
-                it('it should POST a dissendo - with token', function (done) {
-                   Retlisto.insert(retlisto.nomo, retlisto.priskribo).then(function (success) {
-                     chai.request(server)
-                       .post('/dissendoj/retlistoj/' + success.insertId + '/abonantoj')
-                       .set('x-access-token', token)
-                       .send(abonanto)
-                       .end(function (err, res) {
-                           res.should.have.status(201);
-                           done();
-                         });
-                    });
-                });
-            });
-
    });
+
+  describe('POST /dissendoj', () => {
+    it('it should POST a dissendo - with token', (done) => {
+      request
+        .post('/dissendoj/retlistoj')
+        .set('x-access-token', token)
+        .send(retlistoModel1)
+        .expect(201)
+      .then((res) => {
+      dissendoModel1["idRetlisto"] = res.body.insertId;
+      return request
+        .post('/dissendoj')
+        .set('x-access-token', token)
+        .send(dissendoModel1)
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('POST /dissendoj/retlistoj/:id/abonantoj', () => {
+    it('it should POST a dissendo 2- with token',(done) => {
+      request
+        .post('/dissendoj/retlistoj')
+        .set('x-access-token', token)
+        .send(retlistoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/dissendoj/retlistoj/' + res.body.insertId + '/abonantoj')
+        .set('x-access-token', token)
+        .send(abonantoModel1)
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('GET /dissendoj/:id', () => {
+    it('it should POST a dissendo - with token', (done) => {
+      request
+        .post('/dissendoj/retlistoj')
+        .set('x-access-token', token)
+        .send(retlistoModel1)
+        .expect(201)
+      .then((res) => {
+      dissendoModel1["idRetlisto"] = res.body.insertId;
+      return request
+        .post('/dissendoj')
+        .set('x-access-token', token)
+        .send(dissendoModel1)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/dissendoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(200)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('DELETE /dissendoj/retlistoj', () => {
+    it('it should DELETE a retlisto - with token', (done) => {
+      request
+        .post('/dissendoj/retlistoj')
+        .set('x-access-token', token)
+        .send(retlistoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/dissendoj/retlistoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) => {
+          res.body.message.should.equal("Ok");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
+
 });

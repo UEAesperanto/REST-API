@@ -1,367 +1,476 @@
-//Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-const {readFileSync} = require('fs');
-var util = require('util');
-var jwt  = require('jsonwebtoken');
-var async = require('async');
+describe('==== UZANTO ====', () => {
 
-var server = require('../server');
-var db = require('../modules/db');
-var Uzanto = require('../models/uzanto');
-var Lando = require('../models/lando');
-var config = require('../config');
+  var uzanto = {
+    "uzantnomo" : "retposxto@io.com",
+    "pasvorto" : "nomoLoka",
+    "personanomo": "personanomo",
+    "titolo":"titolo",
+    "adreso":"adreso",
+    "posxtkodo":"idNacialando",
+    "idLando": 1,
+    "naskigxtago": "1996-05-05",
+    "retposxto":"retposxto@io.com"
+  };
 
-var should = chai.should();
+  var uzantoSenUzantnomo = {
+    "personanomo": "personanomo",
+    "titolo":"titolo",
+    "adreso":"adreso",
+    "posxtkodo":"idNacialando",
+    "idLando": 1,
+    "naskigxtago": "1996-05-05"
+  };
 
-chai.use(chaiHttp);
-describe('Uzantoj', function() {
-    var uzanto = {"uzantnomo" : "retposxto@io.com",
-      "pasvorto" : "nomoLoka",
-      "personanomo": "personanomo",
-      "titolo":"titolo",
-      "adreso":"adreso",
-      "posxtkodo":"idNacialando",
-      "idLando": 1,
-      "naskigxtago": "1996-05-05",
-      "retposxto":"retposxto@io.com"};
+  var uzanto_ueakodo = {
+    "uzantnomo" : "retposxto@io.com",
+     "pasvorto" : "nomoLoka",
+     "personanomo": "personanomo",
+     "titolo":"titolo",
+     "adreso":"adreso",
+     "posxtkodo":"idNacialando",
+     "idLando": 1,
+     "naskigxtago": "1996-05-05",
+     "ueakodo":"aamcf"
+   };
 
-    var uzantoSenUzantnomo = { "personanomo": "personanomo",
-      "titolo":"titolo",
-      "adreso":"adreso",
-      "posxtkodo":"idNacialando",
-      "idLando": 1,
-      "naskigxtago": "1996-05-05"};
+   var permesatajKampoj = [
+     "uzantnomo",
+     "retposxto",
+     "tttpagxo",
+     "telhejmo",
+     "teloficejo",
+     "telportebla",
+     "titolo"
+   ];
 
-    var uzanto_ueakodo = {"uzantnomo" : "retposxto@io.com",
-       "pasvorto" : "nomoLoka",
-       "personanomo": "personanomo",
-       "titolo":"titolo",
-       "adreso":"adreso",
-       "posxtkodo":"idNacialando",
-       "idLando": 1,
-       "naskigxtago": "1996-05-05",
-       "ueakodo":"aamcf"};
+   var uzantoUpdate = [
+     {"uzantnomo" : "retposxto@io.com"},
+     {"pasvorto" : "nmoLoka"},
+     {"personanomo": "prsonanomo"},
+     {"titolo":"titol"},
+     {"adreso":"adreo"},
+     {"posxtkodo":"iNacialando"},
+     {"idLando": 2},
+     {"naskigxtago": "1995-05-05"},
+     {"retposxto":"retposxto@io.com"}
+   ];
 
-    describe('Testoj sen Uzantoj /uzantoj', function(){
-      beforeEach(function(done) {
-        var query = util.format('DELETE FROM `uzantoAuxAsocio`;');
-        db.mysqlExec(query);
-        query = util.format('DELETE FROM `uzanto`;');
-        db.mysqlExec(query);
-        var administranto = {
-          id: 1,
-          uzantnomo: 'nomo',
-          permesoj: [1]
-        };
-        token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
-        done();
-      });
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('uzantoAuxAsocio');
+      cleanTable('uzanto');
+      token = generateToken();
+      tokenUzanto = generateToken('uzanto');
+      done();
+  });
 
-      it('it should POST a uzanto', function(done){
-        chai.request(server)
+  describe('POST /uzantoj', () => {
+    it('it should POST a uzanto', (done) => {
+      request
         .post('/uzantoj')
         .send(uzanto_ueakodo)
-        .end(function(err, res){
-          res.should.have.status(201);
-          res.body.should.have.property('id');
-          var query = util.format('SELECT * FROM `uzantoAuxAsocio` WHERE `id` = %s;', res.body.id);
-          db.mysqlExec(query).then(
-            function(res) {
-              res[0].should.have.property('ueakodo');
-              res[0].ueakodo.should.be.equal('aamcf');
-              done();
-            });
-        });
-      });
+        .expect(201)
+      .then((res) => {
+      uzanto_ueakodo["id"] = res.body.id;
+      return request
+        .get('/uzantoj/' + res.body.id)
+        .expect(200)
+        .set('x-access-token', getToken(uzanto_ueakodo))
+        .expect((res) => {
+          res.body[0].ueakodo.should.equals('aamcf');
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should POST a uzanto kun UEA-kodo', function(done){
-        chai.request(server)
+    it('it should POST a uzanto kun UEA-kodo', (done) => {
+      request
         .post('/uzantoj')
         .send(uzantoSenUzantnomo)
-        .end(function(err, res){
-          res.should.have.status(201);
+        .expect(201)
+        .expect((res) => {
           res.body.should.have.property('id');
-          done();
-        });
-      });
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-
-      it('it should POST a uzanto sen uzantnomo', function(done){
-        chai.request(server)
+    it('it should POST a uzanto sen uzantnomo', (done) => {
+      request
         .post('/uzantoj')
         .send(uzanto)
-        .end(function(err, res){
-          res.should.have.status(201);
+        .expect(201)
+        .expect((res) => {
           res.body.should.have.property('id');
-          done();
-        });
-      });
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-      it('forgesis pasvorton sen uzanto', function(done){
-        chai.request(server)
+  });
+
+  describe('POST /uzantoj/forgesisPasvorton', () => {
+    it('forgesis pasvorton sen uzanto', (done) => {
+      request
         .post('/uzantoj/forgesisPasvorton')
         .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
-        .end(function(err, res){
-          res.should.have.status(400);
-          done();
-        });
-      });
+        .expect(400)
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-      it('should get false email', function(done){
-        chai.request(server)
+  describe('GET /uzantoj/cxuMembro/:retposxto', () => {
+    it('should get false email', (done) => {
+      request
         .get('/uzantoj/cxuMembro/retposxto@io.com')
-        .end(function(err, res) {
-          res.should.have.status(200);
+        .expect(200)
+        .expect((res) => {
           res.body.should.have.property('membro');
           res.body.membro.should.equal(false);
-          done();
-        });
-      });
-    });
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-    describe('Testoj kun uzantoj en la sistemo', function(){
-      var idUzanto;
-
-      var uzanto = {
-        "naskigxtago": "1996-05-05",
-        "retposxto":"retposxto@io.com"};
-
-      beforeEach(function(done) {
-        chai.request(server)
-            .post('/uzantoj')
-            .send(uzanto)
-            .end(function(err, res) {
-              idUzanto = res.body.id;
-              var administranto = {
-                id: 1,
-                uzantnomo: 'nomo',
-                permesoj: [1]
-              };
-              token = jwt.sign(administranto,
-                               config.sekretoJWT, {expiresIn: 18000});
-              var uzanto = {
-                 id: idUzanto,
-                 permesoj: ['uzanto']
-               };
-
-              tokenUzanto = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
-              done();
-            });
-      });
-
-      var permesatajKampoj = ["uzantnomo", "pasvorto", "retposxto",
-                              "tttpagxo", "telhejmo", "teloficejo",
-                              "telportebla", "titolo"];
-
-    async.each(permesatajKampoj, function(item, callback) {
-      describe('PUT /uzantoj - UZANTO # ' + item, function () {
-        it('Devus ĝisdatigi uzanton', function (done) {
-          chai.request(server)
-          .put('/uzantoj/' + idUzanto)
-          .set('x-access-token', tokenUzanto)
+  describe('PUT /uzantoj/:id', () => {
+    async.each(permesatajKampoj, (item, callback) => {
+      it('Devus ĝisdatigi uzanton - Kampo:' + item, (done) => {
+        var uzantoId;
+        request
+          .post('/uzantoj')
+          .send(uzanto_ueakodo)
+          .expect(201)
+        .then((res) => {
+        uzantoId = res.body.id;
+        uzanto["id"] = uzantoId;
+        return request
+          .put('/uzantoj/' + uzantoId)
+          .set('x-access-token', getToken(uzanto))
           .send({kampo: item, valoro: "valoro"})
-          .end((err, res) => {
-            res.should.have.status(200);
-            done()
-          });
-        });
-      });
-      callback()
-    });
+          .expect(200)
+        })
+        .then((res) => {
+        return request
+          .get('/uzantoj/' + uzantoId)
+          .set('x-access-token', getToken(uzanto))
+          .expect(200)
+          .expect((res) => {
+            res.body[0][item].should.equals("valoro");
+          })
+        })
+        .then((sucess) => {done()}, (error) => {done(error)});
+      })
+      callback();
+    })
 
-    it('it should GET uzanto - UZANTO', function(done) {
-        chai.request(server)
-          .get('/uzantoj/' + idUzanto)
-          .set('x-access-token', tokenUzanto)
-          .end((err, res) =>  {
-            res.should.have.status(200);
-            done();
-          });
-    });
+    it('Devus ĝisdatigi uzanton - Kampo: pasvorto', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      uzanto["id"] = uzantoId;
+      return request
+        .put('/uzantoj/' + uzantoId)
+        .set('x-access-token', getToken(uzanto))
+        .send({kampo: "pasvorto", valoro: "valoro"})
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-    it('it should GET uzantgrupoj - UZANTO', function(done) {
-        chai.request(server)
-          .get('/uzantoj/' + idUzanto + '/grupoj')
-          .set('x-access-token', tokenUzanto)
-          .end((err, res) =>  {
-            res.should.have.status(200);
-            done();
-          });
-    });
+    it('It should NOT ĝisdatigi uzanton - Malpermesata kampo', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      uzanto["id"] = uzantoId;
+      return request
+        .put('/uzantoj/' + uzantoId)
+        .set('x-access-token', getToken(uzanto))
+        .send({kampo: "adreso", valoro: "valoro"})
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-    it('it should GET uzantgrupoj - Admin', function(done) {
-        chai.request(server)
-          .get('/uzantoj/admin/' + idUzanto + '/grupoj')
-          .set('x-access-token', token)
-          .end((err, res) =>  {
-            res.should.have.status(200);
-            done();
-          });
+  describe('GET /uzantoj/:id', () => {
+    it('it should NOT GET uzanto - Alia ID', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/' + uzanto["id"] + 1)
+        .set('x-access-token', getToken(uzanto))
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
+  })
 
-    it('it should NOT GET uzanto - Alia ID - UZANTO', function(done) {
-      chai.request(server)
-        .get('/uzantoj/' + (idUzanto + 1))
-        .set('x-access-token', tokenUzanto)
-        .end((err, res) =>  {
-          res.should.have.status(403);
-          done();
-        });
+  describe('GET /uzantoj/:id/grupoj', () => {
+    it('it should GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/' + uzanto["id"])
+        .set('x-access-token', getToken(uzanto))
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
+  })
 
-    it('It should NOT ĝisdatigi uzanton - Malpermesata kampo', function (done) {
-      chai.request(server)
-      .put('/uzantoj/' + idUzanto)
-      .set('x-access-token', tokenUzanto)
-      .send({kampo: "adreso", valoro: "valoro"})
-      .end((err, res) => {
-        res.should.have.status(403);
-        done()
-      });
-    });
-
-    it('it should delete uzanton - ADMIN', function(done){
-      chai.request(server)
-        .delete('/uzantoj/admin/' + idUzanto)
+  describe('GET /uzantoj/admin/:id/grupoj', () => {
+    it('it should GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/admin/' + uzanto["id"] + '/grupoj')
         .set('x-access-token', token)
-        .end((err, res) =>  {
-          res.should.have.status(204);
-          done();
-        });
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
-    it('it should NOT delete uzanton - Sen ĵetono - ADMIN', function(done){
-      chai.request(server)
-        .delete('/uzantoj/admin/' + idUzanto)
-        .end((err, res) =>  {
-          res.should.have.status(400);
-          done();
-        });
+    it('it should NOT GET uzantgrupoj', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .get('/uzantoj/admin/' + uzanto["id"] + '/grupoj')
+        .set('x-access-token', getToken(uzanto))
+        .expect(403)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('DELETE /uzantoj/:id', () => {
+    it('it should delete uzanton - ADMIN', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .delete('/uzantoj/admin/' + uzanto["id"])
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
     });
 
-    it('forgesis pasvorton kun uzanto', function(done){
-      chai.request(server)
+    it('it should NOT delete uzanton - Sen ĵetono - ADMIN', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .delete('/uzantoj/admin/' + uzanto["id"])
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    });
+  })
+
+  describe('POST /uzantoj/forgesisPasvorton', () => {
+    it('forgesis pasvorton kun uzanto', (done) => {
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
         .post('/uzantoj/forgesisPasvorton')
         .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
-        .end(function(err, res) {
-          res.should.have.status(200);
-          done();
-        });
-     });
+        .expect(200)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-      var uzantoUpdate = [
-        {"uzantnomo" : "retposxto@io.com"},
-        {"pasvorto" : "nmoLoka"},
-        {"personanomo": "prsonanomo"},
-        {"titolo":"titol"},
-        {"adreso":"adreo"},
-        {"posxtkodo":"iNacialando"},
-        {"idLando": 2},
-        {"naskigxtago": "1995-05-05"},
-        {"retposxto":"retposxto@io.com"}];
+    it('forgesis pasvorton sen uzanto', (done) => {
+      request
+        .post('/uzantoj/forgesisPasvorton')
+        .send({"retposxto": "retposxto@io.com", "naskigxtago": "1996-05-05"})
+        .expect(400)
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-      async.each(uzantoUpdate, function(item, callback) {
-        describe('PUT /config # ' + Object.keys(item)[0], function () {
-          it('it should update uzanto -  ADMIN', function (done) {
-            var key = Object.keys(item)[0];
-            var value = Object.values(item)[0];
-            var request = '/uzantoj/admin/' + idUzanto;
-            var body = {kampo: key, valoro: value};
-            chai.request(server)
-            .put(request)
-            .set('x-access-token', token)
-            .send(body)
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.message.should.equal("Ĝisdatigo sukcese farita");
-              done();
-            });
-          });
-        });
-        callback();
-      });
+  describe("PUT /uzantoj/admin/:id", () => {
+    async.each(uzantoUpdate, (item, callback) => {
+      it('it should update uzanto - ' + Object.keys(item)[0], (done) => {
+        var uzantoId, key, value;
+        request
+          .post('/uzantoj')
+          .send(uzanto_ueakodo)
+          .expect(201)
+        .then((res) => {
+        uzantoId = res.body.id;
+        uzanto["id"] = uzantoId;
+        key = Object.keys(item)[0];
+        value = Object.values(item)[0];
+        return request
+          .put('/uzantoj/admin/' + uzantoId)
+          .set('x-access-token', token)
+          .send({kampo: key, valoro: value})
+          .expect(200)
+          .expect((res) => {
+            res.body.message.should.equal("Ĝisdatigo sukcese farita");
+          })
+        })
+        .then((sucess) => {done()}, (error) => {done(error)});
+      })
+      callback();
+    })
 
-      it('should POST a bildo - ADMIN', function(done){
-        chai.request(server)
-        .post('/uzantoj/admin/1/bildo')
+    it('it should NOT update uzanton', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto_ueakodo)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      return request
+        .put('/uzantoj/admin/' + uzantoId)
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(201);
-          chai.request(server)
-          .get('/uzantoj/admin/1/bildo')
-          .set('x-access-token', token)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.text.should.to.be.a('string');
-            res.text.substring(0,15).should.to.have.string('data:image/png');
-            done();
-          });
-        });
-      });
+        .send({kampo: "id", valoro: 1})
+        .expect(403)
+        .expect((res) => {
+          res.body.message.should.equal("vi ne povas ŝanĝi vian ID");
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-      it('should POST a bildo - Uzanto', function(done){
-        chai.request(server)
-        .post(util.format('/uzantoj/%s/bildo', idUzanto))
-        .set('x-access-token', tokenUzanto)
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(201);
-          chai.request(server)
-          .get(util.format('/uzantoj/%s/bildo', idUzanto))
-          .set('x-access-token', tokenUzanto)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.text.should.to.be.a('string');
-            res.text.substring(0,15).should.to.have.string('data:image/png');
-            done();
-          });
-        });
-      });
+  describe('POST /uzantoj/admin/:id/bildo', () => {
+    it('should POST a bildo', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      return request
+        .post('/uzantoj/admin/' + uzantoId + '/bildo')
+        .set('x-access-token', token)
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/uzantoj/admin/' + uzantoId + '/bildo')
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) => {
+          res.text.should.to.be.a('string');
+          res.text.substring(0,15).should.to.have.string('data:image/png');
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-      it('should NOT POST a bildo - sen ĵetono - ADMIN', function(done){
-        chai.request(server)
-        .post('/uzantoj/admin/1/bildo')
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-      });
+    it('should NOT POST a bildo - sen ĵetono', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzantoId = res.body.id;
+      return request
+        .post('/uzantoj/admin/' + uzantoId + '/bildo')
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-      it('should NOT POST a bildo - sen ĵetono - Uzanto', function(done){
-        chai.request(server)
-        .post('/uzantoj/1/bildo')
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-      });
+  describe('POST /uzantoj/:id/bildo', () => {
+    it('should POST a bildo', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .post('/uzantoj/' + uzanto["id"] + '/bildo')
+        .set('x-access-token', getToken(uzanto))
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/uzantoj/' + uzanto["id"] + '/bildo')
+        .set('x-access-token', getToken(uzanto))
+        .expect(200)
+        .expect((res) => {
+          res.text.should.to.be.a('string');
+          res.text.substring(0,15).should.to.have.string('data:image/png');
+        })
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
 
-      it('it should NOT update uzanton - ID - ADMIN', function(done){
-        chai.request(server)
-          .put('/uzantoj/admin/' + idUzanto)
-          .set('x-access-token', token)
-          .send({kampo: "id", valoro: 1})
-          .end((err, res) =>  {
-            res.should.have.status(403);
-            res.body.message.should.equal("vi ne povas ŝanĝi vian ID");
-            done();
-          });
-      });
+    it('should NOT POST a bildo - sen ĵetono', (done) => {
+      var uzantoId;
+      request
+        .post('/uzantoj')
+        .send(uzanto)
+        .expect(201)
+      .then((res) => {
+      uzanto["id"] = res.body.id;
+      return request
+        .post('/uzantoj/' + uzanto["id"] + '/bildo')
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(400)
+      })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
 
-      it('it should get ALL uzantoj - ADMIN', function(done){
-        chai.request(server)
-          .get('/uzantoj')
-          .set('x-access-token', token)
-          .send({kampo: "id", valoro: 1})
-          .end((err, res) =>  {
-            res.should.have.status(200);
-            res.body.should.be.a('array');
-            done();
-          });
-      });
-    });
+  describe('GET /uzantoj', (done) => {
+    it('it should get ALL uzantoj', (done) => {
+      request
+        .get('/uzantoj')
+        .set('x-access-token', token)
+        .send({kampo: "id", valoro: 1})
+        .expect(200)
+        .expect((res) => {
+          res.body.should.be.a('array');
+        })
+      .then((sucess) => {done()}, (error) => {done(error)});
+    })
+  })
+
 });

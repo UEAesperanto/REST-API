@@ -60,7 +60,7 @@ describe('==== ADMIN ====', () => {
   });
 
   describe('POST /admin/ensaluti', () => {
-    it('korekte ensaluti', (done) => {
+    it('ĝuste ensaluti', (done) => {
       request
         .post('/admin/ensaluti')
         .send(uzantoModel1)
@@ -80,7 +80,7 @@ describe('==== ADMIN ====', () => {
       .then((success) => {done()}, (error) => {done(error)});
     })
 
-    it('ensaluti kun malkorekta pasvorto', (done) => {
+    it('ensaluti kun malĝusta pasvorto', (done) => {
       request
         .post('/admin/ensaluti')
         .send(uzantoModel1)
@@ -90,19 +90,19 @@ describe('==== ADMIN ====', () => {
         })
       .then((res) => {
       var uzanto = uzantoModel1;
-      uzanto["pasvorto"] = "malkorekta"
+      uzanto["pasvorto"] = "malĝusta"
       return request
         .post('/admin/ensaluti')
         .send(uzanto)
         .expect(401)
         .expect((res) => {
-          res.body.should.have.property('message', 'Malkorekta pasvorto');
+          res.body.should.have.property('message', 'Malĝusta pasvorto');
         })
       })
       .then((success) => {done()}, (error) => {done(error)});
     })
 
-    it('ensaluti kun malkorekta uzantnomo', (done) => {
+    it('ensaluti kun malĝusta uzantnomo', (done) => {
       request
         .post('/admin/ensaluti')
         .send(uzantoModel1)
@@ -112,7 +112,7 @@ describe('==== ADMIN ====', () => {
         })
       .then((res) => {
       var uzanto = uzantoModel1;
-      uzanto["uzantnomo"] = "malkorekta"
+      uzanto["uzantnomo"] = "malĝusta"
       return request
         .post('/admin/ensaluti')
         .send(uzanto)

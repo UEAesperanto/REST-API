@@ -41,7 +41,7 @@ var _ensaluti = function (req, res) {
                 res.status(401).send({message: 'La uzantnomo ne ekzistas'});
               else if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
                                             sucess[0].pasvortoHash)){
-                res.status(401).send({message: 'Malkorekta pasvorto'});
+                res.status(401).send({message: 'Malĝusta pasvorto'});
               } else {
                 var administranto = {
                   id: sucess[0].id,
@@ -55,7 +55,7 @@ var _ensaluti = function (req, res) {
                   for (var i = 0; i < sucess.length; i++) {
                     administranto.permesoj[i] = (sucess[i].idAdminrajto);
                   }
-                  // kaze uzanto estas trovita kaj pasvorto estas korekta
+                  // okaze ke la uzanto estas trovita kaj la pasvorto estas ĝusta
                   // oni kreas iun token
                   var token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: "8h"});
                     res.status(200).send({token: token, administranto: administranto});

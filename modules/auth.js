@@ -7,7 +7,7 @@ var _authorizeID = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-           message: 'La ĵetono (token) ne estas korekta.' });
+           message: 'La ĵetono (token) ne estas ĝusta.' });
       } else {
         if(req.originalUrl.split('/').includes(decoded.id.toString())) {
            if(req.method == "PUT"){
@@ -27,7 +27,7 @@ var _authorizeID = function(req, res, next) {
            }
         } else {
           return res.status(403).send({ success: false,
-             message: 'La ĵetono (token) ne estas korekta.' });
+             message: 'La ĵetono (token) ne estas ĝusta.' });
         }
       }
   });
@@ -47,7 +47,7 @@ var _authorizeUzanto = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-           message: 'La ĵetono (token) ne estas korekta.' });
+           message: 'La ĵetono (token) ne estas ĝusta.' });
       } else {
         req.decoded = decoded;
         next();
@@ -62,7 +62,7 @@ var _authorizeMembro = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.'});
+          message: 'La ĵetono (token) ne estas ĝusta.'});
       } else {
         if(decoded.permesoj) {
           if((decoded.permesoj.indexOf('membro') > -1)
@@ -72,11 +72,11 @@ var _authorizeMembro = function(req, res, next) {
              next();
           } else {
             return res.status(403).send({ success: false,
-              message: 'La ĵetono (token) ne estas korekta.'});
+              message: 'La ĵetono (token) ne estas ĝusta.'});
           }
         } else {
           return res.status(403).send({ success: false,
-            message: 'La ĵetono (token) ne estas korekta.'});
+            message: 'La ĵetono (token) ne estas ĝusta.'});
         }
       }
     });
@@ -96,7 +96,7 @@ var _authorizeAdmin = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.'});
+          message: 'La ĵetono (token) ne estas ĝusta.'});
       } else {
         if(decoded.permesoj) {
           if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
@@ -104,11 +104,11 @@ var _authorizeAdmin = function(req, res, next) {
              next();
           } else {
             return res.status(403).send({ success: false,
-              message: 'La ĵetono (token) ne estas korekta.'});
+              message: 'La ĵetono (token) ne estas ĝusta.'});
           }
         } else {
           return res.status(403).send({ success: false,
-            message: 'La ĵetono (token) ne estas korekta.'});
+            message: 'La ĵetono (token) ne estas ĝusta.'});
         }
       }
     });
@@ -128,7 +128,7 @@ var _authorizeAdminKomunikisto = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.'});
+          message: 'La ĵetono (token) ne estas ĝusta.'});
       } else {
         if(decoded.permesoj) {
           if((decoded.permesoj.indexOf(config.idAdministranto) > -1) ||
@@ -137,11 +137,11 @@ var _authorizeAdminKomunikisto = function(req, res, next) {
              next();
           } else {
             return res.status(403).send({ success: false,
-              message: 'La ĵetono (token) ne estas korekta.'});
+              message: 'La ĵetono (token) ne estas ĝusta.'});
           }
         } else {
           return res.status(403).send({ success: false,
-            message: 'La ĵetono (token) ne estas korekta.'});
+            message: 'La ĵetono (token) ne estas ĝusta.'});
         }
       }
     });
@@ -161,7 +161,7 @@ var _authorizeAdminFinancoj = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.'});
+          message: 'La ĵetono (token) ne estas ĝusta.'});
       } else {
         if(decoded.permesoj) {
           if((decoded.permesoj.indexOf(config.idAdministranto) > -1) ||
@@ -170,11 +170,11 @@ var _authorizeAdminFinancoj = function(req, res, next) {
              next();
           } else {
             return res.status(403).send({ success: false,
-              message: 'La ĵetono (token) ne estas korekta.'});
+              message: 'La ĵetono (token) ne estas ĝusta.'});
           }
         } else {
           return res.status(403).send({ success: false,
-            message: 'La ĵetono (token) ne estas korekta.'});
+            message: 'La ĵetono (token) ne estas ĝusta.'});
         }
       }
     });
@@ -194,7 +194,7 @@ var _authorizeAdminJuna = function(req, res, next) {
     jwt.verify(token, config.sekretoJWT, function(err, decoded) {
       if (err) {
         return res.status(403).send({ success: false,
-          message: 'La ĵetono (token) ne estas korekta.'});
+          message: 'La ĵetono (token) ne estas ĝusta.'});
       } else {
         if(decoded.permesoj) {
           if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
@@ -208,11 +208,11 @@ var _authorizeAdminJuna = function(req, res, next) {
             next();
           } else {
             return res.status(403).send({ success: false,
-              message: 'La ĵetono (token) ne estas korekta.'});
+              message: 'La ĵetono (token) ne estas ĝusta.'});
           }
         } else {
           return res.status(403).send({ success: false,
-            message: 'La ĵetono (token) ne estas korekta.'});
+            message: 'La ĵetono (token) ne estas ĝusta.'});
         }
     }
     });

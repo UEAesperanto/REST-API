@@ -1,322 +1,401 @@
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-const {readFileSync} = require('fs');
-var util = require('util');
-var jwt  = require('jsonwebtoken');
+describe('==== REVUO ====', () => {
+  var revuoModel1 = {
+    "titolo":"Revuo Esperanto",
+    fondjaro:1920,
+    issn:"333"
+  };
 
-var server = require('../server');
-var config = require('../config');
-var db = require('../modules/db');
+  var revuoModel2 = {
+    "titolo":"Revuo Esperanto 2",
+    fondjaro:1921,
+    issn:"444"
+  };
 
-var expect = chai.expect;
-var should = chai.should();
+  var volumoModel1 = {
+    numeroJaro: 1,
+    numeroEntute: 2,
+    enhavlisto: "enhavo"
+  }
 
-chai.use(chaiHttp);
+  var volumoModel2 = {
+    numeroJaro: 2,
+    numeroEntute: 3,
+    enhavlisto: "enhavo2"
+  }
 
-describe('Revuoj', function() {
-    var token = '';
 
-    beforeEach(function(done){
-      var query = util.format('DELETE FROM `revuo`;');
-      var query2 = util.format('DELETE FROM `volumo`;');
-
-      db.mysqlExec(query);
-      db.mysqlExec(query2);
-
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [1]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('revuo');
+      cleanTable('volumo');
+      cleanTable('ref_administranto_adminrajto')
+      token = generateToken();
       done();
+  });
 
-      var uzanto = {
-         id: 1,
-         permesoj: ['uzanto']
-       };
-      tokenUzanto = jwt.sign(uzanto, config.sekretoJWT, {expiresIn: 18000});
-
-      var membro = {
-         id: 1,
-         permesoj: ['uzanto', 'membro']
-       };
-      tokenMembro = jwt.sign(membro, config.sekretoJWT, {expiresIn: 18000});
+  describe('POST /revuoj', () => {
+    it('it should POST revuon',(done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((success) => {done()}, (error) => {done(error)});
     });
 
-    it('it should POST revuon', function(done){
-      chai.request(server)
-          .post('/revuoj')
-          .set('x-access-token', token)
-          .send({"titolo":"Revuo Esperanto"})
-          .end((err, res) => {
-            res.should.have.status(201);
-            done();
-         });
-     });
+    it('it should POST revuon - sen permeso',(done) => {
+      request
+        .post('/revuoj')
+        .send(revuoModel1)
+        .expect(400)
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
 
-     it('it should NOT POST revuon - sen permeso', function(done){
-       chai.request(server)
-           .post('/revuoj')
-           .send({"titolo":"Revuo Esperanto"})
-           .end((err, res) => {
-             res.should.have.status(400);
-             done();
-          });
-      });
+  describe('GET /revuoj', () => {
+    it('it should GET revuon - sen revuoj', (done) => {
+      request
+        .get('/revuoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+        })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should GET revuon - sen revuoj', function(done){
-        chai.request(server)
-            .get('/revuoj')
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.length.should.equals(0)
-              done();
-           });
-       });
-
-       it('it should GET revuon - kun revuoj', function(done){
-         var query = util.format('INSERT INTO `revuo`\
-                                  VALUES(1, "ESPERANTO", "1920", "333");');
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/revuoj')
-             .end((err, res) => {
-               res.should.have.status(200);
-               res.body.length.should.equals(1);
-               res.body[0].should.have.property('id');
-               res.body[0].id.should.equal(1);
-               res.body[0].should.have.property('titolo');
-               res.body[0].titolo.should.equal('ESPERANTO');
-               res.body[0].should.have.property('fondjaro');
-               res.body[0].fondjaro.should.equal(1920);
-               res.body[0].should.have.property('issn');
-               res.body[0].issn.should.equal('333');
-               done();
-             });
-           });
-      });
-
-      it('it should DELETE revuon', function(done) {
-        var query = util.format('INSERT INTO `revuo`\
-                                 VALUES(1, "ESPERANTO", "1920", "333");');
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/revuoj/1')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-      });
-
-      it('it should NOT DELETE revuon - sen permeso', function(done) {
-        var query = util.format('INSERT INTO `revuo`\
-                                 VALUES(1, "ESPERANTO", "1920", "333");');
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/revuoj/1')
-            .end((err, res) => {
-              res.should.have.status(400);
-              done();
-            });
-          });
-      });
-
-      it('it should DELETE volumon', function(done) {
-        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
-                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/revuoj/volumoj/1')
-            .set('x-access-token', token)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-      });
-
-      it('it should NOT DELETE volumon - sen permeso', function(done) {
-        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
-                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
-         db.mysqlExec(query).then(function(result){
-            chai.request(server)
-            .delete('/revuoj/volumoj/1')
-            .end((err, res) => {
-              res.should.have.status(400);
-              done();
-            });
-        });
-      });
-
-      it('it should POST volumon', function(done){
-         chai.request(server)
-         .post('/revuoj/1/volumoj')
-         .set('x-access-token', token)
-         .end((err, res) => {
-           res.should.have.status(201);
-           done();
-         });
-      });
-
-      it('it should POST volumon files - bildo', function(done){
-        chai.request(server)
-        .post('/revuoj/volumoj/1/bildo')
+    it('it should GET revuon - kun revuoj', (done) => {
+      request
+        .post('/revuoj')
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(201);
-          chai.request(server)
-          .get('/revuoj/volumoj/1/bildo')
-          .set('x-access-token', token)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.text.should.to.be.a('string');
-            res.text.substring(0,15).should.to.have.string('data:image/png');
-            done();
-          });
-        });
-      });
+        .send(revuoModel1)
+        .expect(201)
+        .then((res) => {
+      return request
+        .get('/revuoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('titolo');
+          res.body[0].should.have.property('fondjaro');
+          res.body[0].should.have.property('issn');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should NOT POST volumon files - sen ĵetono', function(done){
-        chai.request(server)
-        .post('/revuoj/volumoj/1/bildo')
-        .attach("file", readFileSync("test/files/logoo.png"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(400);
-          chai.request(server)
-          done();
-        });
-      });
-
-      it('it should POST volumon files - PDF', function(done){
-        chai.request(server)
-        .post('/revuoj/volumoj/1/kvalita')
+  describe('DELETE /revuoj/:id', () => {
+    it('it should DELETE revuon', (done) => {
+      request
+        .post('/revuoj')
         .set('x-access-token', token)
-        .attach("file", readFileSync("test/files/LIBRO.pdf"), "file.test")
-        .end((err, res) => {
-          res.should.have.status(201);
-          chai.request(server)
-          .get('/revuoj/volumoj/1/kvalita')
-          .set('x-access-token', token)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.text.should.to.be.a('string');
-            res.text.substring(0,20).should.to.have.string('data:application/pdf');
-            done();
-          });
-        });
-      });
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/revuoj/' + res.body.insertId)
+        .set('x-access-token', token)
+        .expect(204)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should not GET volumon files - sen ĵetono', function(done) {
-        chai.request(server)
-        .get('/revuoj/volumoj/1/kvalita')
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-      });
+    it('it should NOT DELETE revuon - sen permeso', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/revuoj/' + res.body.insertId)
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should not GET volumon files - uzanto sen membreco', function(done) {
-        chai.request(server)
-        .get('/revuoj/volumoj/1/kvalita')
-        .set('x-access-token', tokenUzanto)
-        .end((err, res) => {
-          res.should.have.status(403);
-          done();
-        });
-      });
 
-      it('it should GET volumon files - uzanto kun membreco', function(done) {
-        chai.request(server)
-        .get('/revuoj/volumoj/1/kvalita')
-        .set('x-access-token', tokenMembro)
-        .end((err, res) => {
-          res.should.have.status(200);
-          done();
-        });
-      });
+  describe('POST /revuoj/:id/volumoj', () => {
+    it('it should POST volumon', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
 
-      it('it should UPDATE a volumo', function (done) {
-        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
-                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
-         db.mysqlExec(query).then(function(result){
-              chai.request(server)
-                  .put('/revuoj/volumoj/1')
-                  .set('x-access-token', token)
-                  .send({kampo: 'enhavlisto', valoro: 'new valuto'})
-                  .end(function (err, res) {
-                      res.should.have.status(200);
-                      res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                      done();
-                  });
-          });
-      });
+  describe('POST /revuoj/volumoj/:id/bildo', () => {
+    it('it should NOT POST volumon files - sen ĵetono', (done) => {
+      var volumeId;
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      volumeId = res.body.insertId;
+      return request
+        .post('/revuoj/volumoj/' + volumeId +'/bildo')
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should NOT UPDATE a volumo - ID', function (done) {
-        var query = util.format('INSERT INTO `volumo`(id, numeroJaro, numeroEntute, \
-                                 enhavlisto, idRevuo) VALUES(1, 2, 3, "enhavo", 2);');
-         db.mysqlExec(query).then(function(result){
-              chai.request(server)
-                  .put('/revuoj/volumoj/1')
-                  .set('x-access-token', token)
-                  .send({kampo: 'id', valoro: 2})
-                  .end(function (err, res) {
-                      res.should.have.status(403);
-                      done();
-                  });
-          });
-      });
+    it('it should POST volumon files - bildo', (done) => {
+      var volumeId;
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      volumeId = res.body.insertId;
+      return request
+        .post('/revuoj/volumoj/' + volumeId +'/bildo')
+        .set('x-access-token', token)
+        .attach("file", readFileSync(bildoPath1), "file.test")
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/revuoj/volumoj/' + volumeId +'/bildo')
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) =>{
+          res.text.should.to.be.a('string');
+          res.text.substring(0,15).should.to.have.string('data:image/png');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should NOT UPDATE a volumo - Sen ĵetono', function (done) {
-        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
-                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
-         db.mysqlExec(query).then(function(result){
-              chai.request(server)
-                  .put('/revuoj/volumoj/1')
-                  .send({kampo: 'enhavlisto', valoro: 'enhavlisto'})
-                  .end(function (err, res) {
-                      res.should.have.status(400);
-                      done();
-                  });
-          });
-      });
+  });
 
-      it('it should GET all volumoj', function(done){
-        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
-                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
-        db.mysqlExec(query).then(function(result){
-          query = 'INSERT INTO `volumo` (id, numeroJaro, numeroEntute, enhavlisto,\
-                  idRevuo) VALUES(2, 2, 3, "enhavo", 1);';
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/revuoj/volumoj')
-             .end(function (err, res) {
-               res.body.length.should.be.equal(2);
-               res.should.have.status(200);
-               done();
-             });
-          });
-        });
-      });
+  describe('POST /revuoj/volumoj/:id/kvalita', () => {
+    it('it should NOT POST volumon files - sen ĵetono', (done) => {
+      var volumeId;
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      volumeId = res.body.insertId;
+      return request
+        .post('/revuoj/volumoj/' + volumeId +'/kvalita')
+        .attach("file", readFileSync(pdfPath1), "file.test")
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should GET all volumoj given revuo ID', function(done){
-        var query = 'INSERT INTO `volumo`(id, numeroJaro, numeroEntute, enhavlisto, \
-                    idRevuo) VALUES(1, 2, 3, "enhavo", 2);';
-        db.mysqlExec(query).then(function(result){
-          query = 'INSERT INTO `volumo` (id, numeroJaro, numeroEntute, enhavlisto,\
-                  idRevuo) VALUES(2, 2, 3, "enhavo", 1);';
-          db.mysqlExec(query).then(function(result){
-             chai.request(server)
-             .get('/revuoj/1/volumoj')
-             .end(function (err, res) {
-               res.body.length.should.be.equal(1);
-               res.should.have.status(200);
-               done();
-             });
-          });
-        });
-      });
+    it('it should POST volumon files - PDF', (done) => {
+      var volumeId;
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      volumeId = res.body.insertId;
+      return request
+        .post('/revuoj/volumoj/' + volumeId +'/kvalita')
+        .set('x-access-token', token)
+        .attach("file", readFileSync(pdfPath1), "file.test")
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/revuoj/volumoj/' + volumeId +'/kvalita')
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) =>{
+          res.text.should.to.be.a('string');
+          res.text.substring(0,20).should.to.have.string('data:application/pdf');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+  });
+
+
+  describe('PUT /revuoj/volumoj/:id', () => {
+    it('it should UPDATE a volumo', (done) => {
+      var volumeId;
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      volumeId = res.body.insertId;
+      return request
+        .put('/revuoj/volumoj/' + volumeId)
+        .send({kampo: 'enhavlisto', valoro: 'new valuto'})
+        .set('x-access-token', token)
+        .expect(200)
+        .expect((res) =>{
+          res.body.message.should.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should NOT UPDATE a volumo - ID', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .put('/revuoj/volumoj/' + res.body.insertId)
+        .send({kampo: 'id', valoro: 2})
+        .set('x-access-token', token)
+        .expect(403)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+
+    it('it should NOT UPDATE a volumo - Sen ĵetono', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .put('/revuoj/volumoj/' + res.body.insertId)
+        .send({kampo: 'id', valoro: 2})
+        .expect(400)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+  });
+
+  describe('GET /revuoj/volumoj', () => {
+    it('it should GET all volumoj', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel2)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .post('/revuoj/' + res.body.insertId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/revuoj/volumoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.be.equal(2);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
+
+  describe('GET /revuoj/:id/volumoj', () => {
+    var revuoId;
+    it('it should GET all volumoj given revuo ID', (done) => {
+      request
+        .post('/revuoj')
+        .set('x-access-token', token)
+        .send(revuoModel1)
+        .expect(201)
+      .then((res) => {
+      revuoId = res.body.insertId;
+      return request
+        .post('/revuoj/' + revuoId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .post('/revuoj/' + revuoId + '/volumoj')
+        .set('x-access-token', token)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/revuoj/'+ revuoId + '/volumoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.be.equal(2);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    })
+  })
 });

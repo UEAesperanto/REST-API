@@ -1,225 +1,387 @@
-//Require the dev-dependencies
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../server');
-var db = require('../modules/db');
-var util = require('util');
-var should = chai.should();
-var expect = chai.expect;
-var Lando = require('../models/lando');
-var jwt  = require('jsonwebtoken');
-var config = require('../config');
+describe('==== LANDO ====', () => {
 
-chai.use(chaiHttp);
-describe('Landoj', function() {
-    var token = '';
-    beforeEach( function(done) { //Before each test we empty the database
-      var query = util.format('DELETE FROM `lando`');
-      db.mysqlExec(query).then(function(result){
-      });
-      var administranto = {
-        id: 1,
-        uzantnomo: 'nomo',
-        permesoj: [1]
-      };
-      token = jwt.sign(administranto, config.sekretoJWT, {expiresIn: 18000});
+  var token = '';
+  var landoModel1 = {
+    valuto : "eur",
+    radikoEo : "radiko",
+    finajxoEo: "finajxo",
+    landkodo : "l1"
+  };
+
+  var landoModel2 = {
+    valuto : "eur",
+    radikoEo : "radiko",
+    finajxoEo: "finajxo",
+    landkodo : "lk"
+  };
+
+  var landoModel3 = {
+    valuto : "eur",
+    radikoEo : "radiko",
+    finajxoEo: "finajxo",
+    landkodo : "l2"
+  };
+
+  //Before each test we empty the database
+  beforeEach((done) => {
+      createAdmin();
+      cleanTable('lando');
+      token = generateToken();
       done();
-    });
-
-    describe('GET /landoj', function(){
-     it('it should GET all the landoj', function(done){
-         Lando.insert("eur", "radiko", "finajxo", "lk");
-         Lando.insert("eur", "radiko", "finajxo", "l2");
-         Lando.insert("eur", "radiko", "finajxo", "l1");
-
-       chai.request(server)
-           .get('/landoj')
-           .end((err, res) => {
-               res.should.have.status(200);
-               res.body.length.should.equals(3);
-               done();
-           });
-     });
-
-     it('it should GET all the landoj with body', function(done){
-       chai.request(server)
-           .get('/landoj')
-           .end((err, res) => {
-               res.should.have.status(200);
-               res.body.length.should.equals(0)
-               done();
-           });
-     });
-   });
-
-   describe('GET /landoj/:id', function(){
-     it('it should GET a lando given id', function(done){
-      Lando.insert("eur", "radiko", "finajxo", "lk").then(function(success){
-        chai.request(server)
-          .get('/landoj/' + success.insertId)
-          .end(function(err, res){
-              res.should.have.status(200);
-              res.body[0].should.have.property('finajxoEo');
-              res.body[0].finajxoEo.should.equal('finajxo');
-              res.body[0].should.have.property('valuto');
-              res.body[0].valuto.should.equal('eur');
-              res.body[0].should.have.property('radikoEo');
-              res.body[0].radikoEo.should.equal('radiko');
-              res.body[0].should.have.property('landkodo');
-              res.body[0].landkodo.should.equal('lk');
-              done();
-          });
-      });
-    });
-
-    it('it should NOT GET a landoj given id', function(done){
-     Lando.insert("eur", "radiko", "finajxo", "lk").then(function(success){
-       chai.request(server)
-         .get('/landoj/' + success + 1)
-         .end(function(err, res){
-             var response = JSON.stringify(res.body);
-             res.body.should.be.a('array');
-             res.should.have.status(200);
-             response.should.equal('[]');
-             done();
-         });
-     });
-   });
   });
 
-  describe('POST /landoj', function(){
+  describe('GET /landoj', () => {
+    it('it should GET all the landoj',(done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel2)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel3)
+        .expect(201)
+      })
+      .then((res) => {
+      return request
+        .get('/landoj')
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(3);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-   it('it should NOT POST a lando - Sen ĵetono (token)', function(done){
-     var lando = {valuto : "eur", nomoEo : "nomoEo",
-                  finajxoEo: "finajxoEo", landKodo : "lk" };
-     chai.request(server)
-         .post('/landoj')
-         .send(lando)
-         .end(function(err, res){
-             var error = JSON.parse(err.response.error.text);
-             error.success.should.equal(false);
-             error.message.should.equal("Sen ĵetono (token).");
-             res.should.have.status(400);
-             err.should.have.status(400);
-             done();
-         });
-   });
+    it('it should GET all the landoj', (done) => {
+      request
+      .get('/landoj')
+      .expect(200)
+      .expect((res) => {
+        res.body.length.should.equals(0)
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
 
-      it('it should POST a lando - with token', function (done) {
-          var lando = {valuto : "eur", nomoEo : "nomoEo",
-              finajxoEo: "finajxoEo", landKodo : "lk" };
-          chai.request(server)
-              .post('/landoj')
-              .set('x-access-token', token)
-              .send(lando)
-              .end(function (err, res) {
-                  res.should.have.status(201);
-                  done();
-              });
+  });
+
+  describe('GET /landoj/:id', () => {
+    it('it should GET a lando given id', (done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/landoj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal(landoModel1.finajxoEo);
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal(landoModel1.valuto);
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal(landoModel1.radikoEo);
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal(landoModel1.landkodo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should NOT GET a landoj given id', (done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/landoj/' + res.body.insertId + 1)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(0);
+          res.body.should.be.a('array');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+  });
+
+  describe('POST /landoj', () => {
+    it('it should NOT POST a lando - Sen ĵetono (token)',(done) => {
+      request
+        .post('/landoj')
+        .send(landoModel1)
+        .expect(400)
+        .expect((res) => {
+          res.clientError.should.be.equal(true);
+          res.serverError.should.be.equal(false);
+          res.body.success.should.be.equal(false);
+          res.body.message.should.be.equal("Sen ĵetono (token).");
+        })
+        .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should POST a lando - with token', (done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .get('/landoj/' + res.body.insertId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal(landoModel1.finajxoEo);
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal(landoModel1.valuto);
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal(landoModel1.radikoEo);
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal(landoModel1.landkodo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+  });
+
+  describe('DELETE /landoj/:id', () => {
+    it('it should NOT DELETE a lando - Sen ĵetono', (done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .delete('/landoj/' + res.body.insertId)
+        .expect(400)
+        .expect((res) => {
+          res.clientError.should.be.equal(true);
+          res.serverError.should.be.equal(false);
+          res.body.success.should.be.equal(false);
+          res.body.message.should.be.equal("Sen ĵetono (token).");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+      it('it should DELETE a lando - with token', (done) => {
+        request
+          .post('/landoj')
+          .set('x-access-token', token)
+          .send(landoModel1)
+          .expect(201)
+        .then((res) => {
+        return request
+          .delete('/landoj/' + res.body.insertId)
+          .set('x-access-token', token)
+          .expect(200)
+          .expect((res) => {
+            res.clientError.should.be.equal(false);
+            res.serverError.should.be.equal(false);
+            res.body.message.should.be.equal("Ok");
+          })
+        })
+        .then((success) => {done()}, (error) => {done(error)});
       });
- });
+  });
 
-    describe('DELETE /landoj', function(){
-    it('it should NOT DELETE a lando - Sen ĵetono', function (done) {
-         Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-             chai.request(server)
-                 .delete('/landoj/' + success.insertId)
-                 .end(function (err, res) {
-                     var error = JSON.parse(err.response.error.text);
-                     error.success.should.equal(false);
-                     error.message.should.equal("Sen ĵetono (token).");
-                     res.should.have.status(400);
-                     err.should.have.status(400);
-                     done();
-                 });
-         })
-     });
-
-    it('it should DELETE a lando - with token', function (done) {
-                Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                    chai.request(server)
-                        .delete('/landoj/' + success.insertId)
-                        .set('x-access-token', token)
-                        .end(function (err, res) {
-                            res.should.have.status(200);
-                            res.body.message.should.equal("Ok");
-                            done();
-                        });
-                });
-        });
+  describe('PUT /landoj/:id', () => {
+    it('it should NOT UPDATE a lando - Sen ĵetono', (done) => {
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      return request
+        .put('/landoj/' + res.body.insertId)
+        .send({kampo: 'valuto', valoro: 'new valuto'})
+        .expect(400)
+        .expect((res) => {
+          res.clientError.should.be.equal(true);
+          res.serverError.should.be.equal(false);
+          res.body.success.should.be.equal(false);
+          res.body.message.should.be.equal("Sen ĵetono (token).");
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
 
-    describe('PUT /landoj/:id', function () {
-        it('it should NOT UPDATE a lando - Sen ĵetono', function (done) {
-            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                chai.request(server)
-                    .delete('/landoj/' + success.insertId)
-                    .send({kampo: 'valuto', valoro: 'new valuto'})
-                    .end(function (err, res) {
-                        var error = JSON.parse(err.response.error.text);
-                        error.success.should.equal(false);
-                        error.message.should.equal("Sen ĵetono (token).");
-                        res.should.have.status(400);
-                        err.should.have.status(400);
-                        done();
-                    });
-            });
-        });
 
-        it('it should UPDATE a lando valuto - with token', function (done) {
-            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                chai.request(server)
-                    .put('/landoj/' + success.insertId)
-                    .set('x-access-token', token)
-                    .send({kampo: 'valuto', valoro: 'gbp'})
-                    .end(function (err, res) {
-                        res.should.have.status(200);
-                        res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
-                    });
-            });
-        });
-
-        it('it should UPDATE a lando radikoEo - with token', function (done) {
-            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                chai.request(server)
-                    .put('/landoj/' + success.insertId)
-                    .set('x-access-token', token)
-                    .send({kampo: 'radikoEo', valoro: 'new radikoEo'})
-                    .end(function (err, res) {
-                        res.should.have.status(200);
-                        res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
-                    });
-            });
-        });
-
-        it('it should UPDATE a lando finajxoEo - with token', function (done) {
-            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                chai.request(server)
-                    .put('/landoj/' + success.insertId)
-                    .set('x-access-token', token)
-                    .send({kampo: 'finajxoEo', valoro: 'new finajxoEo'})
-                    .end(function (err, res) {
-                        res.should.have.status(200);
-                        res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
-                    });
-            });
-        });
-
-        it('it should UPDATE a lando landkodo - with token', function (done) {
-            Lando.insert("eur", "radiko", "finajxo", "lk").then(function (success) {
-                chai.request(server)
-                    .put('/landoj/' + success.insertId)
-                    .set('x-access-token', token)
-                    .send({kampo: 'landkodo', valoro: 'lk'})
-                    .end(function (err, res) {
-                        res.should.have.status(200);
-                        res.body.message.should.equal("Ĝisdatigo sukcese farita");
-                        done();
-                    });
-            });
-        });
+    it('it should UPDATE a lando valuto - with token', (done) => {
+      var landoId;
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      landoId = res.body.insertId
+      return request
+        .put('/landoj/' + landoId)
+        .set('x-access-token', token)
+        .send({kampo: 'valuto', valoro: 'gbp'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((res) => {
+      return request
+        .get('/landoj/' + landoId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal(landoModel1.finajxoEo);
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal('gbp');
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal(landoModel1.radikoEo);
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal(landoModel1.landkodo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
     });
+
+    it('it should UPDATE a lando valuto - with token', (done) => {
+      var landoId;
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      landoId = res.body.insertId
+      return request
+        .put('/landoj/' + landoId)
+        .set('x-access-token', token)
+        .send({kampo: 'radikoEo', valoro: 'new radikoEo'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((res) => {
+      return request
+        .get('/landoj/' + landoId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal(landoModel1.finajxoEo);
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal(landoModel1.valuto);
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal('new radikoEo');
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal(landoModel1.landkodo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should UPDATE a lando valuto - with token', (done) => {
+      var landoId;
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      landoId = res.body.insertId
+      return request
+        .put('/landoj/' + landoId)
+        .set('x-access-token', token)
+        .send({kampo: 'finajxoEo', valoro: 'new finajxoEo'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((res) => {
+      return request
+        .get('/landoj/' + landoId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal('new finajxoEo');
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal(landoModel1.valuto);
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal(landoModel1.radikoEo);
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal(landoModel1.landkodo);
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+    it('it should UPDATE a lando valuto - with token', (done) => {
+      var landoId;
+      request
+        .post('/landoj')
+        .set('x-access-token', token)
+        .send(landoModel1)
+        .expect(201)
+      .then((res) => {
+      landoId = res.body.insertId
+      return request
+        .put('/landoj/' + landoId)
+        .set('x-access-token', token)
+        .send({kampo: 'landkodo', valoro: 'lk'})
+        .expect(200)
+        .expect((res) => {
+          res.clientError.should.be.equal(false);
+          res.serverError.should.be.equal(false);
+          res.body.message.should.be.equal("Ĝisdatigo sukcese farita");
+        })
+      })
+      .then((res) => {
+      return request
+        .get('/landoj/' + landoId)
+        .expect(200)
+        .expect((res) => {
+          res.body.length.should.equals(1);
+          res.body[0].should.have.property('finajxoEo');
+          res.body[0].finajxoEo.should.equal(landoModel1.finajxoEo);
+          res.body[0].should.have.property('valuto');
+          res.body[0].valuto.should.equal(landoModel1.valuto);
+          res.body[0].should.have.property('radikoEo');
+          res.body[0].radikoEo.should.equal(landoModel1.radikoEo);
+          res.body[0].should.have.property('landkodo');
+          res.body[0].landkodo.should.equal('lk');
+        })
+      })
+      .then((success) => {done()}, (error) => {done(error)});
+    });
+
+  });
+
 });

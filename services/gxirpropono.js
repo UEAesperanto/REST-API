@@ -10,7 +10,7 @@ app.route('/')
     .get(routerAuth, gxiroj.getGxiroj)
     .post(gxiroj.postGxiro);
 app.route('/:id')
-    .get(routerAuth, gxiroj.getGxiroj)
+    .get(routerAuth, gxiroj.getGxiro)
     .delete(routerAuth, gxiroj.deleteGxiro)
     .put(routerAuth, gxiroj.putGxiro);
 

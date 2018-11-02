@@ -197,7 +197,8 @@ var _authorizeAdminJuna = function(req, res, next) {
           message: 'La ĵetono (token) ne estas korekta.'});
       } else {
         if(decoded.permesoj) {
-          if(decoded.permesoj.indexOf(config.idAdministranto) > -1) {
+          if((decoded.permesoj.indexOf(config.idAdministranto) > -1) ||
+            (decoded.permesoj.indexOf(config.idFinancoj) > -1)) {
              req.decoded = decoded;
              next();
           } else if (decoded.permesoj.indexOf(config.idJunaAdministranto) > -1) {

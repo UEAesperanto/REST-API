@@ -2,12 +2,7 @@ const express = require('express');
 const passport = require('passport');
 var app = express();
 var cors = require('cors');
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
 var bodyParser  = require('body-parser');
-var multer = require('multer');
-var morgan = require('morgan');
 require('shelljs/global');
 
 app.use(bodyParser.json({limit: '25mb'}));

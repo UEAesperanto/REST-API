@@ -13,6 +13,9 @@ var router = express.Router();
 var routerAuth = express.Router();
 routerAuth.use(auth.authorizeAdmin);
 
+var routerFinancoj = express.Router();
+routerFinancoj.use(auth.authorizeAdminFinancoj);
+
 app.use('/', router);
 
 app.route('/')
@@ -36,15 +39,18 @@ app.route('/:id(\\d+)')
     .put(routerAuth, grupo.updateGrupo);
 
 var routerAuthSen = express.Router();
-
 routerAuthSen.use(auth.authorizeSenKondicxo);
+
 router.route('/:id(\\d+)/anoj')
     .get(routerAuthSen, grupo.getAnoj)
     .post(routerAuthSen, grupo.postAneco);
 
 router.route('/anecoj/:id(\\d+)')
-    .delete(routerAuth, aneco.deleteAneco)
-    .put(routerAuth, aneco.updateAneco);
+    .delete(routerFinancoj, aneco.deleteAneco)
+    .put(routerFinancoj, aneco.updateAneco);
+
+router.route('/anecoj/gxiroj')
+    .get(routerFinancoj, grupo.getGxiroj);
 
 router.route('/:id(\\d+)/kotizoj')
     .get(aneco.getKotizoj)

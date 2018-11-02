@@ -162,3 +162,16 @@ databaseChangeLog:
                   name: nomo
                   value: financoj
 
+  - changeSet:
+      id: DateTime Gxiroj
+      author: Ana Ribeiro
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP
+            tableName: gxirpropono

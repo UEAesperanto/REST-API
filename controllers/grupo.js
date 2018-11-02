@@ -246,8 +246,13 @@ var _deleteGrupoKat = function(req, res) {
     });
 }
 
+var _getGxiroj = function(req, res) {
+  findAnoj(req, res);
+}
+
 module.exports = {
   getGrupoj: _getGrupoj,
+  getGxiroj: _getGxiroj,
   deleteGrupoKat: _deleteGrupoKat,
   getKategorioj: _getKategorioj,
   postKategorio: _postKategorio,

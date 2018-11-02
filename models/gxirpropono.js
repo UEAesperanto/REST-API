@@ -1,12 +1,13 @@
 var util = require('util');
 var db = require('../modules/db');
  
-var _insertGxiro = function(idGxiranto, idRicevanto, kialo, traktita, aligxo, kvanto, valuto) {
+var _insertGxiro = function(idGxiranto, idRicevanto, kialo, traktita, aligxo, kvanto, valuto, pagmaniero) {
     db.escapeArgs(arguments);
     var query = util.format('INSERT INTO `gxirpropono`\
-    (idGxiranto, idRicevanto, kialo, traktita, aligxo, kvanto, valuto)\
-    VALUES(%s, %s, %s, %s, %s, %s, %s);', idGxiranto, idRicevanto, kialo, traktita, aligxo, kvanto, valuto);
-
+    (idGxiranto, idRicevanto, kialo, traktita, aligxo, kvanto, valuto, pagmaniero)\
+    VALUES(%s, %s, %s, %s, %s, %s, %s, %s);', 
+    idGxiranto, idRicevanto, kialo, traktita, aligxo,
+    kvanto, valuto, pagmaniero);
     return db.mysqlExec(query);
 }
 

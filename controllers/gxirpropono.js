@@ -7,8 +7,8 @@ var query = require('../modules/query');
   GET /Gxiroj
 */
 var _getGxiroj = function(req, res) {
-  Gxiro.findGxiroj().then(function(sucess) {
-    var gxiroj = sucess;
+  Gxiro.findGxiroj().then(function(success) {
+    var gxiroj = success;
     gxiroj = gxiroj.filter(query.search(req.query));
     res.status(200).send(gxiroj);
   });
@@ -31,7 +31,7 @@ var _getGxiro = function(req, res){
 var _postGxiro = function(req, res) {
     Gxiro.insertGxiro(req.body.idGxiranto, req.body.idRicevanto, 
       req.body.kialo, req.body.traktita, req.body.aligxo, 
-      req.body.kvanto,req.body.valuto).then(
+      req.body.kvanto,req.body.valuto, req.body.pagmaniero).then(
       function(sucess){
         if(sucess) {
           res.status(201).send({insertId: sucess.insertId});
@@ -63,6 +63,7 @@ var _deleteGxiro = function(req, res) {
   PUT Gxiroj/:id
 */
 var _putGxiro = function(req, res) {
+  // console.log(req.body);
   if (req.body.kampo == 'id') {
     res.status(403).send({message: "vi ne povas ŝanĝi la ID"});
   } else {

@@ -50,14 +50,14 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
       "jar": true
   };
   try {
-    urllib.request('http://reto.uea.org/index.php?a=persone', options,
+    urllib.request('https://reto.uea.org/index.php?a=persone', options,
       function (err, data, res) {
         if(res.headers && res.headers['set-cookie']){
           var options2 = {
                           "method": "GET",
                           "headers":{"Cookie": res.headers['set-cookie'][0].split(';')[0]}
                         };
-          urllib.request('http://reto.uea.org/index.php?a=persone', options2, function (err, data, res) {
+          urllib.request('https://reto.uea.org/index.php?a=persone', options2, function (err, data, res) {
             if(data) {
               var data = data.toString();
               var indexOf = data.indexOf('UEA-kodo');
@@ -75,15 +75,15 @@ var proviMalnovaRetejo = function(uzantnomo, pasvorto, cres) {
                     });
                   } else {
                     cres.status(401).send({message: 'Viaj datumoj ne estas en nia nova sistemo, \
-                                                    bonvole, kontaktu sekretario@co.uea.org\
-                                                    kaj informu vian UEA-kodo'});
+                                                    kontaktu sekretario@co.uea.org\
+                                                    kaj transdonu vian UEA-kodon'});
                   }
                 });
             } else {
-              cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
+              cres.status(401).send({message: 'La uzantnomo aŭ pasvorto ne estas ĝusta'});
             }
           } else {
-            cres.status(401).send({message: 'La salutvorto aŭ pasvorto ne estas korekta'});
+            cres.status(401).send({message: 'La uzantnomo aŭ pasvorto ne estas ĝusta'});
           }
        });
        } else {
@@ -108,17 +108,17 @@ var _ensaluti = function(req, res) {
               UzantoAuxAsocio.find('id', sucess[0].id).then(function(sucess){
                 if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
                                           sucess[0].pasvortoHash)) {
-                  res.status(401).send({message: 'Malkorekta pasvorto'});
+                  res.status(401).send({message: 'Malĝusta pasvorto'});
                 }
                 sendToken(sucess[0].id, res);
               });
             } else if(sucess.length == 0){
               res.status(401).send({message: 'Tiu retadreso apartenas al neniu en nia datumbazo. \
-                                              Bonvole, provu ensaluti per uzantnomo'});
+                                              Provu ensaluti per uzantnomo'});
             } else {
               res.status(401).send({message: 'Tiu retadreso apartenas al\
                                               pli ol unu persono en nia datumbazo. \
-                                              Bonvole, provu ensaluti per uzantnomo'});
+                                              Provu ensaluti per uzantnomo'});
             }
           });
         } else {
@@ -127,7 +127,7 @@ var _ensaluti = function(req, res) {
       } else {
         if (!hash.valigiPasvorto(sucess[0].pasvortoSalt, req.body.pasvorto,
                                   sucess[0].pasvortoHash)) {
-          res.status(401).send({message: 'Malkorekta pasvorto'});
+          res.status(401).send({message: 'Malĝusta pasvorto'});
         }
         sendToken(sucess[0].id, res);
     }
@@ -156,8 +156,16 @@ function makeUEAkodo() {
   var text = "";
   var possible = "abcdefghijklmnopqrstuvwxyz";
 
-  for (var i = 0; i < 5; i++)
+  for (var i = 0; i < 4; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  number = (text.substring(0, 1).charCodeAt(0) - 96) * 2;
+  number += (text.substring(1, 2).charCodeAt(0) - 96) * 3;
+  number += (text.substring(2, 3).charCodeAt(0) - 96) * 4;
+  number += (text.substring(3, 4).charCodeAt(0) - 96) * 5;
+  number = 26 - (number % 26);
+
+  text += String.fromCharCode(number + 96);
 
   return text;
 }
